@@ -9,7 +9,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import tw.edu.ncu.cc.oauth.data.v1.message.ErrorCode
-import tw.edu.ncu.cc.oauth.server.concepts.log.LogService
+import tw.edu.ncu.cc.oauth.server.service.log.LogService
 
 @ControllerAdvice
 public class ApplicationExceptionHandler {

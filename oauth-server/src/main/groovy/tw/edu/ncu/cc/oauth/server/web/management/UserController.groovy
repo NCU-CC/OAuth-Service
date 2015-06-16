@@ -8,18 +8,18 @@ import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
-import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ClientTokenObject
-import tw.edu.ncu.cc.oauth.data.v1.management.user.DetailedUserObject
+import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenClientObject
+import tw.edu.ncu.cc.oauth.data.v1.management.user.UserIdObject
 import tw.edu.ncu.cc.oauth.data.v1.management.user.UserObject
-import tw.edu.ncu.cc.oauth.server.concepts.client.Client
-import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken
-import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshTokenService
-import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken_
-import tw.edu.ncu.cc.oauth.server.concepts.user.User
-import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
-import tw.edu.ncu.cc.oauth.server.concepts.user.UserValidator
-import tw.edu.ncu.cc.oauth.server.concepts.user.User_
+import tw.edu.ncu.cc.oauth.server.model.client.Client
+import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken
+import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken_
+import tw.edu.ncu.cc.oauth.server.model.user.User
+import tw.edu.ncu.cc.oauth.server.model.user.User_
+import tw.edu.ncu.cc.oauth.server.service.refreshToken.RefreshTokenService
+import tw.edu.ncu.cc.oauth.server.service.user.UserService
+import tw.edu.ncu.cc.oauth.server.validator.user.UserValidator
 
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
@@ -39,24 +39,23 @@ public class UserController {
 
     @InitBinder
     public static void initBinder( WebDataBinder binder ) {
-        binder.addValidators( new UserValidator() );
+        binder.addValidators( new UserValidator() )
     }
 
     /**
      * 部份搜尋使用者帳號
-     * /users?name={userName}
-     *
+     * /users?name={userName}*
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity search(@RequestParam(value = "name", required = true) String userName) {
+    @RequestMapping( method = RequestMethod.GET )
+    public ResponseEntity search( @RequestParam( value = "name", required = true ) String userName ) {
         respondWith(
                 resource()
                 .pipe {
                     conversionService.convert(
-                            userService.findByPartialName(userName),
-                            TypeDescriptor.collection(List.class,TypeDescriptor.valueOf(User.class)),
-                            TypeDescriptor.array(TypeDescriptor.valueOf( DetailedUserObject.class))
+                            userService.findByPartialName( userName ),
+                            TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( User.class ) ),
+                            TypeDescriptor.array( TypeDescriptor.valueOf( UserIdObject.class ) )
                     );
                 }
         )
@@ -68,7 +67,7 @@ public class UserController {
                 resource()
                 .pipe {
                     conversionService.convert(
-                            userService.findByName( userName ), DetailedUserObject.class
+                            userService.findByName( userName ), UserIdObject.class
                     );
                 }
         )
@@ -84,7 +83,7 @@ public class UserController {
                 conversionService.convert(
                         refreshTokenService.findAllUnexpiredByUser( user, RefreshToken_.scope ),
                         TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( RefreshToken.class ) ),
-                        TypeDescriptor.array( TypeDescriptor.valueOf( ClientTokenObject.class ) )
+                        TypeDescriptor.array( TypeDescriptor.valueOf( TokenClientObject.class ) )
                 );
             }
         )
@@ -100,26 +99,27 @@ public class UserController {
                 conversionService.convert(
                         user.clients,
                         TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( Client.class ) ),
-                        TypeDescriptor.array( TypeDescriptor.valueOf( IdClientObject.class ) )
+                        TypeDescriptor.array( TypeDescriptor.valueOf( ClientIdObject.class ) )
                 );
             }
         )
     }
 
     @RequestMapping( method = RequestMethod.POST )
-    public ResponseEntity createIfNotExist( @Validated @RequestBody final UserObject userObject, BindingResult validation ) {
+    public ResponseEntity createIfNotExist(
+            @Validated @RequestBody final UserObject userObject, BindingResult validation ) {
         respondWith(
-            resource()
-            .validate( validation )
-            .pipe {
-                User user = userService.findByName( userObject.name )
-                if( user == null ) {
-                    user = userService.create( new User( name: userObject.name ) )
+                resource()
+                        .validate( validation )
+                        .pipe {
+                    User user = userService.findByName( userObject.name )
+                    if ( user == null ) {
+                        user = userService.create( new User( name: userObject.name ) )
+                    }
+                    conversionService.convert(
+                            user, UserObject.class
+                    )
                 }
-                conversionService.convert(
-                        user, UserObject.class
-                );
-            }
         )
     }
 

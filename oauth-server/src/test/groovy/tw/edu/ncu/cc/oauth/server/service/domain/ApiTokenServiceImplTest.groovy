@@ -3,7 +3,7 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiTokenService
+import tw.edu.ncu.cc.oauth.server.service.apiToken.ApiTokenService
 
 class ApiTokenServiceImplTest extends SpringSpecification {
 

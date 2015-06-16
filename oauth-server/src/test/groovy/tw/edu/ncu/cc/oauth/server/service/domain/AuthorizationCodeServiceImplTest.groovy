@@ -3,10 +3,10 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCodeService
-import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCode_
-import tw.edu.ncu.cc.oauth.server.concepts.client.ClientRepository
-import tw.edu.ncu.cc.oauth.server.concepts.user.UserRepository
+import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCode_
+import tw.edu.ncu.cc.oauth.server.repository.model.ClientRepository
+import tw.edu.ncu.cc.oauth.server.repository.model.UserRepository
+import tw.edu.ncu.cc.oauth.server.service.authorizationCode.AuthorizationCodeService
 
 class AuthorizationCodeServiceImplTest extends SpringSpecification {
 

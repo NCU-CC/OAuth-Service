@@ -1,7 +1,7 @@
 package data
 
 import org.springframework.transaction.annotation.Transactional
-import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
+import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
 
 trait AccessTokenTestData extends DomainTestData {
 

@@ -1,6 +1,6 @@
 package data
 
-import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiToken
+import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiToken
 
 trait ApiTokenTestData extends DomainTestData {
 

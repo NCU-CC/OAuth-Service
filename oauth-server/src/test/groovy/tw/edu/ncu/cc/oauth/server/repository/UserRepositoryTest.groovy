@@ -3,8 +3,8 @@ package tw.edu.ncu.cc.oauth.server.repository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.concepts.user.User
-import tw.edu.ncu.cc.oauth.server.concepts.user.UserRepository
+import tw.edu.ncu.cc.oauth.server.model.user.User
+import tw.edu.ncu.cc.oauth.server.repository.model.UserRepository
 
 class UserRepositoryTest extends SpringSpecification {
 

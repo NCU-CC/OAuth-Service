@@ -2,7 +2,7 @@ package tw.edu.ncu.cc.oauth.resource.filter
 
 import org.springframework.security.core.context.SecurityContextHolder
 import spock.lang.Specification
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
 
 import javax.servlet.FilterChain
@@ -45,7 +45,7 @@ class ApiTokenDecisionFilterTest extends Specification {
         given:
             request.getHeader( API_TOKEN_HEADER ) >> "TOKEN1"
         and:
-            tokenConfirmService.readApiToken( "TOKEN2" ) >> new ApiTokenObject()
+            tokenConfirmService.readApiToken( "TOKEN2" ) >> new ApiTokenClientObject()
         when:
             apiTokenDecisionFilter.doFilter( request, response, filterChain )
         then:
@@ -58,7 +58,7 @@ class ApiTokenDecisionFilterTest extends Specification {
         given:
             request.getHeader( API_TOKEN_HEADER ) >> "TOKEN"
         and:
-            tokenConfirmService.readApiToken( "TOKEN" ) >> new ApiTokenObject(
+            tokenConfirmService.readApiToken( "TOKEN" ) >> new ApiTokenClientObject(
                     client_id: "testapp"
             )
         when:

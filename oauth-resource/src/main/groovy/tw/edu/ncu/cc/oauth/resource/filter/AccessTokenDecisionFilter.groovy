@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.context.SecurityContextHolder
-import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenObject
 import tw.edu.ncu.cc.oauth.resource.core.ApiCredentialHolder
 import tw.edu.ncu.cc.oauth.resource.exception.InvalidRequestException
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
@@ -38,9 +38,9 @@ public class AccessTokenDecisionFilter extends AbstractFilter {
 
     private void checkAuthentication( HttpServletRequest request ) {
         if( isOAuthRequest( request ) ) {
-            AccessTokenObject accessTokenObject = findAccessToken( request )
-            if( accessTokenObject != null ) {
-                bindAccessToken( request, accessTokenObject )
+            TokenObject accessToken = findAccessToken( request )
+            if( accessToken != null ) {
+                bindAccessToken( request, accessToken )
             } else {
                 throw new InvalidRequestException( HttpStatus.UNAUTHORIZED, "invalid access token" )
             }
@@ -54,7 +54,7 @@ public class AccessTokenDecisionFilter extends AbstractFilter {
         return authorization != null && authorization.startsWith( ACCESS_TOKEN_PREFIX )
     }
 
-    private AccessTokenObject findAccessToken( HttpServletRequest request ) {
+    private TokenObject findAccessToken( HttpServletRequest request ) {
         String accessToken = readAccessTokenFromRequest( request )
         if( ApiCredentialHolder.containsAccessToken( accessToken ) ) {
             ApiCredentialHolder.getAccessToken( accessToken )
@@ -68,13 +68,13 @@ public class AccessTokenDecisionFilter extends AbstractFilter {
         return authorization.trim().substring( ACCESS_TOKEN_PREFIX.length() ).trim()
     }
 
-    private static void bindAccessToken( HttpServletRequest request, AccessTokenObject accessTokenObject ) {
+    private static void bindAccessToken( HttpServletRequest request, TokenObject accessToken ) {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(
-                        accessTokenObject.user, "", AuthorityUtils.createAuthorityList( accessTokenObject.scope )
+                        accessToken.user, "", AuthorityUtils.createAuthorityList( accessToken.scope )
                 )
         )
-        request.setAttribute( ACCESS_TOKEN_ATTR, accessTokenObject )
+        request.setAttribute( ACCESS_TOKEN_ATTR, accessToken )
     }
 
 }

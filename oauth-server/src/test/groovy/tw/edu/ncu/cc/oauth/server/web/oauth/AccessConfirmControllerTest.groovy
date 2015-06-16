@@ -2,7 +2,7 @@ package tw.edu.ncu.cc.oauth.server.web.oauth
 
 import org.springframework.transaction.annotation.Transactional
 import specification.IntegrationSpecification
-import tw.edu.ncu.cc.oauth.server.concepts.permission.Permission
+import tw.edu.ncu.cc.oauth.server.model.permission.Permission
 
 import static helper.CustomMockMvcResponseMatchers.url
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf

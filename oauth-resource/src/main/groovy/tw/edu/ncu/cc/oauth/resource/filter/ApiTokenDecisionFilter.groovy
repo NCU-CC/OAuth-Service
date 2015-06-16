@@ -3,7 +3,7 @@ package tw.edu.ncu.cc.oauth.resource.filter
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
 import tw.edu.ncu.cc.oauth.resource.core.ApiCredentialHolder
 import tw.edu.ncu.cc.oauth.resource.exception.InvalidRequestException
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
@@ -38,7 +38,7 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
 
     private void checkAuthentication( HttpServletRequest request ) {
         if( isApiRequest( request ) ) {
-            ApiTokenObject apiToken = findApiToken( request )
+            ApiTokenClientObject apiToken = findApiToken( request )
             if( apiToken != null ) {
                 bindApiToken( request, apiToken )
             } else {
@@ -53,7 +53,7 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
         return request.getHeader( API_TOKEN_HEADER ) != null
     }
 
-    private ApiTokenObject findApiToken( HttpServletRequest request ) {
+    private ApiTokenClientObject findApiToken( HttpServletRequest request ) {
         String apiToken = readApiTokenFromRequest( request )
         if( ApiCredentialHolder.containsApiToken( apiToken ) ) {
             ApiCredentialHolder.getApiToken( apiToken )
@@ -66,7 +66,7 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
         request.getHeader( API_TOKEN_HEADER )
     }
 
-    private static void bindApiToken( HttpServletRequest request, ApiTokenObject apiTokenObject ) {
+    private static void bindApiToken( HttpServletRequest request, ApiTokenClientObject apiTokenObject ) {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken( apiTokenObject.client_id, "" )
         )

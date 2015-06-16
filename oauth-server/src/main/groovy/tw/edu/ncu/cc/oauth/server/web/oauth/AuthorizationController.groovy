@@ -11,13 +11,13 @@ import org.springframework.ui.ModelMap
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.SessionAttributes
-import tw.edu.ncu.cc.oauth.server.concepts.client.Client
-import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
-import tw.edu.ncu.cc.oauth.server.concepts.log.LogService
-import tw.edu.ncu.cc.oauth.server.concepts.permission.Permission
-import tw.edu.ncu.cc.oauth.server.concepts.permission.PermissionService
 import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder
 import tw.edu.ncu.cc.oauth.server.helper.OAuthURLBuilder
+import tw.edu.ncu.cc.oauth.server.model.client.Client
+import tw.edu.ncu.cc.oauth.server.model.permission.Permission
+import tw.edu.ncu.cc.oauth.server.service.client.ClientService
+import tw.edu.ncu.cc.oauth.server.service.log.LogService
+import tw.edu.ncu.cc.oauth.server.service.permission.PermissionService
 
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse

@@ -3,13 +3,13 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken
-import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenService
-import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken_
-import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCode
-import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCodeService
-import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken
-import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshTokenService
+import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
+import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken_
+import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCode
+import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken
+import tw.edu.ncu.cc.oauth.server.service.accessToken.AccessTokenService
+import tw.edu.ncu.cc.oauth.server.service.authorizationCode.AuthorizationCodeService
+import tw.edu.ncu.cc.oauth.server.service.refreshToken.RefreshTokenService
 
 class AccessTokenServiceImplTest extends SpringSpecification {
 

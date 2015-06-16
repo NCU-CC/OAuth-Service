@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.convert.ConversionService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenApiTokenObject
-import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiToken
-import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiTokenService
-import tw.edu.ncu.cc.oauth.server.concepts.client.Client
-import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
+import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiToken
+import tw.edu.ncu.cc.oauth.server.model.client.Client
+import tw.edu.ncu.cc.oauth.server.service.apiToken.ApiTokenService
+import tw.edu.ncu.cc.oauth.server.service.client.ClientService
 
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
@@ -33,7 +33,7 @@ class APITokenController {
                 resource()
                 .pipe {
                     conversionService.convert(
-                            apiTokenService.findUnexpiredByToken( token ), ApiTokenObject.class
+                            apiTokenService.findUnexpiredByToken( token ), ApiTokenClientObject.class
                     )
                 }
         )
@@ -47,7 +47,7 @@ class APITokenController {
                     clientService.findUndeletedBySerialId( clientSerialId )
                 }.pipe { Client client ->
                     conversionService.convert(
-                            apiTokenService.create( new ApiToken( client: client ) ), TokenApiTokenObject.class
+                            apiTokenService.create( new ApiToken( client: client ) ), ApiTokenObject.class
                     )
                 }
         )
@@ -61,7 +61,7 @@ class APITokenController {
                     apiTokenService.findUnexpiredById( id )
                 }.pipe { ApiToken apiToken ->
                     conversionService.convert(
-                            apiTokenService.revoke( apiToken ), TokenApiTokenObject.class
+                            apiTokenService.revoke( apiToken ), ApiTokenObject.class
                     )
                 }
         )
@@ -75,7 +75,7 @@ class APITokenController {
                     apiTokenService.findUnexpiredById( id )
                 }.pipe { ApiToken apiToken ->
                     conversionService.convert(
-                            apiTokenService.refreshToken( apiToken ), TokenApiTokenObject.class
+                            apiTokenService.refreshToken( apiToken ), ApiTokenObject.class
                     )
                 }
         )

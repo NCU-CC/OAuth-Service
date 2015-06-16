@@ -11,10 +11,10 @@ import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.user.ManagerCreateObject
 import tw.edu.ncu.cc.oauth.data.v1.management.user.ManagerObject
-import tw.edu.ncu.cc.oauth.server.concepts.manager.ManagerCreateValidator
-import tw.edu.ncu.cc.oauth.server.concepts.manager.ManagerService
-import tw.edu.ncu.cc.oauth.server.concepts.user.User
-import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
+import tw.edu.ncu.cc.oauth.server.model.user.User
+import tw.edu.ncu.cc.oauth.server.service.manager.ManagerService
+import tw.edu.ncu.cc.oauth.server.service.user.UserService
+import tw.edu.ncu.cc.oauth.server.validator.manager.ManagerCreateValidator
 
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith

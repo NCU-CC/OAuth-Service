@@ -1,8 +1,8 @@
 package data
 
 import org.springframework.beans.factory.annotation.Autowired
-import tw.edu.ncu.cc.oauth.server.concepts.client.Client
-import tw.edu.ncu.cc.oauth.server.concepts.security.SecretService
+import tw.edu.ncu.cc.oauth.server.model.client.Client
+import tw.edu.ncu.cc.oauth.server.service.security.SecretService
 
 trait ClientTestData extends DomainTestData {
 

@@ -1,6 +1,6 @@
 package data
 
-import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken
+import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken
 
 trait RefreshTokenTestData extends DomainTestData {
 

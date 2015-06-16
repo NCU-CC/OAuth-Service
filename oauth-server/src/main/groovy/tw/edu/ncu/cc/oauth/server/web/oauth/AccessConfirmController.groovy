@@ -8,16 +8,16 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
-import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCode
-import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCodeService
-import tw.edu.ncu.cc.oauth.server.concepts.client.Client
-import tw.edu.ncu.cc.oauth.server.concepts.log.LogService
-import tw.edu.ncu.cc.oauth.server.concepts.permission.Permission
-import tw.edu.ncu.cc.oauth.server.concepts.permission.PermissionService
-import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
 import tw.edu.ncu.cc.oauth.server.helper.OAuthURLBuilder
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
+import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCode
+import tw.edu.ncu.cc.oauth.server.model.client.Client
+import tw.edu.ncu.cc.oauth.server.model.permission.Permission
+import tw.edu.ncu.cc.oauth.server.service.authorizationCode.AuthorizationCodeService
+import tw.edu.ncu.cc.oauth.server.service.log.LogService
+import tw.edu.ncu.cc.oauth.server.service.permission.PermissionService
+import tw.edu.ncu.cc.oauth.server.service.user.UserService
 
 import javax.servlet.http.HttpServletRequest
 

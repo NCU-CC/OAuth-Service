@@ -1,6 +1,6 @@
 package data
 
-import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCode
+import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCode
 
 trait AuthorizationCodeTestData extends DomainTestData {
 

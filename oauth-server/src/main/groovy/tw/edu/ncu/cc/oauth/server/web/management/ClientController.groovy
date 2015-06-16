@@ -8,16 +8,16 @@ import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
+import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdObject
+import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdSecretObject
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientObject
-import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
-import tw.edu.ncu.cc.oauth.data.v1.management.client.SecretIdClientObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenApiTokenObject
-import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiToken
-import tw.edu.ncu.cc.oauth.server.concepts.client.Client
-import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
-import tw.edu.ncu.cc.oauth.server.concepts.client.ClientValidator
-import tw.edu.ncu.cc.oauth.server.concepts.client.Client_
-import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
+import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
+import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiToken
+import tw.edu.ncu.cc.oauth.server.model.client.Client
+import tw.edu.ncu.cc.oauth.server.model.client.Client_
+import tw.edu.ncu.cc.oauth.server.service.client.ClientService
+import tw.edu.ncu.cc.oauth.server.service.user.UserService
+import tw.edu.ncu.cc.oauth.server.validator.client.ClientValidator
 
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
@@ -51,7 +51,7 @@ public class ClientController {
                                  @RequestParam(value = "owner", required = false) String owner,
                                  @RequestParam(value = "isDeleted", defaultValue = "false") Boolean isDeleted) {
 
-        def dto = IdClientObject.newInstance(
+        def dto = new ClientIdObject(
                 id : id,
                 name : name,
                 owner : owner,
@@ -61,7 +61,7 @@ public class ClientController {
         respondWith(
             resource()
             .pipe {
-                clientService.findByDTO(dto)
+                clientService.findByDTO( dto )
             }.pipe { List<Client> clients ->
                 conversionService.convert(
                         clients,
@@ -85,7 +85,7 @@ public class ClientController {
                                 url: clientObject.url,
                                 callback: clientObject.callback,
                                 owner: userService.findByName( clientObject.owner )
-                        ) ), SecretIdClientObject.class
+                        ) ), ClientIdSecretObject.class
                 );
             }
         )
@@ -97,7 +97,7 @@ public class ClientController {
                 resource()
                 .pipe {
                     conversionService.convert(
-                            clientService.findUndeletedBySerialId( clientId ), SecretIdClientObject.class
+                            clientService.findUndeletedBySerialId( clientId ), ClientIdSecretObject.class
                     );
                 }
         )
@@ -118,7 +118,7 @@ public class ClientController {
                 client.description = clientObject.description
 
                 conversionService.convert(
-                        clientService.update( client ), SecretIdClientObject.class
+                        clientService.update( client ), ClientIdSecretObject.class
                 );
             }
         )
@@ -132,7 +132,7 @@ public class ClientController {
                 clientService.findUndeletedBySerialId( clientId )
             }.pipe { Client client ->
                 conversionService.convert(
-                        clientService.delete( client ), SecretIdClientObject.class
+                        clientService.delete( client ), ClientIdSecretObject.class
                 );
             }
         )
@@ -146,7 +146,7 @@ public class ClientController {
                 clientService.findUndeletedBySerialId( clientId )
             }.pipe { Client client ->
                 conversionService.convert(
-                        clientService.refreshSecret( client ), SecretIdClientObject.class
+                        clientService.refreshSecret( client ), ClientIdSecretObject.class
                 );
             }
         )
@@ -162,7 +162,7 @@ public class ClientController {
                     conversionService.convert(
                             client.apiTokens,
                             TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( ApiToken.class ) ),
-                            TypeDescriptor.array( TypeDescriptor.valueOf( TokenApiTokenObject.class ) )
+                            TypeDescriptor.array( TypeDescriptor.valueOf( ApiTokenObject.class ) )
                     );
                 }
         )

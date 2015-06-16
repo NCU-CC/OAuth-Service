@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ClientTokenObject
-import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken
-import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshTokenService
-import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshToken_
+import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenClientObject
+import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken
+import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken_
+import tw.edu.ncu.cc.oauth.server.service.refreshToken.RefreshTokenService
 
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
@@ -31,7 +31,7 @@ public class AuthorizedTokenController {
                 resource()
                 .pipe {
                     return conversionService.convert(
-                            refreshTokenService.findUnexpiredById( id, RefreshToken_.scope ), ClientTokenObject.class
+                            refreshTokenService.findUnexpiredById( id, RefreshToken_.scope ), TokenClientObject.class
                     )
                 }
         )
@@ -45,7 +45,7 @@ public class AuthorizedTokenController {
                 refreshTokenService.findUnexpiredById( id, RefreshToken_.scope )
             }.pipe { RefreshToken refreshToken ->
                 conversionService.convert(
-                        refreshTokenService.revoke( refreshToken ), ClientTokenObject.class
+                        refreshTokenService.revoke( refreshToken ), TokenClientObject.class
                 )
             }
         )

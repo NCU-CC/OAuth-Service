@@ -2,7 +2,7 @@ package tw.edu.ncu.cc.oauth.resource.filter
 
 import org.springframework.security.core.context.SecurityContextHolder
 import spock.lang.Specification
-import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenObject
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
 
 import javax.servlet.FilterChain
@@ -44,7 +44,7 @@ class AccessTokenDecisionFilterTest extends Specification {
         given:
             request.getHeader( ACCESS_TOKEN_HEADER ) >> ACCESS_TOKEN_PREFIX + " " + "ACCESS_TOKEN1"
         and:
-            tokenConfirmService.readApiToken( "ACCESS_TOKEN2" ) >> new AccessTokenObject()
+            tokenConfirmService.readApiToken( "ACCESS_TOKEN2" ) >> new TokenObject()
         when:
             accessTokenDecisionFilter.doFilter( request, response, filterChain )
         then:
@@ -57,7 +57,7 @@ class AccessTokenDecisionFilterTest extends Specification {
         given:
             request.getHeader( ACCESS_TOKEN_HEADER ) >> ACCESS_TOKEN_PREFIX + " " + "ACCESS_TOKEN"
         and:
-            tokenConfirmService.readAccessToken( "ACCESS_TOKEN" ) >> new AccessTokenObject(
+            tokenConfirmService.readAccessToken( "ACCESS_TOKEN" ) >> new TokenObject(
                     user: "USER",
                     scope: [ "PERMISSION" ]
             )

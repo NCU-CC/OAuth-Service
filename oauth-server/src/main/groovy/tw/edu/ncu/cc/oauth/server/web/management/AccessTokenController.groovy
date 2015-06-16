@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
-import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
-import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenService
-import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessToken_
+import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenObject
+import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken_
+import tw.edu.ncu.cc.oauth.server.service.accessToken.AccessTokenService
 
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
 import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
@@ -19,10 +19,10 @@ import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
 public class AccessTokenController {
 
     @Autowired
-    def ConversionService conversionService;
+    def ConversionService conversionService
 
     @Autowired
-    def AccessTokenService accessTokenService;
+    def AccessTokenService accessTokenService
 
     @RequestMapping( value = "token/{token}", method = RequestMethod.GET )
     public ResponseEntity getByToken( @PathVariable ( "token" ) final String token ) {
@@ -30,8 +30,8 @@ public class AccessTokenController {
                 resource()
                 .pipe {
                     conversionService.convert(
-                            accessTokenService.findUnexpiredByToken( token, AccessToken_.scope ), AccessTokenObject.class
-                    );
+                            accessTokenService.findUnexpiredByToken( token, AccessToken_.scope ), TokenObject.class
+                    )
                 }
         )
     }

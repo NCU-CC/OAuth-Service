@@ -1,6 +1,6 @@
 package data
 
-import tw.edu.ncu.cc.oauth.server.concepts.user.User
+import tw.edu.ncu.cc.oauth.server.model.user.User
 
 
 trait ManagerTestData extends DomainTestData {
