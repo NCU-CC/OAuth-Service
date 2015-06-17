@@ -1,20 +1,21 @@
-package tw.edu.ncu.cc.oauth.server.concepts.client
+package tw.edu.ncu.cc.oauth.server.view.client
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
-import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
-import tw.edu.ncu.cc.oauth.server.concepts.security.SecretService
+import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdObject
+import tw.edu.ncu.cc.oauth.server.model.client.Client
+import tw.edu.ncu.cc.oauth.server.service.security.SecretService
 
 @Component
-class Client_IdClientObjectConverter implements Converter< Client, IdClientObject >{
+class Client_ClientIdObjectConverter implements Converter< Client, ClientIdObject >{
 
     @Autowired
     def SecretService secretService
 
     @Override
-    IdClientObject convert( Client source ) {
-        IdClientObject idClientObject = new IdClientObject()
+    ClientIdObject convert( Client source ) {
+        ClientIdObject idClientObject = new ClientIdObject()
         idClientObject.id = secretService.encodeHashId( source.id )
         idClientObject.name = source.name
         idClientObject.description = source.description

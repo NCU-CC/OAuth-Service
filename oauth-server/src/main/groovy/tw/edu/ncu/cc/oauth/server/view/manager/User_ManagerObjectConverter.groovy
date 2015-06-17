@@ -1,9 +1,9 @@
-package tw.edu.ncu.cc.oauth.server.concepts.manager
+package tw.edu.ncu.cc.oauth.server.view.manager
 
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 import tw.edu.ncu.cc.oauth.data.v1.management.user.ManagerObject
-import tw.edu.ncu.cc.oauth.server.concepts.user.User
+import tw.edu.ncu.cc.oauth.server.model.user.User
 
 @Component
 class User_ManagerObjectConverter implements Converter< User, ManagerObject > {

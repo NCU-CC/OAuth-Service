@@ -1,11 +1,12 @@
-package tw.edu.ncu.cc.oauth.server.concepts.refreshToken
+package tw.edu.ncu.cc.oauth.server.view.refreshToken
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
 import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenObject
-import tw.edu.ncu.cc.oauth.server.concepts.security.SecretService
 import tw.edu.ncu.cc.oauth.server.helper.ScopeHelper
+import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken
+import tw.edu.ncu.cc.oauth.server.service.security.SecretService
 
 @Component
 class RefreshToken_TokenObjectConverter implements Converter< RefreshToken, TokenObject > {

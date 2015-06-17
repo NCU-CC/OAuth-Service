@@ -1,15 +1,16 @@
-package tw.edu.ncu.cc.oauth.server.concepts.user
+package tw.edu.ncu.cc.oauth.server.view.user
 
 import org.springframework.core.convert.converter.Converter
 import org.springframework.stereotype.Component
-import tw.edu.ncu.cc.oauth.data.v1.management.user.DetailedUserObject
+import tw.edu.ncu.cc.oauth.data.v1.management.user.UserIdObject
+import tw.edu.ncu.cc.oauth.server.model.user.User
 
 @Component
-class User_DetailedUserObjectConverter implements Converter< User, DetailedUserObject > {
+class User_UserIdObjectConverter implements Converter< User, UserIdObject > {
 
     @Override
-    DetailedUserObject convert( User source ) {
-        DetailedUserObject userObject = new DetailedUserObject()
+    UserIdObject convert( User source ) {
+        UserIdObject userObject = new UserIdObject()
         userObject.id = source.id
         userObject.name = source.name
         userObject.date_created = source.dateCreated
