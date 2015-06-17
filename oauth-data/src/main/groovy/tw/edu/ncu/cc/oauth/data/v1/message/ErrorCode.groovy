@@ -8,5 +8,6 @@ public class ErrorCode {
     public static final int INVALID_BODY = INVALID_FIELD + 1
     public static final int INVALID_METHOD = INVALID_BODY + 1
     public static final int INVALID_HEADER = INVALID_METHOD + 1
+    public static final int INVALID_PARAM  = INVALID_HEADER + 1
 
 }
