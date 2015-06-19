@@ -1,23 +1,14 @@
 package tw.edu.ncu.cc.oauth.server.web.oauth
 
-import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
-import tw.edu.ncu.cc.oauth.server.helper.OAuthURLBuilder
-import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
-import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
-import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCode
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.permission.Permission
-import tw.edu.ncu.cc.oauth.server.service.authorizationCode.AuthorizationCodeService
-import tw.edu.ncu.cc.oauth.server.service.log.LogService
-import tw.edu.ncu.cc.oauth.server.service.permission.PermissionService
-import tw.edu.ncu.cc.oauth.server.service.user.UserService
+import tw.edu.ncu.cc.oauth.server.operation.oauth.OauthOperations
 
 import javax.servlet.http.HttpServletRequest
 
@@ -26,19 +17,7 @@ import javax.servlet.http.HttpServletRequest
 public final class AccessConfirmController {
 
     @Autowired
-    def LogService logService
-
-    @Autowired
-    def UserService userService
-
-    @Autowired
-    def PermissionService permissionService
-
-    @Autowired
-    def AuthorizationCodeService authorizationCodeService
-
-    @Value( '${custom.oauth.authCode.expire-seconds}' )
-    def long authorizationCodeExpireSeconds
+    def OauthOperations oauthOperations
 
     private SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler()
 
@@ -46,43 +25,24 @@ public final class AccessConfirmController {
     public String confirm( @ModelAttribute( "state" )  String state,
                            @ModelAttribute( "scope" )  Set< Permission > scope,
                            @ModelAttribute( "client" ) Client client,
-                           @RequestParam( "approval" ) boolean isAgree,
+                           @RequestParam( "approval" ) boolean approval,
                            HttpServletRequest request, Authentication authentication ) throws URISyntaxException, OAuthSystemException {
 
-        logService.info(
-                "OAUTH CONFIRM",
-                "USER:" + authentication.name,
-                "AGREE:" + isAgree
-        )
+        logoutHandler.logout( request, null, null )
 
-        logoutHandler.logout( request, null, null );
+        def targetURL
 
-        if( isAgree ) {
-
-            Date expireDate = TimeBuilder
-                    .now()
-                    .after( authorizationCodeExpireSeconds, TimeUnit.SECOND )
-                    .buildDate();
-
-            AuthorizationCode authCode = authorizationCodeService.create( new AuthorizationCode(
-                    client: client,
-                    user: userService.findByName( authentication.name ),
-                    scope: scope,
-                    dateExpired: expireDate
-            ) );
-
-            return "redirect:" + OAuthURLBuilder
-                    .url( client.getCallback() )
-                    .code( authCode.getCode() )
-                    .state( state )
-                    .build();
+        if( approval ) {
+            targetURL = oauthOperations.accessAccessAgree.process(
+                    state: state, scope: scope, client: client, username: authentication.name
+            )
         } else {
-            return "redirect:" + OAuthURLBuilder
-                    .url( client.getCallback() )
-                    .error( OAuthError.CodeResponse.ACCESS_DENIED )
-                    .state( state )
-                    .build();
+            targetURL = oauthOperations.accessDisagree.process(
+                    state: state, client: client, username: authentication.name
+            )
         }
+
+        return "redirect:" + targetURL
     }
 
 }
