@@ -2,6 +2,7 @@ package tw.edu.ncu.cc.oauth.server.operation.user
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import org.springframework.util.StringUtils
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
 import tw.edu.ncu.cc.oauth.server.service.user.UserService
 
@@ -17,9 +18,13 @@ class UserSearch extends BasicOperation {
 
     @Override
     protected handle( Map params, Map Model ) {
+        String username = params.username as String
         streams {
             notNullStream {
-                userService.findByPartialName( params.username as String )
+                if ( StringUtils.isEmpty( username ) ) {
+                    return Collections.emptyList()
+                }
+                userService.findAllByNameLike( username )
             }
         }
     }

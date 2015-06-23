@@ -3,6 +3,7 @@ package tw.edu.ncu.cc.oauth.server.operation.user
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import tw.edu.ncu.cc.oauth.server.model.user.User
+import tw.edu.ncu.cc.oauth.server.model.user.User_
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
 import tw.edu.ncu.cc.oauth.server.service.user.UserService
 
@@ -20,7 +21,7 @@ class UserShowOwnedClients extends BasicOperation {
     protected handle( Map params, Map Model ) {
         streams {
             notNullStream {
-                userService.findByName( params.username as String )
+                userService.findByName( params.username as String, User_.clients )
             }
             notNullStream { User user ->
                 user.clients

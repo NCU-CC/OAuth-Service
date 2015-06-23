@@ -18,4 +18,13 @@ class UserSpecifications extends BasicSpecifications< User > {
             }
         }
     }
+
+    static Specification< User > nameLike( final String name ) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate( Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb ) {
+                return cb.like( root.get( User_.name ), "%${ name }%" )
+            }
+        }
+    }
 }

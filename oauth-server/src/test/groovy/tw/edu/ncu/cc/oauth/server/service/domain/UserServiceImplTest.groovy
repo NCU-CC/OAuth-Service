@@ -40,6 +40,6 @@ class UserServiceImplTest extends SpringSpecification {
             ) )
             def partialUsername = username.substring( username.length() - 1 )
         then:
-            userService.findByPartialName( partialUsername ) != null
+            userService.findAllByNameLike( partialUsername ) != null
     }
 }

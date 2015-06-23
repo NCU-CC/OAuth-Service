@@ -10,5 +10,6 @@ interface UserService {
     User findByName( String name )
     User findByName( String name, Attribute...attributes )
 
-    List< User > findByPartialName( String userName )
+    List< User > findAllByNameLike( String userName )
+    List< User > findAllByNameLike( String userName, Attribute...attributes )
 }
