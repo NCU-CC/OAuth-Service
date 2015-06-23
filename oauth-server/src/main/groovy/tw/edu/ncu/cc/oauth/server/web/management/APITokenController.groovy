@@ -2,82 +2,59 @@ package tw.edu.ncu.cc.oauth.server.web.management
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.convert.ConversionService
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenApiTokenObject
-import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiToken
-import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiTokenService
-import tw.edu.ncu.cc.oauth.server.concepts.client.Client
-import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
-
-import static tw.edu.ncu.cc.oauth.server.helper.Responder.resource
-import static tw.edu.ncu.cc.oauth.server.helper.Responder.respondWith
+import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiToken
+import tw.edu.ncu.cc.oauth.server.operation.apiToken.ApiTokenOperations
 
 @RestController
 @RequestMapping( value = "management/v1/api_tokens" )
 class APITokenController {
 
     @Autowired
+    def ApiTokenOperations apiTokenOperations
+
+    @Autowired
     def ConversionService conversionService
 
-    @Autowired
-    def ApiTokenService apiTokenService
-
-    @Autowired
-    def ClientService clientService
-
     @RequestMapping( value = "token/{token}", method = RequestMethod.GET )
-    public ResponseEntity getByToken( @PathVariable( "token" ) final String token ) {
-        respondWith(
-                resource()
-                .pipe {
-                    conversionService.convert(
-                            apiTokenService.findUnexpiredByToken( token ), ApiTokenObject.class
-                    )
-                }
+    def get( @PathVariable( "token" ) final String token ) {
+
+        def resource = apiTokenOperations.show.process( token: token )
+
+        conversionService.convert(
+                resource as ApiToken, ApiTokenClientObject.class
         )
     }
 
     @RequestMapping( method = RequestMethod.POST )
-    public ResponseEntity createByClientId( @RequestParam( "client_id" ) String clientSerialId ) {
-        respondWith(
-                resource()
-                .pipe {
-                    clientService.findUndeletedBySerialId( clientSerialId )
-                }.pipe { Client client ->
-                    conversionService.convert(
-                            apiTokenService.create( new ApiToken( client: client ) ), TokenApiTokenObject.class
-                    )
-                }
+    def create( @RequestParam( "client_id" ) String clientSerialId ) {
+
+        def resource = apiTokenOperations.create.process( clientSerialId: clientSerialId )
+
+        conversionService.convert(
+                resource as ApiToken, ApiTokenObject.class
         )
     }
 
     @RequestMapping( value = "{id}", method = RequestMethod.DELETE )
-    public ResponseEntity revokeById( @PathVariable( "id" ) final String id ) {
-        respondWith(
-                resource()
-                .pipe {
-                    apiTokenService.findUnexpiredById( id )
-                }.pipe { ApiToken apiToken ->
-                    conversionService.convert(
-                            apiTokenService.revoke( apiToken ), TokenApiTokenObject.class
-                    )
-                }
+    def revoke( @PathVariable( "id" ) final String id ) {
+
+        def resource = apiTokenOperations.revoke.process( id: id )
+
+        conversionService.convert(
+                resource as ApiToken , ApiTokenObject.class
         )
     }
 
     @RequestMapping( value = "{id}/refresh", method = RequestMethod.POST )
-    public ResponseEntity refreshById( @PathVariable( "id" ) final String id ) {
-        respondWith(
-                resource()
-                .pipe {
-                    apiTokenService.findUnexpiredById( id )
-                }.pipe { ApiToken apiToken ->
-                    conversionService.convert(
-                            apiTokenService.refreshToken( apiToken ), TokenApiTokenObject.class
-                    )
-                }
+    def refresh( @PathVariable( "id" ) final String id ) {
+
+        def resource = apiTokenOperations.refresh.process( id: id )
+
+        conversionService.convert(
+                resource as ApiToken, ApiTokenObject.class
         )
     }
 

@@ -2,7 +2,7 @@ package tw.edu.ncu.cc.oauth.resource.test
 
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.test.web.servlet.request.RequestPostProcessor
-import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenObject
 import tw.edu.ncu.cc.oauth.resource.core.ApiCredentialHolder
 
 import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.ACCESS_TOKEN_HEADER
@@ -43,7 +43,7 @@ class OauthTokenRequestPostProcessor implements RequestPostProcessor {
     @Override
     MockHttpServletRequest postProcessRequest( MockHttpServletRequest request ) {
         request.addHeader( ACCESS_TOKEN_HEADER, ACCESS_TOKEN_PREFIX + " " + accessToken )
-        ApiCredentialHolder.addAccessToken( accessToken, new AccessTokenObject(
+        ApiCredentialHolder.addAccessToken( accessToken, new TokenObject(
                 id: id,
                 user: user,
                 scope: scope,

@@ -1,6 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.helper
 
-import tw.edu.ncu.cc.oauth.server.concepts.permission.Permission
+import tw.edu.ncu.cc.oauth.server.model.permission.Permission
 
 
 class ScopeHelper {

@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
-import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenObject
 import tw.edu.ncu.cc.oauth.resource.config.RemoteConfig
 
 public class TokenConfirmServiceImpl implements TokenConfirmService {
@@ -19,10 +19,10 @@ public class TokenConfirmServiceImpl implements TokenConfirmService {
     }
 
     @Override
-    public AccessTokenObject readAccessToken( String accessToken ) {
+    public TokenObject readAccessToken( String accessToken ) {
         String resourceAddress = config.serverPath + config.accessTokenPath;
         try {
-            getTokenWithType( resourceAddress, accessToken, AccessTokenObject.class ).getBody();
+            getTokenWithType( resourceAddress, accessToken, TokenObject.class ).getBody();
         } catch ( HttpClientErrorException e ) {
             if( e.statusCode.equals( HttpStatus.NOT_FOUND ) ) {
                 return null;
@@ -33,10 +33,10 @@ public class TokenConfirmServiceImpl implements TokenConfirmService {
     }
 
     @Override
-    ApiTokenObject readApiToken( String apiToken ) {
+    ApiTokenClientObject readApiToken( String apiToken ) {
         String remoteAddr = config.serverPath + config.apiTokenPath;
         try {
-            getTokenWithType( remoteAddr, apiToken, ApiTokenObject.class ).getBody();
+            getTokenWithType( remoteAddr, apiToken, ApiTokenClientObject.class ).getBody();
         } catch ( HttpClientErrorException e ) {
             if( e.statusCode.equals( HttpStatus.NOT_FOUND ) ) {
                 return null;

@@ -2,7 +2,7 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 
 import org.springframework.beans.factory.annotation.Autowired
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.concepts.permission.PermissionService
+import tw.edu.ncu.cc.oauth.server.service.permission.PermissionService
 
 class PermissionServiceImplTest extends SpringSpecification {
 

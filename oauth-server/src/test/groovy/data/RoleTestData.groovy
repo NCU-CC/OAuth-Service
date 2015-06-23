@@ -1,6 +1,6 @@
 package data
 
-import tw.edu.ncu.cc.oauth.server.concepts.role.Role
+import tw.edu.ncu.cc.oauth.server.model.role.Role
 
 trait RoleTestData extends DomainTestData {
 

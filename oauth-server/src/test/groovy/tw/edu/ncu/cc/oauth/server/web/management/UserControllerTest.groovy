@@ -96,7 +96,7 @@ class UserControllerTest extends IntegrationSpecification {
     def "managers can search user by partial username"() {
         when:
             server().perform(
-                post(targetURL)
+                post( targetURL )
                     .contentType( MediaType.APPLICATION_JSON )
                     .content(
                     '''
@@ -111,7 +111,7 @@ class UserControllerTest extends IntegrationSpecification {
         and:
             def response = JSON(
                     server().perform(
-                        get(targetURL + "?name=jas")
+                        get( targetURL + "?name=jas" )
                     ).andExpect(
                          status().isOk()
                     ).andReturn()

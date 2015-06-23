@@ -1,14 +1,7 @@
 package data
 
 import org.springframework.beans.factory.annotation.Autowired
-import tw.edu.ncu.cc.oauth.server.concepts.accessToken.AccessTokenRepository
-import tw.edu.ncu.cc.oauth.server.concepts.apiToken.ApiTokenRepository
-import tw.edu.ncu.cc.oauth.server.concepts.authorizationCode.AuthorizationCodeRepository
-import tw.edu.ncu.cc.oauth.server.concepts.client.ClientRepository
-import tw.edu.ncu.cc.oauth.server.concepts.permission.PermissionRepository
-import tw.edu.ncu.cc.oauth.server.concepts.refreshToken.RefreshTokenRepository
-import tw.edu.ncu.cc.oauth.server.concepts.role.RoleRepository
-import tw.edu.ncu.cc.oauth.server.concepts.user.UserRepository
+import tw.edu.ncu.cc.oauth.server.repository.model.*
 
 trait DomainTestData {
 

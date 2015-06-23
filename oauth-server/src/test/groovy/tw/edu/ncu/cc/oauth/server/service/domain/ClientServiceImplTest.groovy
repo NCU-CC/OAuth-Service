@@ -3,8 +3,8 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.data.v1.management.client.IdClientObject
-import tw.edu.ncu.cc.oauth.server.concepts.client.ClientService
+import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdObject
+import tw.edu.ncu.cc.oauth.server.service.client.ClientService
 
 class ClientServiceImplTest extends SpringSpecification {
 
@@ -76,13 +76,12 @@ class ClientServiceImplTest extends SpringSpecification {
         and:
             clientService.create(client)
 
-            def dto = IdClientObject.newInstance(
-                    name : client.name.substring(client.name.length() - 1),
-                    isDeleted : false
+            def dto = new ClientIdObject(
+                    name : client.name.substring( client.name.length() - 1 ),
+                    deleted: false
             )
-
         when:
-            def results = clientService.findByDTO(dto)
+            def results = clientService.findAllByDataObject( dto )
         then:
             results.size() == 1
             results[0].name == client.name
@@ -93,17 +92,17 @@ class ClientServiceImplTest extends SpringSpecification {
         given:
             def client = new_client()
         and:
-            def createdClient = clientService.create(client)
+            def createdClient = clientService.create( client )
 
-            def dto = IdClientObject.newInstance(
-                    name : createdClient.name.substring(createdClient.name.length() - 1),
+            def dto = new ClientIdObject(
+                    name : createdClient.name.substring( createdClient.name.length() - 1 ),
                     id : createdClient.id,
                     owner : createdClient.owner.name,
-                    isDeleted : false
+                    deleted: false
             )
 
         when:
-            def results = clientService.findByDTO(dto)
+            def results = clientService.findAllByDataObject(dto)
         then:
             results.size() == 1
             results[0].name == createdClient.name
@@ -119,15 +118,17 @@ class ClientServiceImplTest extends SpringSpecification {
         and:
             def createdClient = clientService.create(client)
 
-            def dto = IdClientObject.newInstance(
-                    name : createdClient.name.substring(createdClient.name.length() - 1),
+            def dto = new ClientIdObject(
+                    name : createdClient.name.substring( createdClient.name.length() - 1 ),
                     id : createdClient.id,
-                    owner : createdClient.owner.name
+                    owner : createdClient.owner.name,
+                    deleted: false
             )
 
         when:
-            def results = clientService.findByDTO(dto)
+            def results = clientService.findAllByDataObject( dto )
         then:
             results.isEmpty()
     }
+
 }

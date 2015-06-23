@@ -3,8 +3,8 @@ package tw.edu.ncu.cc.oauth.server.service.domain
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.concepts.user.User
-import tw.edu.ncu.cc.oauth.server.concepts.user.UserService
+import tw.edu.ncu.cc.oauth.server.model.user.User
+import tw.edu.ncu.cc.oauth.server.service.user.UserService
 
 class UserServiceImplTest extends SpringSpecification {
 
@@ -35,11 +35,11 @@ class UserServiceImplTest extends SpringSpecification {
     def "it can find user by partial username"() {
         when:
             def username = "fakeusername"
-            userService.create(new User(
+            userService.create( new User(
                     name: username
-            ))
-            def partialUsername = username.substring(username.length() - 1)
+            ) )
+            def partialUsername = username.substring( username.length() - 1 )
         then:
-            userService.findByPartialName(partialUsername) != null
+            userService.findAllByNameLike( partialUsername ) != null
     }
 }

@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.concepts.manager.ManagerService
-import tw.edu.ncu.cc.oauth.server.concepts.user.User
-
+import tw.edu.ncu.cc.oauth.server.model.user.User
+import tw.edu.ncu.cc.oauth.server.service.manager.ManagerService
 
 class ManagerServiceImplTest extends SpringSpecification {
 

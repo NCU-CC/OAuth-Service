@@ -3,7 +3,7 @@ package tw.edu.ncu.cc.oauth.server.repository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
-import tw.edu.ncu.cc.oauth.server.concepts.role.RoleRepository
+import tw.edu.ncu.cc.oauth.server.repository.model.RoleRepository
 
 class RoleRepositoryTest extends SpringSpecification {
 

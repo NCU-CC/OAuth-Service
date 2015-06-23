@@ -1,15 +1,14 @@
 package tw.edu.ncu.cc.oauth.resource.core
 
-import tw.edu.ncu.cc.oauth.data.v1.management.token.AccessTokenObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
-
+import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenObject
 
 class ApiCredentialHolder {
 
-    private static Map< String, ApiTokenObject > apiTokenMap = new Hashtable<>()
-    private static Map< String, AccessTokenObject > accessTokenMap = new Hashtable<>()
+    private static Map< String, ApiTokenClientObject > apiTokenMap = new Hashtable<>()
+    private static Map< String, TokenObject > accessTokenMap = new Hashtable<>()
 
-    static void addApiToken( String token, ApiTokenObject apiToken ) {
+    static void addApiToken( String token, ApiTokenClientObject apiToken ) {
         apiTokenMap.put( token, apiToken )
     }
 
@@ -21,11 +20,11 @@ class ApiCredentialHolder {
         apiTokenMap.containsKey( token )
     }
 
-    static ApiTokenObject getApiToken( String token ) {
+    static ApiTokenClientObject getApiToken( String token ) {
         apiTokenMap.get( token )
     }
 
-    static void addAccessToken( String token,AccessTokenObject accessToken ) {
+    static void addAccessToken( String token,TokenObject accessToken ) {
         accessTokenMap.put( token, accessToken )
     }
 
@@ -37,7 +36,7 @@ class ApiCredentialHolder {
         accessTokenMap.containsKey( token )
     }
 
-    static AccessTokenObject getAccessToken( String token ) {
+    static TokenObject getAccessToken( String token ) {
         accessTokenMap.get( token )
     }
 
