@@ -80,7 +80,7 @@ class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    List< Client > findByDTO( ClientIdObject dto ) {
+    List< Client > findByDataObject( ClientIdObject dto ) {
         clientRepository.findAll( new Specification<Client>() {
             @Override
             public Predicate toPredicate( Root<Client> root, CriteriaQuery<?> query, CriteriaBuilder cb ) {

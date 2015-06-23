@@ -15,5 +15,5 @@ interface ClientService {
     Client findUndeletedBySerialId( String id, Attribute... attributes )
     boolean isCredentialValid( String serialId, String secret )
 
-    List< Client > findByDTO( ClientIdObject dto )
+    List< Client > findByDataObject( ClientIdObject dto )
 }

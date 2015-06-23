@@ -24,7 +24,7 @@ class ClientSearch extends BasicOperation {
 
         streams {
             notNullStream {
-                clientService.findByDTO( dto )
+                clientService.findByDataObject( dto )
             }
         }
     }

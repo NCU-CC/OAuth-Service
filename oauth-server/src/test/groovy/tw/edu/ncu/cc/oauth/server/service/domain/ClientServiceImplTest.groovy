@@ -81,7 +81,7 @@ class ClientServiceImplTest extends SpringSpecification {
                     deleted: false
             )
         when:
-            def results = clientService.findByDTO( dto )
+            def results = clientService.findByDataObject( dto )
         then:
             results.size() == 1
             results[0].name == client.name
@@ -102,7 +102,7 @@ class ClientServiceImplTest extends SpringSpecification {
             )
 
         when:
-            def results = clientService.findByDTO(dto)
+            def results = clientService.findByDataObject(dto)
         then:
             results.size() == 1
             results[0].name == createdClient.name
@@ -125,7 +125,7 @@ class ClientServiceImplTest extends SpringSpecification {
             )
 
         when:
-            def results = clientService.findByDTO( dto )
+            def results = clientService.findByDataObject( dto )
         then:
             results.isEmpty()
     }
