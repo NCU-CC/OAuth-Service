@@ -19,7 +19,7 @@ class ClientSearch extends BasicOperation {
                 id : params.id as String,
                 name : params.name as String,
                 owner : params.owner as String,
-                isDeleted : params.isDeleted as Boolean
+                deleted: params.deleted as Boolean
         )
 
         streams {

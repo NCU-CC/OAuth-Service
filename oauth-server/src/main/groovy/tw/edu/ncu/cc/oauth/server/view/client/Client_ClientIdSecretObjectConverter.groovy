@@ -23,6 +23,7 @@ class Client_ClientIdSecretObjectConverter implements Converter< Client, ClientI
         secretIdClientObject.owner = source.owner.name
         secretIdClientObject.url = source.url
         secretIdClientObject.callback = source.callback
+        secretIdClientObject.deleted = source.deleted
         return secretIdClientObject
     }
 

@@ -22,6 +22,7 @@ class Client_ClientIdObjectConverter implements Converter< Client, ClientIdObjec
         idClientObject.owner = source.owner.name
         idClientObject.url = source.url
         idClientObject.callback = source.callback
+        idClientObject.deleted = source.deleted
         return idClientObject
     }
 

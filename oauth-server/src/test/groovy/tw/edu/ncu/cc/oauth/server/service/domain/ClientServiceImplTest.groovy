@@ -78,7 +78,7 @@ class ClientServiceImplTest extends SpringSpecification {
 
             def dto = new ClientIdObject(
                     name : client.name.substring( client.name.length() - 1 ),
-                    isDeleted : false
+                    deleted: false
             )
         when:
             def results = clientService.findByDTO( dto )
@@ -98,7 +98,7 @@ class ClientServiceImplTest extends SpringSpecification {
                     name : createdClient.name.substring( createdClient.name.length() - 1 ),
                     id : createdClient.id,
                     owner : createdClient.owner.name,
-                    isDeleted : false
+                    deleted: false
             )
 
         when:

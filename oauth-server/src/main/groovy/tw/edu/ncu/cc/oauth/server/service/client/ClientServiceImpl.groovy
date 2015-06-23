@@ -102,7 +102,7 @@ class ClientServiceImpl implements ClientService {
                     }
                 }
 
-                predicates.add( cb.equal( root.get( Client_.deleted ), dto.isDeleted ) )
+                predicates.add( cb.equal( root.get( Client_.deleted ), dto.deleted ) )
 
                 cb.and( predicates as Predicate[] )
             }

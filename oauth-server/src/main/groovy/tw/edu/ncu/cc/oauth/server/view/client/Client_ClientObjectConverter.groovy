@@ -16,6 +16,7 @@ class Client_ClientObjectConverter implements Converter< Client, ClientObject >{
         clientObject.owner = source.owner.name
         clientObject.url = source.url
         clientObject.callback = source.callback
+        clientObject.deleted = source.deleted
         return clientObject
     }
 

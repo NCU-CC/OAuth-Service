@@ -187,7 +187,7 @@ class ClientControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get(targetURL + "?name=${clientObject.name}&owner=${clientObject.owner}&isDeleted=false" )
+                            get(targetURL + "?name=${clientObject.name}&owner=${clientObject.owner}&deleted=false" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()

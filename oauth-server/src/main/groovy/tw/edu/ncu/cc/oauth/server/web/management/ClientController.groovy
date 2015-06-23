@@ -32,19 +32,19 @@ public class ClientController {
 
     /**
      * ·j´Mclients
-     * <code>/clients?name={clientName}&id={clientId}&owner={portalId}&isDeleted={true or false}</code>
+     * <code>/clients?name={clientName}&id={clientId}&owner={portalId}&deleted={true or false}</code>
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET)
-    def search(@RequestParam(value = "id", required = false) String id,
-                                 @RequestParam(value = "name", required = false) String name,
-                                 @RequestParam(value = "owner", required = false) String owner,
-                                 @RequestParam(value = "isDeleted", defaultValue = "false") Boolean isDeleted) {
+    @RequestMapping( method = RequestMethod.GET )
+    def search( @RequestParam( value = "id", required = false ) String id,
+                @RequestParam( value = "name", required = false ) String name,
+                @RequestParam( value = "owner", required = false ) String owner,
+                @RequestParam( value = "deleted", defaultValue = "false" ) Boolean deleted ) {
 
-        def resource = clientOperations.search.process( id: id, name: name, owner: owner, isDeleted: isDeleted )
+        def resource = clientOperations.search.process( id: id, name: name, owner: owner, deleted: deleted )
 
         conversionService.convert(
-                resource as List< Client >,
+                resource as List<Client>,
                 TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( Client.class ) ),
                 TypeDescriptor.array( TypeDescriptor.valueOf( ClientObject.class ) )
         )
