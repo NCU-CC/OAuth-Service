@@ -2,21 +2,15 @@ package tw.edu.ncu.cc.oauth.server.service.client
 
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdObject
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.client.ClientSpecifications
-import tw.edu.ncu.cc.oauth.server.model.client.Client_
 import tw.edu.ncu.cc.oauth.server.repository.model.ClientRepository
 import tw.edu.ncu.cc.oauth.server.service.security.SecretService
 import tw.edu.ncu.cc.oauth.server.service.user.UserService
 
-import javax.persistence.criteria.CriteriaBuilder
-import javax.persistence.criteria.CriteriaQuery
-import javax.persistence.criteria.Predicate
-import javax.persistence.criteria.Root
 import javax.persistence.metamodel.Attribute
 
 import static org.springframework.data.jpa.domain.Specifications.where
@@ -60,7 +54,7 @@ class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    Client findUndeletedBySerialId( String serialId, Attribute... attributes = [ ] ) {
+    Client findUndeletedBySerialId( String serialId, Attribute... attributes = [] ) {
         long id = secretService.decodeHashId( serialId )
         clientRepository.findOne(
                 where( ClientSpecifications.idEquals( id as Integer ) )
@@ -80,32 +74,16 @@ class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    List< Client > findByDataObject( ClientIdObject dto ) {
-        clientRepository.findAll( new Specification<Client>() {
-            @Override
-            public Predicate toPredicate( Root<Client> root, CriteriaQuery<?> query, CriteriaBuilder cb ) {
-
-                def predicates = [ ]
-
-                if ( !StringUtils.isEmpty( dto.id ) ) {
-                    predicates.add( cb.equal( root.get( "id" ), dto.id as Integer ) )
-                }
-
-                if ( !StringUtils.isEmpty( dto.name ) ) {
-                    predicates.add( cb.like( root.get( Client_.name ), "%${ dto.name }%" ) )
-                }
-
-                if ( !StringUtils.isEmpty( dto.owner ) ) {
-                    def user = userService.findByName( dto.owner )
-                    if ( user != null ) {
-                        predicates.add( cb.equal( root.get( Client_.owner ), user ) )
-                    }
-                }
-
-                predicates.add( cb.equal( root.get( Client_.deleted ), dto.deleted ) )
-
-                cb.and( predicates as Predicate[] )
-            }
-        } )
+    List< Client > findAllByDataObject( ClientIdObject clientObject, Attribute... attributes = [] ) {
+        clientRepository.findAll(
+                where( ClientSpecifications.attributes(
+                        clientObject.id,
+                        clientObject.name,
+                        StringUtils.isEmpty( clientObject.owner ) ? null : userService.findByName( clientObject.owner ),
+                        clientObject.deleted
+                ) )
+                .and( ClientSpecifications.include( attributes ) )
+        )
     }
+
 }
