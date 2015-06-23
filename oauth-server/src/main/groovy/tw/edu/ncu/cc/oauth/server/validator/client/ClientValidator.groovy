@@ -14,9 +14,9 @@ public class ClientValidator implements Validator {
 
     @Override
     public void validate( Object target, Errors errors ) {
-		ValidationUtils.rejectIfEmpty(errors, "name", "name.necessary", "name is necessary")
-		ValidationUtils.rejectIfEmpty(errors, "callback", "callback.necessary", "callback is necessary")
-		ValidationUtils.rejectIfEmpty(errors, "owner", "owner.necessary", "owner is necessary")
+        ValidationUtils.rejectIfEmpty( errors, "name", "name.necessary", "name is necessary" )
+        ValidationUtils.rejectIfEmpty( errors, "callback", "callback.necessary", "callback is necessary" )
+        ValidationUtils.rejectIfEmpty( errors, "owner", "owner.necessary", "owner is necessary" )
     }
 
 }
