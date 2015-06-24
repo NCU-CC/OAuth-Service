@@ -3,6 +3,8 @@ package tw.edu.ncu.cc.oauth.server.operation.oauth
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.helper.OAuthURLBuilder
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
@@ -41,6 +43,7 @@ class OauthAccessAgree extends BasicOperation {
     }
 
     @Override
+    @Transactional( isolation = Isolation.SERIALIZABLE )
     protected handle( Map params, Map model ) {
 
         Client client = params.client as Client
