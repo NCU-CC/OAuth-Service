@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import specification.SpringSpecification
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdObject
+import tw.edu.ncu.cc.oauth.server.model.client.Client_
 import tw.edu.ncu.cc.oauth.server.service.client.ClientService
 
 class ClientServiceImplTest extends SpringSpecification {
@@ -129,6 +130,23 @@ class ClientServiceImplTest extends SpringSpecification {
             def results = clientService.findAllByDataObject( dto )
         then:
             results.isEmpty()
+    }
+
+    @Transactional
+    def "it can revoke all tokens of client"() {
+        given:
+            def client = get_client( 1 )
+        when:
+            clientService.revokeTokens( client )
+        and:
+            def managedClient = clientService.findUndeletedBySerialId(
+                    serialId( client.id ), Client_.apiTokens, Client_.accessTokens , Client_.codes, Client_.refreshTokens
+            )
+        then:
+            managedClient.accessTokens.size() == 0
+            managedClient.apiTokens.size() == 0
+            managedClient.codes.size() == 0
+            managedClient.refreshTokens.size() == 0
     }
 
 }

@@ -13,7 +13,7 @@ class ManagerIndex extends BasicOperation {
     def ManagerService managerService
 
     public ManagerIndex() {
-        assertHasText( 'page' )
+        assertNotNull( 'page' )
     }
 
     @Override

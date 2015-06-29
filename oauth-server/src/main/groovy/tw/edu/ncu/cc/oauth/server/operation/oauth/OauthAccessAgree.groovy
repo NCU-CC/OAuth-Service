@@ -1,8 +1,12 @@
 package tw.edu.ncu.cc.oauth.server.operation.oauth
 
+import org.apache.oltu.oauth2.common.error.OAuthError
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
+import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder
 import tw.edu.ncu.cc.oauth.server.helper.OAuthURLBuilder
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
@@ -11,6 +15,7 @@ import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.permission.Permission
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
 import tw.edu.ncu.cc.oauth.server.service.authorizationCode.AuthorizationCodeService
+import tw.edu.ncu.cc.oauth.server.service.clientRestricted.ClientRestrictedService
 import tw.edu.ncu.cc.oauth.server.service.log.LogService
 import tw.edu.ncu.cc.oauth.server.service.permission.PermissionService
 import tw.edu.ncu.cc.oauth.server.service.user.UserService
@@ -30,6 +35,9 @@ class OauthAccessAgree extends BasicOperation {
     @Autowired
     def AuthorizationCodeService authorizationCodeService
 
+    @Autowired
+    def ClientRestrictedService clientRestrictedService
+
     @Value( '${custom.oauth.authCode.expire-seconds}' )
     def long authorizationCodeExpireSeconds
 
@@ -41,6 +49,7 @@ class OauthAccessAgree extends BasicOperation {
     }
 
     @Override
+    @Transactional( isolation = Isolation.SERIALIZABLE )
     protected handle( Map params, Map model ) {
 
         Client client = params.client as Client
@@ -53,6 +62,14 @@ class OauthAccessAgree extends BasicOperation {
                 "USER:" + username,
                 "CLIENT:" + client.id
         )
+
+        if( clientRestrictedService.isClientRestricted( client ) ) {
+            throw OAuthProblemBuilder
+                    .error( OAuthError.CodeResponse.INVALID_REQUEST )
+                    .description( "CLIENT NOT EXIST" )
+                    .state( state )
+                    .build();
+        }
 
         Date expireDate = TimeBuilder
                 .now()

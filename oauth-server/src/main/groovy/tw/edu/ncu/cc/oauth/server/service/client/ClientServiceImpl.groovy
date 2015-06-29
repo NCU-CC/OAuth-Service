@@ -3,6 +3,7 @@ package tw.edu.ncu.cc.oauth.server.service.client
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.StringUtils
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdObject
 import tw.edu.ncu.cc.oauth.server.model.client.Client
@@ -51,6 +52,15 @@ class ClientServiceImpl implements ClientService {
     Client delete( Client client ) {
         client.deleted = true
         clientRepository.save( client )
+    }
+
+    @Override
+    @Transactional
+    void revokeTokens( Client client ) {
+        clientRepository.revokeAuthorizationCodes( client )
+        clientRepository.revokeAccessTokens( client )
+        clientRepository.revokeApiTokens( client )
+        clientRepository.revokeRefreshTokens( client )
     }
 
     @Override

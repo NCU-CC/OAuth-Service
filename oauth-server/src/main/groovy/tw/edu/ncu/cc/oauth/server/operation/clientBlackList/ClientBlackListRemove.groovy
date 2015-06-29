@@ -1,20 +1,25 @@
-package tw.edu.ncu.cc.oauth.server.operation.client
+package tw.edu.ncu.cc.oauth.server.operation.clientBlackList
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.model.client.Client
+import tw.edu.ncu.cc.oauth.server.model.clientRestricted.ClientRestricted
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
 import tw.edu.ncu.cc.oauth.server.service.client.ClientService
+import tw.edu.ncu.cc.oauth.server.service.clientRestricted.ClientRestrictedService
 
 @Component
-class ClientDelete extends BasicOperation {
+class ClientBlackListRemove extends BasicOperation {
 
     @Autowired
     def ClientService clientService
 
-    public ClientDelete() {
+    @Autowired
+    def ClientRestrictedService clientRestrictedService
+
+    public ClientBlackListRemove() {
         assertHasText( 'serialId' )
     }
 
@@ -26,7 +31,10 @@ class ClientDelete extends BasicOperation {
                 clientService.findUndeletedBySerialId( params.serialId as String )
             }
             notNullStream { Client client ->
-                clientService.delete( client )
+                clientRestrictedService.findByClient( client )
+            }
+            notNullStream { ClientRestricted clientRestricted ->
+                clientRestrictedService.delete( clientRestricted )
             }
         }
     }

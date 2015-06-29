@@ -13,6 +13,7 @@ import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
 import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken_
 import tw.edu.ncu.cc.oauth.server.service.accessToken.AccessTokenService
 import tw.edu.ncu.cc.oauth.server.service.client.ClientService
+import tw.edu.ncu.cc.oauth.server.service.clientRestricted.ClientRestrictedService
 import tw.edu.ncu.cc.oauth.server.service.log.LogService
 import tw.edu.ncu.cc.oauth.server.service.refreshToken.RefreshTokenService
 
@@ -32,6 +33,9 @@ class RefreshTokenExchangeService implements TokenExchangeService {
 
     @Autowired
     def AccessTokenService accessTokenService;
+
+    @Autowired
+    def ClientRestrictedService clientRestrictedService
 
     @Override
     String buildResonseMessage( OAuthTokenRequest request, long expireSeconds ) throws OAuthProblemException, OAuthSystemException {
@@ -55,7 +59,9 @@ class RefreshTokenExchangeService implements TokenExchangeService {
                 "REFRESHTOKEN[10]:" + StringHelper.first( refreshToken, 10 )
         )
 
-        if ( ! clientService.isCredentialValid( clientID, clientSecret ) ) {
+        def client = clientService.findUndeletedBySerialId( clientID )
+
+        if ( ! clientService.isCredentialValid( clientID, clientSecret ) || clientRestrictedService.isClientRestricted( client ) ) {
             throw OAuthProblemException.error(
                     OAuthError.TokenResponse.INVALID_CLIENT, "INVALID CLIENT"
             );

@@ -50,6 +50,16 @@ CREATE TABLE IF NOT EXISTS client
   owner_id INT NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS client_restricted
+(
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  version INT DEFAULT 0,
+  date_created DATETIME,
+  last_updated DATETIME,
+  client_id INT NOT NULL,
+  reason VARCHAR(255)
+);
+
 CREATE TABLE IF NOT EXISTS api_token
 (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,

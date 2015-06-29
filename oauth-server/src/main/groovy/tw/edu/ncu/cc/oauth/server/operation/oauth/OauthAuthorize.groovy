@@ -6,11 +6,14 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Isolation
+import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.permission.Permission
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
 import tw.edu.ncu.cc.oauth.server.service.client.ClientService
+import tw.edu.ncu.cc.oauth.server.service.clientRestricted.ClientRestrictedService
 import tw.edu.ncu.cc.oauth.server.service.log.LogService
 import tw.edu.ncu.cc.oauth.server.service.permission.PermissionService
 
@@ -21,10 +24,13 @@ class OauthAuthorize extends BasicOperation {
     def LogService logService
 
     @Autowired
-    def ClientService clientService;
+    def ClientService clientService
 
     @Autowired
     def PermissionService permissionService
+
+    @Autowired
+    def ClientRestrictedService clientRestrictedService
 
     public OauthAuthorize() {
         assertNotNull( 'oauthRequest' )
@@ -33,6 +39,7 @@ class OauthAuthorize extends BasicOperation {
     }
 
     @Override
+    @Transactional( isolation = Isolation.SERIALIZABLE )
     protected handle( Map params, Map model ) {
 
         OAuthAuthzRequest oauthRequest = params.oauthRequest as OAuthAuthzRequest
@@ -62,7 +69,7 @@ class OauthAuthorize extends BasicOperation {
         String clientID    = oauthRequest.getClientId();
 
         Client client = clientService.findUndeletedBySerialId( clientID )
-        if( client == null ) {
+        if( client == null || clientRestrictedService.isClientRestricted( client ) ) {
             throw OAuthProblemBuilder
                     .error( OAuthError.CodeResponse.INVALID_REQUEST )
                     .description( "CLIENT NOT EXIST" )

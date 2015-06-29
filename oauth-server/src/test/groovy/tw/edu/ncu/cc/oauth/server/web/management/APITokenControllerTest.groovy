@@ -31,6 +31,16 @@ class APITokenControllerTest extends IntegrationSpecification {
     }
 
     @Transactional
+    def "user cannot create api token if providing client is in blacklist"() {
+        expect:
+            server().perform(
+                    post( targetURL + "?client_id=" + serialId( 2 ) )
+            ).andExpect(
+                    status().isNotFound()
+            ).andReturn()
+    }
+
+    @Transactional
     def "user can get api token info by token"() {
         given:
             def apiToken = a_apiToken()
