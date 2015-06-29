@@ -29,6 +29,9 @@ trait DomainTestData {
     @Autowired
     def RoleRepository Roles
 
+    @Autowired
+    def ClientRestrcitedRepository ClientRestrciteds
+
     public static Date laterTime() {
         return new Date( System.currentTimeMillis() + 1000000 )
     }

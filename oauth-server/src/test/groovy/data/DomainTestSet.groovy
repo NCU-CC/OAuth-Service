@@ -9,5 +9,6 @@ trait DomainTestSet implements
         PermissionTestData,
         RefreshTokenTestData,
         RoleTestData,
-        ManagerTestData {
+        ManagerTestData,
+        ClientRestrictedTestData {
 }

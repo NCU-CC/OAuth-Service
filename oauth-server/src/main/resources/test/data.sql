@@ -15,6 +15,9 @@ INSERT INTO client ( id, name, encrypted_secret, url, callback, description, own
   ( 3, 'APP3', '0bd2173ec356a389a96fe1527af2ca0441c4f22ebea08bb545cda0abbf1e8a58', 'http://example.com', 'http://example.com', '3333', 2 );
 -- SECRET
 
+INSERT INTO client_restricted ( id, client_id, reason ) VALUES
+  ( 1, 2, 'reason1' );
+
 INSERT INTO api_token ( id, encrypted_token, date_created, last_updated, date_expired,  client_id ) VALUES
   ( 1, 'TOKEN1', '2050-12-25', '2050-12-25', '2100-12-25', 1 ),
   ( 2, 'TOKEN2', '2050-12-25', '2050-12-25', '2000-12-25', 2 ),
