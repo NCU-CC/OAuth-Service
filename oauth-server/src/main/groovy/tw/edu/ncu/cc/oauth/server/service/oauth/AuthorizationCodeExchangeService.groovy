@@ -16,6 +16,7 @@ import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken
 import tw.edu.ncu.cc.oauth.server.service.accessToken.AccessTokenService
 import tw.edu.ncu.cc.oauth.server.service.authorizationCode.AuthorizationCodeService
 import tw.edu.ncu.cc.oauth.server.service.client.ClientService
+import tw.edu.ncu.cc.oauth.server.service.clientRestricted.ClientRestrictedService
 import tw.edu.ncu.cc.oauth.server.service.log.LogService
 import tw.edu.ncu.cc.oauth.server.service.refreshToken.RefreshTokenService
 
@@ -38,6 +39,9 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
 
     @Autowired
     def AuthorizationCodeService authCodeService
+
+    @Autowired
+    def ClientRestrictedService clientRestrictedService
 
     @Override
     @Transactional
@@ -63,7 +67,9 @@ class AuthorizationCodeExchangeService implements TokenExchangeService {
                 "CODE[10]:" + StringHelper.first( authCode, 10 )
         )
 
-        if ( ! clientService.isCredentialValid( clientID, clientSecret ) ) {
+        def client = clientService.findUndeletedBySerialId( clientID )
+
+        if ( ! clientService.isCredentialValid( clientID, clientSecret ) || clientRestrictedService.isClientRestricted( client ) ) {
             throw OAuthProblemException.error(
                     OAuthError.TokenResponse.INVALID_CLIENT, "INVALID CLIENT"
             )

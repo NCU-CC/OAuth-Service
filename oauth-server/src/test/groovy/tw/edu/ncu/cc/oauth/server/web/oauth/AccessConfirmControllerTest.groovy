@@ -61,6 +61,26 @@ class AccessConfirmControllerTest extends IntegrationSpecification {
             )
     }
 
+    @Transactional
+    def "it should return 400 if user agree but client is already restricted"() {
+        given:
+            def state = "abc123"
+            def scope = [ get_permission( 1 ) ]
+            def client = get_client( 2 )
+        expect:
+            server().perform(
+                    post( targetURL )
+                            .sessionAttr( "state", state )
+                            .sessionAttr( "scope", scope )
+                            .sessionAttr( "client", client )
+                            .with( user( "ADMIN1" ) )
+                            .with( csrf() )
+                            .param( "approval", "true" )
+            ).andExpect(
+                    status().isBadRequest()
+            )
+    }
+
     def "it should return 403 if csrf not correct"() {
         expect:
             server().perform(

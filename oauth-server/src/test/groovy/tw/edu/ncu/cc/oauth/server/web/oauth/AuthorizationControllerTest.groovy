@@ -27,6 +27,20 @@ class AuthorizationControllerTest extends IntegrationSpecification {
             )
     }
 
+    @Transactional
+    def "it should return 400 if params are correct but client is already restricted"() {
+        expect:
+            server().perform(
+                    get( targetURL ).with( user( "testman" ) )
+                            .param( "state", "abc123" )
+                            .param( "scope", "READ" )
+                            .param( "client_id", serialId( 2 ) )
+                            .param( "response_type", "code" )
+            ).andExpect(
+                    status().isBadRequest()
+            )
+    }
+
     def "it should return 302 if user not logged in"() {
         expect:
             server().perform(
