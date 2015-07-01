@@ -3,7 +3,6 @@ package tw.edu.ncu.cc.oauth.server.service.apiToken
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
@@ -31,7 +30,6 @@ class ApiTokenServiceImpl implements ApiTokenService {
     def ApiTokenRepository apiTokenRepository
 
     @Override
-    @Transactional
     ApiToken create( ApiToken apiToken ) {
         String token = secretService.generateToken()
         apiToken.encryptedToken = secretService.encrypt( token )
@@ -57,7 +55,6 @@ class ApiTokenServiceImpl implements ApiTokenService {
     }
 
     @Override
-    @Transactional
     ApiToken findUnexpiredByToken( String token, Attribute...attributes = [] ) {
         SerialSecret serialSecret = secretService.decodeSerialSecret( token )
         ApiToken apiToken = findUnexpiredById( serialSecret.id as String, attributes )

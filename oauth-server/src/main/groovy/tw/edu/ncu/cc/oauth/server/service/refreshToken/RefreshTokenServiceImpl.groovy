@@ -3,7 +3,6 @@ package tw.edu.ncu.cc.oauth.server.service.refreshToken
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
 import tw.edu.ncu.cc.oauth.server.model.client.Client
@@ -32,7 +31,6 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     AccessTokenRepository accessTokenRepository
 
     @Override
-    @Transactional
     RefreshToken createByAccessToken( RefreshToken refreshToken, AccessToken accessToken ) {
         refreshToken.accessToken = accessToken
         refreshToken.client = accessToken.client
@@ -51,7 +49,6 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
 
 
     @Override
-    @Transactional
     RefreshToken revoke( RefreshToken refreshToken ) {
         refreshToken.accessToken.revoke()
         refreshToken.revoke()
