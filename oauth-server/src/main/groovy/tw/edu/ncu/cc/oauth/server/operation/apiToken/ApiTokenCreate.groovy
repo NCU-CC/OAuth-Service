@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiToken
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
+import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.apiToken.ApiTokenService
 import tw.edu.ncu.cc.oauth.server.service.client.ClientService
 import tw.edu.ncu.cc.oauth.server.service.clientRestricted.ClientRestrictedService
@@ -23,8 +24,9 @@ class ApiTokenCreate extends BasicOperation {
     @Autowired
     def ClientRestrictedService clientRestrictedService
 
-    public ApiTokenCreate() {
-        assertHasText( 'clientSerialId' )
+    @Override
+    protected validate( OperationParamValidator validator ) {
+        validator.required().hasText( 'clientSerialId' )
     }
 
     @Override

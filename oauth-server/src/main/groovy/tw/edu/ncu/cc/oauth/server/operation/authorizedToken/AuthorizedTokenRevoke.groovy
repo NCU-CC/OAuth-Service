@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken
 import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken_
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
+import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.refreshToken.RefreshTokenService
 
 @Component
@@ -15,8 +16,9 @@ class AuthorizedTokenRevoke extends BasicOperation {
     @Autowired
     def RefreshTokenService refreshTokenService
 
-    public AuthorizedTokenRevoke() {
-        assertHasText( 'id' )
+    @Override
+    protected validate( OperationParamValidator validator ) {
+        validator.required().hasText( 'id' )
     }
 
     @Override

@@ -14,6 +14,7 @@ import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCode
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.permission.Permission
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
+import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.authorizationCode.AuthorizationCodeService
 import tw.edu.ncu.cc.oauth.server.service.clientRestricted.ClientRestrictedService
 import tw.edu.ncu.cc.oauth.server.service.log.LogService
@@ -41,11 +42,12 @@ class OauthAccessAgree extends BasicOperation {
     @Value( '${custom.oauth.authCode.expire-seconds}' )
     def long authorizationCodeExpireSeconds
 
-
-    public OauthAccessAgree() {
-        assertNotNull( 'scope' )
-        assertNotNull( 'client' )
-        assertHasText( 'username' )
+    @Override
+    protected validate( OperationParamValidator validator ) {
+        validator.required().notNull( 'scope' )
+        validator.required().notNull( 'client' )
+        validator.required().hasText( 'username' )
+        validator.optional().hasText( 'state' )
     }
 
     @Override

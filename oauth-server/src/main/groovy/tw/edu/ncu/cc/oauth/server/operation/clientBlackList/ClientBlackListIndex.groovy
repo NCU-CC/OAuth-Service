@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdObject
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
+import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.clientRestricted.ClientRestrictedService
 
 @Component
@@ -15,9 +16,10 @@ class ClientBlackListIndex extends BasicOperation {
     @Autowired
     def ClientRestrictedService clientRestrictedService
 
-    public ClientBlackListIndex() {
-        assertNotNull( 'page' )
-        assertNotNull( 'clientIdObject' )
+    @Override
+    protected validate( OperationParamValidator validator ) {
+        validator.required().notNull( 'page' )
+        validator.required().notNull( 'clientIdObject' )
     }
 
     @Override

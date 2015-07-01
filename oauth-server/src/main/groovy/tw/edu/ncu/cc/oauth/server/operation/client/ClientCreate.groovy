@@ -8,6 +8,7 @@ import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientObject
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.user.User
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
+import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.client.ClientService
 import tw.edu.ncu.cc.oauth.server.service.user.UserService
 
@@ -20,8 +21,9 @@ class ClientCreate extends BasicOperation {
     @Autowired
     def ClientService clientService
 
-    public ClientCreate() {
-        assertNotNull( 'clientObject' )
+    @Override
+    protected validate( OperationParamValidator validator ) {
+        validator.required().notNull( 'clientObject' )
     }
 
     @Override

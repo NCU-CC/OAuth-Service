@@ -12,6 +12,7 @@ import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.permission.Permission
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
+import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.client.ClientService
 import tw.edu.ncu.cc.oauth.server.service.clientRestricted.ClientRestrictedService
 import tw.edu.ncu.cc.oauth.server.service.log.LogService
@@ -32,10 +33,11 @@ class OauthAuthorize extends BasicOperation {
     @Autowired
     def ClientRestrictedService clientRestrictedService
 
-    public OauthAuthorize() {
-        assertNotNull( 'oauthRequest' )
-        assertNotNull( 'contextPath' )
-        assertHasText( 'username' )
+    @Override
+    protected validate( OperationParamValidator validator ) {
+        validator.required().notNull( 'oauthRequest' )
+        validator.required().notNull( 'contextPath' )
+        validator.required().hasText( 'username' )
     }
 
     @Override

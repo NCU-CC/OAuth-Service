@@ -2,10 +2,6 @@ package tw.edu.ncu.cc.oauth.server.operation
 
 import org.springframework.validation.BindingResult
 import tw.edu.ncu.cc.oauth.server.exception.HttpRequestInvalidBodyException
-import tw.edu.ncu.cc.oauth.server.exception.OperationInvalidParamException
-
-import static org.springframework.util.Assert.hasText
-import static org.springframework.util.Assert.notNull
 
 abstract class BasicOperation extends ResourceHandler {
 
@@ -40,26 +36,12 @@ abstract class BasicOperation extends ResourceHandler {
     }
 
     private void validateParams( Map params ) {
-        try {
-            validations.each { Closure closure ->
-                closure.call( params )
-            }
-        } catch ( IllegalArgumentException e ) {
-            throw new OperationInvalidParamException( e.message )
-        }
+        def validator = new OperationParamValidator()
+        validate( validator )
+        validator.validate( params )
     }
 
-    protected void assertNotNull( key ) {
-        validations << { Map params ->
-            notNull( params[ key ], "param ${key} should not be null" )
-        }
-    }
-
-    protected void assertHasText( key ) {
-        validations << { Map params ->
-            hasText( params[ key ] as String, "param ${key} should not be null or blank" )
-        }
-    }
+    protected def validate( OperationParamValidator validator ){}
 
     protected abstract def handle( Map params, Map model )
 

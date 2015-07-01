@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.helper.data.EditableRequest
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
+import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.oauth.TokenExchangeService
 
 import javax.annotation.Resource
@@ -30,8 +31,9 @@ class OauthExchange extends BasicOperation {
     @Resource( name = "AuthCodeExchangeService" )
     def TokenExchangeService authorizationCodeService
 
-    public OauthExchange() {
-        assertNotNull( 'request' )
+    @Override
+    protected validate( OperationParamValidator validator ) {
+        validator.required().notNull( 'request' )
     }
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.model.user.User
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
+import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.manager.ManagerService
 
 @Component
@@ -14,8 +15,9 @@ class ManagerDelete extends BasicOperation {
     @Autowired
     def ManagerService managerService
 
-    public ManagerDelete() {
-        assertHasText( 'username' )
+    @Override
+    protected validate( OperationParamValidator validator ) {
+        validator.required().hasText( 'username' )
     }
 
     @Override

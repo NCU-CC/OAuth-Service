@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.model.user.User
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
+import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.manager.ManagerService
 import tw.edu.ncu.cc.oauth.server.service.user.UserService
 
@@ -18,8 +19,9 @@ class ManagerCreate extends BasicOperation {
     @Autowired
     def ManagerService managerService
 
-    public ManagerCreate() {
-        assertNotNull( 'managerObject' )
+    @Override
+    protected validate( OperationParamValidator validator ) {
+        validator.required().notNull( 'managerObject' )
     }
 
     @Override

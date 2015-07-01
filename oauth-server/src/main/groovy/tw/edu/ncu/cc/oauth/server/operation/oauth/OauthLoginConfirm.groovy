@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.web.savedrequest.SavedRequest
 import org.springframework.stereotype.Component
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
+import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.security.OpenIdService
 
 import javax.security.auth.login.LoginException
@@ -15,8 +16,9 @@ class OauthLoginConfirm extends BasicOperation {
     @Autowired
     def OpenIdService openIdService
 
-    public OauthLoginConfirm() {
-        assertNotNull( 'request' )
+    @Override
+    protected validate( OperationParamValidator validator ) {
+        validator.required().notNull( 'request' )
     }
 
     @Override
