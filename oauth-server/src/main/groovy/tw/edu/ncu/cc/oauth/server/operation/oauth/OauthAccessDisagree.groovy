@@ -35,7 +35,7 @@ class OauthAccessDisagree extends BasicOperation {
                 "CLIENT:" + client.id
         )
 
-        return OAuthURLBuilder
+        OAuthURLBuilder
                 .url( client.getCallback() )
                 .error( OAuthError.CodeResponse.ACCESS_DENIED )
                 .state( state )

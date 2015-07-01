@@ -5,8 +5,6 @@ import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Isolation
-import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.helper.StringHelper
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
@@ -52,19 +50,20 @@ class OauthExchangeAuthorizationCode extends BasicOperation {
     }
 
     @Override
-    @Transactional( isolation = Isolation.SERIALIZABLE )
     protected handle( Map params, Map model ) {
 
         OAuthTokenRequest request = params.request as OAuthTokenRequest
         long expireSeconds = params.expireSeconds as long
 
+        transaction.executeSerializable {
 
-        validateOauthRequest( request )
+            validateOauthRequest( request )
 
-        AccessToken accessToken   = prepareAccessToken( request, expireSeconds )
-        RefreshToken refreshToken = prepareRefreshToken( accessToken )
+            AccessToken accessToken   = prepareAccessToken( request, expireSeconds )
+            RefreshToken refreshToken = prepareRefreshToken( accessToken )
 
-        return buildResponseMessage( accessToken.getToken(), refreshToken.getToken(), expireSeconds )
+            buildResponseMessage( accessToken.getToken(), refreshToken.getToken(), expireSeconds )
+        }
 
     }
 

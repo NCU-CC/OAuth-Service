@@ -27,13 +27,13 @@ class OauthExchangeRefreshToken extends BasicOperation {
     def LogService logService
 
     @Autowired
-    def ClientService clientService;
+    def ClientService clientService
 
     @Autowired
-    def RefreshTokenService refreshTokenService;
+    def RefreshTokenService refreshTokenService
 
     @Autowired
-    def AccessTokenService accessTokenService;
+    def AccessTokenService accessTokenService
 
     @Autowired
     def ClientRestrictedService clientRestrictedService
@@ -49,18 +49,22 @@ class OauthExchangeRefreshToken extends BasicOperation {
         OAuthTokenRequest request = params.request as OAuthTokenRequest
         long expireSeconds = params.expireSeconds as long
 
-        validateOauthRequest( request );
+        transaction.executeSerializable {
 
-        AccessToken accessToken = prepareAccessToken( request, expireSeconds );
+            validateOauthRequest( request )
 
-        return buildResponseMessage( accessToken.getToken(), expireSeconds );
+            AccessToken accessToken = prepareAccessToken( request, expireSeconds )
+
+            buildResponseMessage( accessToken.getToken(), expireSeconds )
+        }
+
     }
 
     private void validateOauthRequest( OAuthTokenRequest request ) {
 
-        String clientID     = request.getClientId();
-        String clientSecret = request.getClientSecret();
-        String refreshToken = request.getRefreshToken();
+        String clientID     = request.getClientId()
+        String clientSecret = request.getClientSecret()
+        String refreshToken = request.getRefreshToken()
 
         logService.info(
                 "EXCHANGE REFRESHTOKEN",
@@ -73,13 +77,13 @@ class OauthExchangeRefreshToken extends BasicOperation {
         if ( ! clientService.isCredentialValid( clientID, clientSecret ) || clientRestrictedService.isClientRestricted( client ) ) {
             throw OAuthProblemException.error(
                     OAuthError.TokenResponse.INVALID_CLIENT, "INVALID CLIENT"
-            );
+            )
         }
 
         if( ! refreshTokenService.isUnexpiredTokenMatchesClientId( refreshToken , clientID ) ) {
             throw OAuthProblemException.error(
                     OAuthError.TokenResponse.INVALID_GRANT, "INVALID REFRESH TOKEN"
-            );
+            )
         }
     }
 
@@ -107,7 +111,7 @@ class OauthExchangeRefreshToken extends BasicOperation {
                 .setTokenType( "Bearer" )
                 .setExpiresIn( expireSeconds as String )
                 .buildJSONMessage()
-                .getBody();
+                .getBody()
     }
 
 }

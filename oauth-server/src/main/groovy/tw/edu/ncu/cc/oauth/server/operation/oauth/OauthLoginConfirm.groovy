@@ -41,7 +41,9 @@ class OauthLoginConfirm extends BasicOperation {
 
         HttpServletRequest request = params.request as HttpServletRequest
 
-        login( request )
+        transaction.executeSerializable {
+            login( request )
+        }
 
         if( getPreviousRequest( request ) != null ) {
             getPreviousURL( request )

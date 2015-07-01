@@ -6,8 +6,6 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Isolation
-import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.permission.Permission
@@ -41,7 +39,6 @@ class OauthAuthorize extends BasicOperation {
     }
 
     @Override
-    @Transactional( isolation = Isolation.SERIALIZABLE )
     protected handle( Map params, Map model ) {
 
         OAuthAuthzRequest oauthRequest = params.oauthRequest as OAuthAuthzRequest
