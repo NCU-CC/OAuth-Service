@@ -1,11 +1,13 @@
 package tw.edu.ncu.cc.oauth.server.operation
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.BindingResult
 import tw.edu.ncu.cc.oauth.server.exception.HttpRequestInvalidBodyException
 
 abstract class BasicOperation extends ResourceHandler {
 
-    private validations = []
+    @Autowired
+    protected OperationTransaction transaction
 
     public def process() {
         process( null, [:], [:] )
