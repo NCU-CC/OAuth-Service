@@ -4,15 +4,15 @@ import org.apache.oltu.oauth2.as.request.OAuthTokenRequest
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.helper.data.EditableRequest
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
-import tw.edu.ncu.cc.oauth.server.service.oauth.TokenExchangeService
+import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 
-import javax.annotation.Resource
 import javax.servlet.http.HttpServletRequest
 
 import static org.apache.oltu.oauth2.common.message.types.GrantType.AUTHORIZATION_CODE
@@ -24,14 +24,15 @@ class OauthExchange extends BasicOperation {
     @Value( '${custom.oauth.accessToken.expire-seconds}' )
     def long accessTokenExpireSeconds
 
-    @Resource( name = "RefreshTokenExchangeService" )
-    def TokenExchangeService refreshTokenService
+    @Autowired
+    def OauthExchangeRefreshToken exchangeRefreshToken
 
-    @Resource( name = "AuthCodeExchangeService" )
-    def TokenExchangeService authorizationCodeService
+    @Autowired
+    def OauthExchangeAuthorizationCode exchangeAuthorizationCode
 
-    public OauthExchange() {
-        assertNotNull( 'request' )
+    @Override
+    protected validate( OperationParamValidator validator ) {
+        validator.required().notNull( 'request' )
     }
 
     @Override
@@ -51,13 +52,13 @@ class OauthExchange extends BasicOperation {
     private String decideAndBuildMessage( OAuthTokenRequest tokenRequest ) throws OAuthProblemException, OAuthSystemException {
         String grantType = tokenRequest.getGrantType()
 
-        if( grantType ==  AUTHORIZATION_CODE as String  && authorizationCodeService != null ) {
+        if( grantType ==  AUTHORIZATION_CODE as String ) {
 
-            authorizationCodeService.buildResonseMessage( tokenRequest, accessTokenExpireSeconds )
+            exchangeAuthorizationCode.process( request: tokenRequest, expireSeconds: accessTokenExpireSeconds )
 
-        } else if( grantType ==  REFRESH_TOKEN as String && refreshTokenService != null ) {
+        } else if( grantType ==  REFRESH_TOKEN as String ) {
 
-            refreshTokenService.buildResonseMessage( tokenRequest, accessTokenExpireSeconds )
+            exchangeRefreshToken.process( request: tokenRequest, expireSeconds: accessTokenExpireSeconds )
 
         } else {
             throw OAuthProblemException.error(

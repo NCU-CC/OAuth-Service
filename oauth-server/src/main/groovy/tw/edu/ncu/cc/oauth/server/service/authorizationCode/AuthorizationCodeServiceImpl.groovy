@@ -3,7 +3,6 @@ package tw.edu.ncu.cc.oauth.server.service.authorizationCode
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCode
 import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCodeSpecifications
@@ -27,7 +26,6 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     def AuthorizationCodeRepository authorizationCodeRepository
 
     @Override
-    @Transactional
     AuthorizationCode create( AuthorizationCode authorizationCode ) {
         String code = secretService.generateToken()
         authorizationCode.encryptedCode = secretService.encrypt( code )
@@ -37,7 +35,6 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     }
 
     @Override
-    @Transactional
     AuthorizationCode revoke( AuthorizationCode authorizationCode ) {
         authorizationCode.revoke()
         authorizationCodeRepository.save( authorizationCode )

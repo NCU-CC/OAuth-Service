@@ -3,7 +3,6 @@ package tw.edu.ncu.cc.oauth.server.service.accessToken
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
 import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessTokenSpecifications
@@ -37,7 +36,6 @@ class AccessTokenServiceImpl implements AccessTokenService {
     def AuthorizationCodeService authorizationCodeService
 
     @Override
-    @Transactional
     AccessToken create( AccessToken accessToken ) {
         String token = secretService.generateToken()
         accessToken.encryptedToken = secretService.encrypt( token )
@@ -47,7 +45,6 @@ class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
-    @Transactional
     AccessToken createByAuthorizationCode( AccessToken accessToken, AuthorizationCode authorizationCode ) {
         authorizationCodeService.revoke( authorizationCode )
         accessToken.client = authorizationCode.client
@@ -57,7 +54,6 @@ class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
-    @Transactional
     AccessToken createByRefreshToken( AccessToken accessToken, RefreshToken refreshToken ) {
         accessToken.client = refreshToken.client
         accessToken.scope = refreshToken.scope.collect().toSet()
@@ -70,7 +66,6 @@ class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
-    @Transactional
     AccessToken revoke( AccessToken accessToken ) {
         accessToken.revoke()
         accessTokenRepository.save( accessToken )
