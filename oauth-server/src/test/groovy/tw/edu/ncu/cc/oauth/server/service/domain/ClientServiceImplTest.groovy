@@ -97,7 +97,7 @@ class ClientServiceImplTest extends SpringSpecification {
 
             def dto = new ClientIdObject(
                     name : createdClient.name.substring( createdClient.name.length() - 1 ),
-                    id : createdClient.id,
+                    id : serialId( createdClient.id ),
                     owner : createdClient.owner.name,
                     deleted: false
             )
@@ -121,7 +121,7 @@ class ClientServiceImplTest extends SpringSpecification {
 
             def dto = new ClientIdObject(
                     name : createdClient.name.substring( createdClient.name.length() - 1 ),
-                    id : createdClient.id,
+                    id : serialId( createdClient.id ),
                     owner : createdClient.owner.name,
                     deleted: false
             )

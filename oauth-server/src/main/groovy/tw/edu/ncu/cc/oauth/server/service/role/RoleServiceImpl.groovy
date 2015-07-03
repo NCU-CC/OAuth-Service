@@ -1,7 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.service.role
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import tw.edu.ncu.cc.oauth.server.model.role.Role
 import tw.edu.ncu.cc.oauth.server.repository.model.RoleRepository
@@ -13,7 +12,6 @@ class RoleServiceImpl implements RoleService {
     def RoleRepository roleRepository
 
     @Override
-    @Cacheable( value="apiService", key="'RoleName:' + #name" )
     Role findByName( String name ) {
         roleRepository.findByName( name )
     }
