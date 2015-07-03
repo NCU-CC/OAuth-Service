@@ -29,7 +29,7 @@ class ClientSpecifications extends BasicSpecifications< Client > {
                 def predicates = [ ]
 
                 if ( !StringUtils.isEmpty( id ) ) {
-                    predicates.add( cb.equal( root.get( "id" ), id as Integer ) )
+                    predicates.add( cb.equal( root.get( Client_.id ), id as Integer ) )
                 }
 
                 if ( !StringUtils.isEmpty( name ) ) {

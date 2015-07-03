@@ -85,7 +85,7 @@ class ClientServiceImpl implements ClientService {
     List< Client > findAllByDataObject( ClientIdObject clientObject, Attribute... attributes = [] ) {
         clientRepository.findAll(
                 where( ClientSpecifications.attributes(
-                        clientObject.id,
+                        StringUtils.isEmpty( clientObject.id ) ? null : secretService.decodeHashId( clientObject.id ) as String,
                         clientObject.name,
                         StringUtils.isEmpty( clientObject.owner ) ? null : userService.findByName( clientObject.owner ),
                         clientObject.deleted
