@@ -9,7 +9,6 @@ import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
-import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdObject
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientRestrictedIdObject
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientRestrictedObject
 import tw.edu.ncu.cc.oauth.server.model.clientRestricted.ClientRestricted
@@ -40,12 +39,10 @@ public class ClientBlackListController {
                @PageableDefault( size = 20 ) Pageable pageable ) {
 
         def resource = clientBlackListOperations.index.process(
-                clientIdObject: new ClientIdObject(
-                        id: id,
-                        name: name,
-                        owner: owner,
-                        deleted: deleted
-                ),
+                id: id,
+                name: name,
+                owner: owner,
+                deleted: deleted,
                 page: pageable
         )
 

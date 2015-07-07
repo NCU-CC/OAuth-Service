@@ -40,6 +40,20 @@ class ClientBlackListControllerTest extends IntegrationSpecification {
     }
 
     @Transactional
+    def "user can get information of clients in blacklist by client attributes 3"() {
+        when:
+            def response = JSON(
+                    server().perform(
+                            get( targetURL + "?id=&owner=&name=APP2" )
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
+            )
+        then:
+            response.size() != 0
+    }
+
+    @Transactional
     def "user can get client in blacklist information by serial id"() {
         given:
             def clientRestricted = a_clientRestricted()
