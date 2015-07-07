@@ -46,7 +46,7 @@ public class ClientController {
         conversionService.convert(
                 resource as List<Client>,
                 TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( Client.class ) ),
-                TypeDescriptor.array( TypeDescriptor.valueOf( ClientObject.class ) )
+                TypeDescriptor.array( TypeDescriptor.valueOf( ClientIdSecretObject.class ) )
         )
     }
 
