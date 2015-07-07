@@ -176,7 +176,7 @@ class ClientControllerTest extends IntegrationSpecification {
     }
 
     @Transactional
-    def "managers can search clients by name, id and owner name"() {
+    def "managers can search clients by name, id and owner name 1"() {
         given:
             def clientObject = new ClientObject(
                     name:     "app",
@@ -195,6 +195,27 @@ class ClientControllerTest extends IntegrationSpecification {
         then:
             response.size() == 1
             response[0].name == clientObject.name
+    }
+
+    @Transactional
+    def "managers can search clients by name, id and owner name 2"() {
+        given:
+            def clientObject = new ClientObject(
+                    name:     "app",
+                    callback: "http://example.com",
+                    owner:    "ADMIN1"
+            )
+            created_a_client(clientObject)
+        when:
+            def response = JSON(
+                    server().perform(
+                            get(targetURL + "?id=&name=&owner=${clientObject.owner}&deleted=false" )
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
+            )
+        then:
+            response.size() != 0
     }
 
 }

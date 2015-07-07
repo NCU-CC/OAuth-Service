@@ -15,9 +15,9 @@ class ClientSearch extends BasicOperation {
 
     @Override
     protected validate( OperationParamValidator validator ) {
-        validator.optional().hasText( 'id' )
-        validator.optional().hasText( 'name' )
-        validator.optional().hasText( 'owner' )
+        validator.optional().attribute( 'id' )
+        validator.optional().attribute( 'name' )
+        validator.optional().attribute( 'owner' )
         validator.optional().isBoolean( 'deleted' )
     }
 

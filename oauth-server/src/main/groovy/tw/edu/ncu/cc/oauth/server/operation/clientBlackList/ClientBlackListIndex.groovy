@@ -19,7 +19,10 @@ class ClientBlackListIndex extends BasicOperation {
     @Override
     protected validate( OperationParamValidator validator ) {
         validator.required().notNull( 'page' )
-        validator.required().notNull( 'clientIdObject' )
+        validator.optional().attribute( 'id' )
+        validator.optional().attribute( 'name' )
+        validator.optional().attribute( 'owner' )
+        validator.optional().isBoolean( 'deleted' )
     }
 
     @Override
@@ -28,7 +31,12 @@ class ClientBlackListIndex extends BasicOperation {
         streams {
             notNullStream {
                 clientRestrictedService.findAll(
-                        params.clientIdObject as ClientIdObject,
+                        new ClientIdObject(
+                                id:   params.id,
+                                name: params.name,
+                                owner:   params.owner,
+                                deleted: params.deleted
+                        ),
                         params.page as Pageable
                 )
             }
