@@ -7,7 +7,7 @@ import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
-import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdObject
+import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdSecretObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.user.UserIdObject
 import tw.edu.ncu.cc.oauth.data.v1.management.user.UserObject
@@ -79,7 +79,7 @@ public class UserController {
         conversionService.convert(
                 resource as Set< Client >,
                 TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( Client.class ) ),
-                TypeDescriptor.array( TypeDescriptor.valueOf( ClientIdObject.class ) )
+                TypeDescriptor.array( TypeDescriptor.valueOf( ClientIdSecretObject.class ) )
         )
     }
 
