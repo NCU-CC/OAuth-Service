@@ -27,7 +27,7 @@ class ManagerCreate extends BasicOperation {
         String id = params.managerObject.id as String
         transaction.executeSerializable {
             streams {
-                notNullStream {
+                notNullNotFound {
                     User user = userService.findByName( id )
                     if( user == null ) {
                         managerService.create( new User( name: id ) )

@@ -71,10 +71,9 @@ public class ClientController {
     }
 
     @RequestMapping( value = "{id}", method = RequestMethod.PUT )
-    def update( @PathVariable( "id" ) final String clientId,
-                @RequestBody @Validated  final ClientObject clientObject, final BindingResult bindingResult ) {
+    def update( @PathVariable( "id" ) final String clientId, @RequestBody final ClientObject clientObject ) {
 
-        def resource = clientOperations.update.process( bindingResult, [ serialId: clientId, clientObject: clientObject ] )
+        def resource = clientOperations.update.process( serialId: clientId, clientObject: clientObject )
 
         conversionService.convert(
                 resource as Client, ClientIdSecretObject.class

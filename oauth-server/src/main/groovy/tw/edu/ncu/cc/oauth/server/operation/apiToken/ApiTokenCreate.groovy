@@ -31,13 +31,13 @@ class ApiTokenCreate extends BasicOperation {
     protected handle( Map params, Map model ) {
         transaction.executeSerializable {
             streams {
-                notNullStream {
+                notNullNotFound {
                     clientService.findUndeletedBySerialId( params.clientSerialId as String )
                 }
-                notNullStream { Client client ->
+                notNullForbidden { Client client ->
                     clientRestrictedService.isClientRestricted( client ) ? null : client
                 }
-                notNullStream { Client client ->
+                notNullNotFound { Client client ->
                     apiTokenService.create( new ApiToken( client: client ) )
                 }
             }

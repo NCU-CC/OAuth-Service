@@ -36,7 +36,7 @@ class APITokenControllerTest extends IntegrationSpecification {
             server().perform(
                     post( targetURL + "?client_id=" + serialId( 2 ) )
             ).andExpect(
-                    status().isNotFound()
+                    status().isForbidden()
             ).andReturn()
     }
 

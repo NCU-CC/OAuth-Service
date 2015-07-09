@@ -21,7 +21,7 @@ class AuthorizedTokenShow extends BasicOperation {
     @Override
     protected handle( Map params, Map model ) {
         streams {
-            notNullStream {
+            notNullNotFound {
                 refreshTokenService.findUnexpiredById( params.id as String, RefreshToken_.scope )
             }
         }

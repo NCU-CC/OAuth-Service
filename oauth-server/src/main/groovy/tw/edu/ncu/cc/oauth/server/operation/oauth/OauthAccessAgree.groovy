@@ -67,7 +67,7 @@ class OauthAccessAgree extends BasicOperation {
             if( clientRestrictedService.isClientRestricted( client ) ) {
                 throw OAuthProblemBuilder
                         .error( OAuthError.CodeResponse.INVALID_REQUEST )
-                        .description( "CLIENT NOT EXIST" )
+                        .description( "CLIENT IS FORBIDDEN" )
                         .state( state )
                         .build();
             }

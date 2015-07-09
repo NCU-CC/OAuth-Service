@@ -22,7 +22,7 @@ class UserSearch extends BasicOperation {
     protected handle( Map params, Map Model ) {
         String username = params.username as String
         streams {
-            notNullStream {
+            notNullNotFound {
                 if ( StringUtils.isEmpty( username ) ) {
                     return Collections.emptyList()
                 }

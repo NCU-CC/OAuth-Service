@@ -20,7 +20,7 @@ class ApiTokenShow extends BasicOperation {
     @Override
     protected def handle( Map params, Map model ) {
         streams {
-            notNullStream {
+            notNullNotFound {
                 apiTokenService.findUnexpiredByToken( params.token as String )
             }
         }

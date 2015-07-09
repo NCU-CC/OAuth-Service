@@ -23,10 +23,10 @@ class AuthorizedTokenRevoke extends BasicOperation {
     protected handle( Map params, Map model ) {
         transaction.executeSerializable {
             streams {
-                notNullStream {
+                notNullNotFound {
                     refreshTokenService.findUnexpiredById( params.id as String, RefreshToken_.scope )
                 }
-                notNullStream { RefreshToken refreshToken ->
+                notNullNotFound { RefreshToken refreshToken ->
                     refreshTokenService.revoke( refreshToken )
                 }
             }

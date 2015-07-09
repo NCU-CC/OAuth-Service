@@ -29,10 +29,10 @@ class ClientCreate extends BasicOperation {
         ClientObject clientObject = params.clientObject as ClientObject
         transaction.executeSerializable {
             streams {
-                notNullStream {
+                notNullNotFound {
                     userService.findByName( clientObject.owner )
                 }
-                notNullStream { User user ->
+                notNullNotFound { User user ->
                     clientService.create( new Client(
                             name: clientObject.name,
                             description: clientObject.description,

@@ -68,10 +68,18 @@ class OauthAuthorize extends BasicOperation {
         String clientID    = oauthRequest.getClientId();
 
         Client client = clientService.findUndeletedBySerialId( clientID )
-        if( client == null || clientRestrictedService.isClientRestricted( client ) ) {
+        if( client == null ) {
             throw OAuthProblemBuilder
                     .error( OAuthError.CodeResponse.INVALID_REQUEST )
                     .description( "CLIENT NOT EXIST" )
+                    .state( clientState )
+                    .build();
+        }
+
+        if( clientRestrictedService.isClientRestricted( client ) ) {
+            throw OAuthProblemBuilder
+                    .error( OAuthError.CodeResponse.INVALID_REQUEST )
+                    .description( "CLIENT IS FORBIDDEN" )
                     .state( clientState )
                     .build();
         }

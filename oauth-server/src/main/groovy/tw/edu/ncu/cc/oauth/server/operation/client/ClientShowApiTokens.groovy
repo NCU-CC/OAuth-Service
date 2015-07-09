@@ -22,10 +22,10 @@ class ClientShowApiTokens extends BasicOperation {
     @Override
     protected handle( Map params, Map model ) {
         streams {
-            notNullStream {
+            notNullNotFound {
                 clientService.findUndeletedBySerialId( params.serialId as String, Client_.apiTokens )
             }
-            notNullStream { Client client ->
+            notNullNotFound { Client client ->
                 client.apiTokens
             }
         }

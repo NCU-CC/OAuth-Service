@@ -26,10 +26,10 @@ class UserShowAuthorizedTokens extends BasicOperation {
     @Override
     protected handle( Map params, Map Model ) {
         streams {
-            notNullStream {
+            notNullNotFound {
                 userService.findByName( params.username as String )
             }
-            notNullStream { User user ->
+            notNullNotFound { User user ->
                 refreshTokenService.findAllUnexpiredByUser( user, RefreshToken_.scope )
             }
         }
