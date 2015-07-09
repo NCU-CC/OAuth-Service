@@ -28,13 +28,13 @@ class ClientBlackListUpdate extends BasicOperation {
     protected handle( Map params, Map model ) {
         transaction.executeSerializable {
             streams {
-                notNullStream {
+                notNullNotFound {
                     clientService.findUndeletedBySerialId( params.serialId as String )
                 }
-                notNullStream { Client client ->
+                notNullNotFound { Client client ->
                     clientRestrictedService.findByClient( client )
                 }
-                notNullStream { ClientRestricted clientRestricted ->
+                notNullNotFound { ClientRestricted clientRestricted ->
                     clientRestricted.reason = params.reason as String
                     clientRestrictedService.update( clientRestricted )
                 }

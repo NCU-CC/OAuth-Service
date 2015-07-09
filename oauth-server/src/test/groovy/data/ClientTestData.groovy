@@ -13,6 +13,19 @@ trait ClientTestData extends DomainTestData {
         secretService.encodeHashId( id )
     }
 
+    Client restricted_client() {
+        new Client(
+                id: 2,
+                name: "APP2",
+                encryptedSecret: "SECRET",
+                owner: getUsers().findOne( 2 ),
+                callback: "http://example.com",
+                url: "http://example.com",
+                description: "2222",
+                deleted: false
+        )
+    }
+
     Client new_client(){
         new Client(
                 name: "HelloWorld",

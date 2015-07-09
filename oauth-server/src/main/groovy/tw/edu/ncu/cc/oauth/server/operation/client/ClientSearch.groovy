@@ -32,7 +32,7 @@ class ClientSearch extends BasicOperation {
         )
 
         streams {
-            notNullStream {
+            notNullNotFound {
                 clientService.findAllByDataObject( dto )
             }
         }

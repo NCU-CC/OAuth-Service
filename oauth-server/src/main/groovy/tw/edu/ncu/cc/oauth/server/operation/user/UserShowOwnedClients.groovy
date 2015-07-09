@@ -22,10 +22,10 @@ class UserShowOwnedClients extends BasicOperation {
     @Override
     protected handle( Map params, Map Model ) {
         streams {
-            notNullStream {
+            notNullNotFound {
                 userService.findByName( params.username as String, User_.clients )
             }
-            notNullStream { User user ->
+            notNullNotFound { User user ->
                 user.clients
             }
         }

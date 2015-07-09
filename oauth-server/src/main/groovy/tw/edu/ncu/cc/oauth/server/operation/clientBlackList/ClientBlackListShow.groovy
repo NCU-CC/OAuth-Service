@@ -28,10 +28,10 @@ class ClientBlackListShow extends BasicOperation {
     @Transactional( isolation = Isolation.SERIALIZABLE )
     protected handle( Map params, Map model ) {
         streams {
-            notNullStream {
+            notNullNotFound {
                 clientService.findUndeletedBySerialId( params.serialId as String )
             }
-            notNullStream { Client client ->
+            notNullNotFound { Client client ->
                 clientRestrictedService.findByClient( client )
             }
         }

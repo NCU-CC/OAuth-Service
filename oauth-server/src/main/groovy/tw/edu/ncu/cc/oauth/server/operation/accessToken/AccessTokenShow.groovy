@@ -21,7 +21,7 @@ class AccessTokenShow extends BasicOperation {
     @Override
     protected handle( Map params, Map model ) {
         streams {
-            notNullStream {
+            notNullNotFound {
                 accessTokenService.findUnexpiredByToken( params.token as String, AccessToken_.scope )
             }
         }

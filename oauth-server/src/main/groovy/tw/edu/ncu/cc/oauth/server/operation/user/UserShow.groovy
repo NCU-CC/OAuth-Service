@@ -20,7 +20,7 @@ class UserShow extends BasicOperation {
     @Override
     protected handle( Map params, Map Model ) {
         streams {
-            notNullStream {
+            notNullNotFound {
                 userService.findByName( params.username as String )
             }
         }

@@ -22,10 +22,10 @@ class ManagerDelete extends BasicOperation {
     protected handle( Map params, Map model ) {
         transaction.executeSerializable {
             streams {
-                notNullStream {
+                notNullNotFound {
                     managerService.findByName( params.username as String )
                 }
-                notNullStream { User user ->
+                notNullNotFound { User user ->
                     managerService.delete( user )
                 }
             }

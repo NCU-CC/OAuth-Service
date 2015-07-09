@@ -21,7 +21,7 @@ class ManagerIndex extends BasicOperation {
     @Override
     protected handle( Map params, Map model ) {
         streams {
-            notNullStream {
+            notNullNotFound {
                 managerService.findAllManagers( params.page as Pageable )
             }
         }

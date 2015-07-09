@@ -29,7 +29,7 @@ class ClientBlackListIndex extends BasicOperation {
     @Transactional( isolation = Isolation.SERIALIZABLE )
     protected handle( Map params, Map model ) {
         streams {
-            notNullStream {
+            notNullNotFound {
                 clientRestrictedService.findAll(
                         new ClientIdObject(
                                 id:   params.id,

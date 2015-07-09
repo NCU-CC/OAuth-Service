@@ -20,7 +20,7 @@ class ManagerShow extends BasicOperation {
     @Override
     protected handle( Map params, Map model ) {
         streams {
-            notNullStream {
+            notNullNotFound {
                 managerService.findByName( params.username as String )
             }
         }

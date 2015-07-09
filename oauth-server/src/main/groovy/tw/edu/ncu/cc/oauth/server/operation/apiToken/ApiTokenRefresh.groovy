@@ -22,10 +22,10 @@ class ApiTokenRefresh extends BasicOperation {
     protected handle( Map params, Map model ) {
         transaction.executeSerializable {
             streams {
-                notNullStream {
+                notNullNotFound {
                     apiTokenService.findUnexpiredById( params.id as String )
                 }
-                notNullStream { ApiToken apiToken ->
+                notNullNotFound { ApiToken apiToken ->
                     apiTokenService.refreshToken( apiToken )
                 }
             }

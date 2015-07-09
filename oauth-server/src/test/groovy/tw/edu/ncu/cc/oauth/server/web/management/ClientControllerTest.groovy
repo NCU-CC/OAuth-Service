@@ -66,6 +66,27 @@ class ClientControllerTest extends IntegrationSpecification {
     }
 
     @Transactional
+    def "user cannot update client which is restricted"() {
+        given:
+            def restrictedClient = restricted_client()
+        expect:
+            server().perform(
+                    put( targetURL + "/${ serialId( restrictedClient.id ) }" )
+                            .contentType( MediaType.APPLICATION_JSON )
+                            .content(
+                            """
+                                {
+                                  "name" : "not important",
+                                  "callback" : "not important"
+                                }
+                            """
+                    )
+            ).andExpect(
+                    status().isForbidden()
+            )
+    }
+
+    @Transactional
     def "user can delete client by serial id"() {
         given:
             def createdClientObject = created_a_client( new ClientObject(
@@ -84,6 +105,18 @@ class ClientControllerTest extends IntegrationSpecification {
                     get( targetURL + "/${ createdClientObject.id }" )
             ).andExpect(
                     status().isNotFound()
+            )
+    }
+
+    @Transactional
+    def "user cannot delete client which is restricted"() {
+        given:
+            def restrictedClient = restricted_client()
+        expect:
+            server().perform(
+                    delete( targetURL + "/${  serialId( restrictedClient.id ) }" )
+            ).andExpect(
+                    status().isForbidden()
             )
     }
 
@@ -114,6 +147,18 @@ class ClientControllerTest extends IntegrationSpecification {
                     post( targetURL + "/123/refresh_secret" )
             ).andExpect(
                     status().isNotFound()
+            )
+    }
+
+    @Transactional
+    def "user cannot refresh secret which is restricted"() {
+        given:
+            def restrictedClient = restricted_client()
+        expect:
+            server().perform(
+                    post( targetURL + "/${  serialId( restrictedClient.id ) }/refresh_secret" )
+            ).andExpect(
+                    status().isForbidden()
             )
     }
 
