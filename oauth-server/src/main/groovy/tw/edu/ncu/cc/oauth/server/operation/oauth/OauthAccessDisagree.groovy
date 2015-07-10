@@ -19,7 +19,7 @@ class OauthAccessDisagree extends BasicOperation {
     protected validate( OperationParamValidator validator ) {
         validator.required().notNull( 'client' )
         validator.required().hasText( 'username' )
-        validator.optional().hasText( 'state' )
+        validator.optional().attribute( 'state' )
     }
 
     @Override

@@ -45,7 +45,7 @@ class OauthAccessAgree extends BasicOperation {
         validator.required().notNull( 'scope' )
         validator.required().notNull( 'client' )
         validator.required().hasText( 'username' )
-        validator.optional().hasText( 'state' )
+        validator.optional().attribute( 'state' )
     }
 
     @Override

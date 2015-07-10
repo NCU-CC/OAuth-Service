@@ -53,7 +53,7 @@ class OauthAuthorize extends BasicOperation {
 
         validateOauthRequest( oauthRequest )
 
-        model[ 'state' ] = oauthRequest.getState() == null ? null : oauthRequest.getState()
+        model[ 'state' ] = oauthRequest.getState() == null ? "" : oauthRequest.getState()
         model[ 'scope' ] = convertToPermissions( oauthRequest.getScopes() )
         model[ 'client' ] = clientService.findUndeletedBySerialId( oauthRequest.getClientId() )
         model[ 'user_id' ] = username
