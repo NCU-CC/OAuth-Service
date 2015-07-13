@@ -8,7 +8,7 @@ import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdObject
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.clientRestricted.ClientRestricted
 import tw.edu.ncu.cc.oauth.server.model.clientRestricted.ClientRestrictedSpecifications
-import tw.edu.ncu.cc.oauth.server.repository.model.ClientRestrcitedRepository
+import tw.edu.ncu.cc.oauth.server.repository.model.ClientRestrictedRepository
 import tw.edu.ncu.cc.oauth.server.service.client.ClientService
 import tw.edu.ncu.cc.oauth.server.service.security.SecretService
 import tw.edu.ncu.cc.oauth.server.service.user.UserService
@@ -26,7 +26,7 @@ class ClientRestrictedServiceImpl implements ClientRestrictedService {
     def ClientService clientService
 
     @Autowired
-    def ClientRestrcitedRepository clientRestrcitedRepository
+    def ClientRestrictedRepository clientRestrcitedRepository
 
     @Override
     ClientRestricted create( ClientRestricted clientRestricted ) {

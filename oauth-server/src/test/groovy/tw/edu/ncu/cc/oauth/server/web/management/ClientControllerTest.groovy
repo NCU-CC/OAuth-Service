@@ -66,6 +66,32 @@ class ClientControllerTest extends IntegrationSpecification {
     }
 
     @Transactional
+    def "user cannot create client if that user is restricted"() {
+        given:
+            def clientObject = new ClientObject(
+                    name:     "app",
+                    callback: "http://example.com",
+                    owner:    restricted_user().name
+            )
+        expect:
+            server().perform(
+                    post( targetURL )
+                            .contentType( MediaType.APPLICATION_JSON )
+                            .content(
+                            """
+                                {
+                                  "name" :     "${ clientObject.name }",
+                                  "callback" : "${ clientObject.callback }",
+                                  "owner" :    "${ clientObject.owner }"
+                                }
+                            """
+                    )
+            ).andExpect(
+                    status().isForbidden()
+            )
+    }
+
+    @Transactional
     def "user cannot update client which is restricted"() {
         given:
             def restrictedClient = restricted_client()
