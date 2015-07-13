@@ -3,6 +3,9 @@ INSERT INTO user ( id, name ) VALUES
   ( 2, 'ADMIN2' ),
   ( 3, 'ADMIN3' );
 
+  INSERT INTO user_restricted ( id, user_id, reason ) VALUES
+  ( 1, 2, 'reason1' );
+
 INSERT INTO role ( id, name ) VALUES
   ( 1, 'admin' );
 
