@@ -32,17 +32,17 @@ public class ClientBlackListController {
     }
 
     @RequestMapping( method = RequestMethod.GET )
-    def index( @RequestParam( value = "id", required = false ) String id,
-               @RequestParam( value = "name", required = false ) String name,
-               @RequestParam( value = "owner", required = false ) String owner,
-               @RequestParam( value = "deleted", defaultValue = "false" ) Boolean deleted,
+    def index( @RequestParam( value = "client_id", required = false ) String client_id,
+               @RequestParam( value = "client_name", required = false ) String client_name,
+               @RequestParam( value = "client_owner", required = false ) String client_owner,
+               @RequestParam( value = "client_deleted", defaultValue = "false" ) Boolean client_deleted,
                @PageableDefault( size = 20 ) Pageable pageable ) {
 
         def resource = clientBlackListOperations.index.process(
-                id: id,
-                name: name,
-                owner: owner,
-                deleted: deleted,
+                id: client_id,
+                name: client_name,
+                owner: client_owner,
+                deleted: client_deleted,
                 page: pageable
         )
 

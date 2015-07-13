@@ -19,10 +19,10 @@ class ClientBlackListIndex extends BasicOperation {
     @Override
     protected validate( OperationParamValidator validator ) {
         validator.required().notNull( 'page' )
-        validator.optional().attribute( 'id' )
-        validator.optional().attribute( 'name' )
-        validator.optional().attribute( 'owner' )
-        validator.optional().isBoolean( 'deleted' )
+        validator.optional().attribute( 'client_id' )
+        validator.optional().attribute( 'client_name' )
+        validator.optional().attribute( 'client_owner' )
+        validator.optional().isBoolean( 'client_deleted' )
     }
 
     @Override
@@ -32,10 +32,10 @@ class ClientBlackListIndex extends BasicOperation {
             notNullNotFound {
                 clientRestrictedService.findAll(
                         new ClientIdObject(
-                                id:   params.id,
-                                name: params.name,
-                                owner:   params.owner,
-                                deleted: params.deleted
+                                id:   params.client_id,
+                                name: params.client_name,
+                                owner:   params.client_owner,
+                                deleted: params.client_deleted
                         ),
                         params.page as Pageable
                 )
