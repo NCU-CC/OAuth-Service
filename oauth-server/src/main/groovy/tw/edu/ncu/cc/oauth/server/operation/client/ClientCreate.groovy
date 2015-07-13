@@ -9,12 +9,16 @@ import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
 import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.client.ClientService
 import tw.edu.ncu.cc.oauth.server.service.user.UserService
+import tw.edu.ncu.cc.oauth.server.service.userRestricted.UserRestrictedService
 
 @Component
 class ClientCreate extends BasicOperation {
 
     @Autowired
     def UserService userService
+
+    @Autowired
+    def UserRestrictedService userRestrictedService
 
     @Autowired
     def ClientService clientService
@@ -31,6 +35,9 @@ class ClientCreate extends BasicOperation {
             streams {
                 notNullNotFound {
                     userService.findByName( clientObject.owner )
+                }
+                notNullForbidden { User user ->
+                    userRestrictedService.isUserRestricted( user ) ? null : user
                 }
                 notNullNotFound { User user ->
                     clientService.create( new Client(
