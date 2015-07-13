@@ -9,4 +9,12 @@ trait UserTestData extends DomainTestData {
         getUsers().findOne( id )
     }
 
+    User unrestricted_user() {
+        get_user( 1 )
+    }
+
+    User restricted_user() {
+        get_user( 2 )
+    }
+
 }
