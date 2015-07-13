@@ -23,27 +23,27 @@ class ClientRestrictedSpecifications extends BasicSpecifications< ClientRestrict
         }
     }
 
-    static Specification< ClientRestricted > attributes( String id, String name, User owner, Boolean deleted ) {
+    static Specification< ClientRestricted > attributes( String client_id, String client_name, User client_owner, Boolean client_deleted ) {
         return new Specification< ClientRestricted >() {
             @Override
             public Predicate toPredicate( Root< ClientRestricted > root, CriteriaQuery<?> query, CriteriaBuilder cb ) {
 
                 def predicates = [ ]
 
-                if ( ! StringUtils.isEmpty( id ) ) {
-                    predicates.add( cb.equal( root.get( ClientRestricted_.client ).get( Client_.id ), id as Integer ) )
+                if ( ! StringUtils.isEmpty( client_id ) ) {
+                    predicates.add( cb.equal( root.get( ClientRestricted_.client ).get( Client_.id ), client_id as Integer ) )
                 }
 
-                if ( ! StringUtils.isEmpty( name ) ) {
-                    predicates.add( cb.like( root.get( ClientRestricted_.client ).get( Client_.name ), "%${ name }%" ) )
+                if ( ! StringUtils.isEmpty( client_name ) ) {
+                    predicates.add( cb.like( root.get( ClientRestricted_.client ).get( Client_.name ), "%${ client_name }%" ) )
                 }
 
-                if ( owner != null ) {
-                    predicates.add( cb.equal( root.get( ClientRestricted_.client ).get( Client_.owner ), owner ) )
+                if ( client_owner != null ) {
+                    predicates.add( cb.equal( root.get( ClientRestricted_.client ).get( Client_.owner ), client_owner ) )
                 }
 
-                if( deleted != null ) {
-                    predicates.add( cb.equal( root.get( ClientRestricted_.client ).get( Client_.deleted ), deleted ) )
+                if( client_deleted != null ) {
+                    predicates.add( cb.equal( root.get( ClientRestricted_.client ).get( Client_.deleted ), client_deleted ) )
                 }
 
                 cb.and( predicates as Predicate[] )

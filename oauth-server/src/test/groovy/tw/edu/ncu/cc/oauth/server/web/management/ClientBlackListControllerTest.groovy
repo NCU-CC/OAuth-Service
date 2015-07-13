@@ -30,7 +30,7 @@ class ClientBlackListControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "?name=APP2" )
+                            get( targetURL + "?client_name=APP2" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
@@ -44,7 +44,7 @@ class ClientBlackListControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "?id=&owner=&name=APP2" )
+                            get( targetURL + "?client_id=&client_owner=&client_name=APP2" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
