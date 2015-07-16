@@ -12,10 +12,11 @@ public class TokenConfirmServiceImpl implements TokenConfirmService {
 
     def RemoteConfig config;
 
-    private RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate;
 
-    public TokenConfirmServiceImpl( RemoteConfig config ) {
+    public TokenConfirmServiceImpl( RemoteConfig config, RestTemplate restTemplate ) {
         this.config = config
+        this.restTemplate = restTemplate
     }
 
     @Override
