@@ -8,10 +8,16 @@ import org.springframework.boot.context.embedded.FilterRegistrationBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.converter.StringHttpMessageConverter
+import org.springframework.web.client.RestTemplate
 import tw.edu.ncu.cc.oauth.resource.filter.AccessTokenDecisionFilter
 import tw.edu.ncu.cc.oauth.resource.filter.ApiTokenDecisionFilter
+import tw.edu.ncu.cc.oauth.resource.service.BlackListService
+import tw.edu.ncu.cc.oauth.resource.service.BlackListServiceImpl
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmServiceImpl
+
+import java.nio.charset.Charset
 
 
 @Configuration
@@ -23,10 +29,27 @@ class ApiAuthorizationAutoConfigure {
     @Autowired
     RemoteConfig remoteConfig
 
+    @Autowired
+    RestTemplate restTemplate
+
+    @Bean
+    @ConditionalOnMissingBean( RestTemplate )
+    RestTemplate restTemplate(  ) {
+        RestTemplate template = new RestTemplate()
+        template.getMessageConverters().add( 0, new StringHttpMessageConverter( Charset.forName( "UTF-8" ) ) )
+        template
+    }
+
     @Bean
     @ConditionalOnMissingBean( TokenConfirmService )
     TokenConfirmService tokenConfirmService(  ) {
-        new TokenConfirmServiceImpl( remoteConfig )
+        new TokenConfirmServiceImpl( remoteConfig, restTemplate )
+    }
+
+    @Bean
+    @ConditionalOnMissingBean( BlackListService )
+    BlackListService blackListService(  ) {
+        new BlackListServiceImpl( remoteConfig, restTemplate )
     }
 
     @Bean
