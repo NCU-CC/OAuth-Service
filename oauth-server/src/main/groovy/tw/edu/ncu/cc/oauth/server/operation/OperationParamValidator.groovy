@@ -1,6 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.operation
 
-import tw.edu.ncu.cc.oauth.server.exception.OperationInvalidParamException
+import org.springframework.http.HttpStatus
+import org.springframework.web.client.HttpServerErrorException
 
 import static org.springframework.util.Assert.*
 
@@ -77,7 +78,7 @@ class OperationParamValidator {
                 }
             }
         } catch ( IllegalArgumentException e ) {
-            throw new OperationInvalidParamException( e.message )
+            throw new HttpServerErrorException( HttpStatus.BAD_REQUEST, e.message )
         }
     }
 

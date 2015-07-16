@@ -1,8 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.operation
 
-import tw.edu.ncu.cc.oauth.server.exception.ResourceForbiddenException
-import tw.edu.ncu.cc.oauth.server.exception.ResourceNotFoundException
-
+import org.springframework.http.HttpStatus
+import org.springframework.web.client.HttpServerErrorException
 
 class ResourceHandler {
 
@@ -17,19 +16,19 @@ class ResourceHandler {
         }
     }
 
-    protected void notNullNotFound( Closure closure ) {
+    protected void notNullNotFound( String message = "required resource is not found", Closure closure ) {
         def currentResource = closure.call( resource.get() )
         if( currentResource == null ) {
-            throw new ResourceNotFoundException()
+            throw new HttpServerErrorException( HttpStatus.NOT_FOUND, message )
         } else {
             resource.set( currentResource )
         }
     }
 
-    protected void notNullForbidden( Closure closure ) {
+    protected void notNullForbidden( String message = "required resource is forbidden", Closure closure ) {
         def currentResource = closure.call( resource.get() )
         if( currentResource == null ) {
-            throw new ResourceForbiddenException()
+            throw new HttpServerErrorException( HttpStatus.FORBIDDEN, message )
         } else {
             resource.set( currentResource )
         }
