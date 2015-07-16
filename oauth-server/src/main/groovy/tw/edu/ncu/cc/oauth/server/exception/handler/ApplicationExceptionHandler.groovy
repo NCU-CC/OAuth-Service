@@ -8,9 +8,8 @@ import org.springframework.web.HttpMediaTypeNotSupportedException
 import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import tw.edu.ncu.cc.oauth.server.exception.HttpRequestInvalidBodyException
-import tw.edu.ncu.cc.oauth.server.exception.ResourceForbiddenException
-import tw.edu.ncu.cc.oauth.server.exception.ResourceNotFoundException
+import org.springframework.web.client.HttpServerErrorException
+import tw.edu.ncu.cc.oauth.data.v1.message.ErrorObject
 import tw.edu.ncu.cc.oauth.server.service.log.LogService
 
 @ControllerAdvice
@@ -19,59 +18,39 @@ public class ApplicationExceptionHandler {
     @Autowired
     def LogService logService
 
-    @ExceptionHandler( [ ResourceNotFoundException.class ] )
-    def ResponseEntity resourceNotFound() {
+    @ExceptionHandler( HttpServerErrorException )
+    def ResponseEntity httpServerError( HttpServerErrorException e ) {
         new ResponseEntity<>(
-                new tw.edu.ncu.cc.oauth.data.v1.message.Error(
-                        "required resource not exist"
-                ), HttpStatus.NOT_FOUND
-        );
-    }
-
-    @ExceptionHandler( [ ResourceForbiddenException.class ] )
-    def ResponseEntity resourceForbidden() {
-        new ResponseEntity<>(
-                new tw.edu.ncu.cc.oauth.data.v1.message.Error(
-                        "required resource is forbidden"
-                ), HttpStatus.FORBIDDEN
-        );
-    }
-
-    @ExceptionHandler( [ HttpRequestInvalidBodyException ] )
-    def ResponseEntity invalidRequestBodyField( HttpRequestInvalidBodyException e ) {
-        new ResponseEntity<>(
-                new tw.edu.ncu.cc.oauth.data.v1.message.Error(
-                        e.message
-                ), HttpStatus.BAD_REQUEST
-        );
+                new ErrorObject( e.message ), e.statusCode
+        )
     }
 
     @ExceptionHandler( [ HttpMessageNotReadableException, HttpMediaTypeNotSupportedException ] )
     def ResponseEntity invalidRequestBodyFormat() {
-        return new ResponseEntity<>(
-                new tw.edu.ncu.cc.oauth.data.v1.message.Error(
+        new ResponseEntity<>(
+                new ErrorObject(
                         "expect request in json format"
                 ), HttpStatus.BAD_REQUEST
-        );
+        )
     }
 
     @ExceptionHandler( HttpRequestMethodNotSupportedException )
     def ResponseEntity invalidMethod( HttpRequestMethodNotSupportedException e ) {
-        return new ResponseEntity<>(
-                new tw.edu.ncu.cc.oauth.data.v1.message.Error(
-                        ( "method not supported:" + e.method + ", expect:" + Arrays.toString( e.getSupportedMethods()  ) ) as String
+        new ResponseEntity<>(
+                new ErrorObject(
+                        ( "method not supported:" + e.method + ", expect:" + Arrays.toString( e.getSupportedMethods() ) ) as String
                 ), HttpStatus.METHOD_NOT_ALLOWED
-        );
+        )
     }
 
     @ExceptionHandler( Exception )
     def ResponseEntity exceptionHandler( Exception exception ) {
-        logService.error( "UNEXPECTED ERROR:", exception );
+        logService.error( "UNEXPECTED ERROR:", exception )
         return new ResponseEntity<>(
-                new tw.edu.ncu.cc.oauth.data.v1.message.Error(
+                new ErrorObject(
                         exception.message
                 ), HttpStatus.INTERNAL_SERVER_ERROR
-        );
+        )
     }
 
 }

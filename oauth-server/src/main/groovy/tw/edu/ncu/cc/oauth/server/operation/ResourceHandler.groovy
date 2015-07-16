@@ -1,8 +1,7 @@
 package tw.edu.ncu.cc.oauth.server.operation
 
-import tw.edu.ncu.cc.oauth.server.exception.ResourceForbiddenException
-import tw.edu.ncu.cc.oauth.server.exception.ResourceNotFoundException
-
+import org.springframework.http.HttpStatus
+import org.springframework.web.client.HttpServerErrorException
 
 class ResourceHandler {
 
@@ -17,22 +16,30 @@ class ResourceHandler {
         }
     }
 
-    protected void notNullNotFound( Closure closure ) {
+    protected void stream( Closure closure ) {
+        resource.set( closure.call( resource.get() ) )
+    }
+
+    protected void notNullBadRequest( String message = "it is a bad request", Closure closure ) {
+        handleNotNull( closure, new HttpServerErrorException( HttpStatus.BAD_REQUEST, message ) )
+    }
+
+    protected void notNullNotFound( String message = "required resource is not found", Closure closure ) {
+        handleNotNull( closure, new HttpServerErrorException( HttpStatus.NOT_FOUND, message ) )
+    }
+
+    protected void notNullForbidden( String message = "required resource is forbidden", Closure closure ) {
+        handleNotNull( closure, new HttpServerErrorException( HttpStatus.FORBIDDEN, message ) )
+    }
+
+    private void handleNotNull( Closure closure, Throwable throwable ) {
         def currentResource = closure.call( resource.get() )
         if( currentResource == null ) {
-            throw new ResourceNotFoundException()
+            throw throwable
         } else {
             resource.set( currentResource )
         }
     }
 
-    protected void notNullForbidden( Closure closure ) {
-        def currentResource = closure.call( resource.get() )
-        if( currentResource == null ) {
-            throw new ResourceForbiddenException()
-        } else {
-            resource.set( currentResource )
-        }
-    }
 
 }

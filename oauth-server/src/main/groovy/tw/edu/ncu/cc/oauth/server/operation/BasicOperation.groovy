@@ -1,8 +1,9 @@
 package tw.edu.ncu.cc.oauth.server.operation
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.validation.BindingResult
-import tw.edu.ncu.cc.oauth.server.exception.HttpRequestInvalidBodyException
+import org.springframework.web.client.HttpServerErrorException
 
 abstract class BasicOperation extends ResourceHandler {
 
@@ -29,7 +30,8 @@ abstract class BasicOperation extends ResourceHandler {
 
     private static void validateBindingResult( BindingResult bindingResult ) {
         if( bindingResult != null && bindingResult.hasErrors() ) {
-            throw new HttpRequestInvalidBodyException(
+            throw new HttpServerErrorException(
+                    HttpStatus.BAD_REQUEST,
                     bindingResult.fieldErrors.collect {
                         it.defaultMessage
                     }.join( "\n" )

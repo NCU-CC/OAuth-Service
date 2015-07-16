@@ -26,7 +26,7 @@ class AuthorizedTokenRevoke extends BasicOperation {
                 notNullNotFound {
                     refreshTokenService.findUnexpiredById( params.id as String, RefreshToken_.scope )
                 }
-                notNullNotFound { RefreshToken refreshToken ->
+                stream { RefreshToken refreshToken ->
                     refreshTokenService.revoke( refreshToken )
                 }
             }

@@ -101,6 +101,27 @@ class ClientBlackListControllerTest extends IntegrationSpecification {
     }
 
     @Transactional
+    def "user cannot add client which is already restricted to blacklist "() {
+        given:
+            def client = a_clientRestricted().client
+        expect:
+            server().perform(
+                    post( targetURL )
+                            .contentType( MediaType.APPLICATION_JSON )
+                            .content(
+                                """
+                                    {
+                                      "client_id" : "${ serialId( client.id ) }",
+                                      "reason" : "other reason"
+                                    }
+                                """
+                    )
+            ).andExpect(
+                    status().isBadRequest()
+            )
+    }
+
+    @Transactional
     def "user can update client information in blacklist"() {
         given:
             def clientRestricted = a_clientRestricted()

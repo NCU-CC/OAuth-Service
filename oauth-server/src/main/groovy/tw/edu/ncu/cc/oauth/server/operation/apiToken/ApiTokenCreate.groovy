@@ -37,7 +37,7 @@ class ApiTokenCreate extends BasicOperation {
                 notNullForbidden { Client client ->
                     clientRestrictedService.isClientRestricted( client ) ? null : client
                 }
-                notNullNotFound { Client client ->
+                stream { Client client ->
                     apiTokenService.create( new ApiToken( client: client ) )
                 }
             }

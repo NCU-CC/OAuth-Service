@@ -24,7 +24,7 @@ class UserCreateIfNotExist extends BasicOperation {
         UserObject userObject = params.userObject as UserObject
         transaction.executeSerializable {
             streams {
-                notNullNotFound {
+                stream {
                     User user = userService.findByName( userObject.name )
                     if( user == null ) {
                         user = userService.create( new User( name: userObject.name ) )
