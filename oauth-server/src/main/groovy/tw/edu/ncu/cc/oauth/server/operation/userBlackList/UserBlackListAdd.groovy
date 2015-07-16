@@ -34,7 +34,7 @@ class UserBlackListAdd extends BasicOperation {
                 notNullBadRequest( 'it has already been restricted' ) { User user ->
                     userRestrictedService.isUserRestricted( user ) ? null : user
                 }
-                notNullNotFound { User user ->
+                stream { User user ->
                     userRestrictedService.create( new UserRestricted(
                             user: user,
                             reason: params.reason as String

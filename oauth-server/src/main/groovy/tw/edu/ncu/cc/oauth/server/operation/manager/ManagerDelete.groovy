@@ -25,7 +25,7 @@ class ManagerDelete extends BasicOperation {
                 notNullNotFound {
                     managerService.findByName( params.username as String )
                 }
-                notNullNotFound { User user ->
+                stream { User user ->
                     managerService.delete( user )
                 }
             }

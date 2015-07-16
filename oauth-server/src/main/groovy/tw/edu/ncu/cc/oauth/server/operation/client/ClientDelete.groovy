@@ -32,7 +32,7 @@ class ClientDelete extends BasicOperation {
                 notNullForbidden { Client client ->
                     clientRestrictedService.isClientRestricted( client ) ? null : client
                 }
-                notNullNotFound { Client client ->
+                stream { Client client ->
                     clientService.delete( client )
                 }
             }

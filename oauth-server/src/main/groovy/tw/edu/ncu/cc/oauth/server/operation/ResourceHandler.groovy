@@ -16,6 +16,10 @@ class ResourceHandler {
         }
     }
 
+    protected void stream( Closure closure ) {
+        resource.set( closure.call( resource.get() ) )
+    }
+
     protected void notNullBadRequest( String message = "it is a bad request", Closure closure ) {
         handleNotNull( closure, new HttpServerErrorException( HttpStatus.BAD_REQUEST, message ) )
     }

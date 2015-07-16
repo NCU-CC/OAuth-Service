@@ -25,7 +25,7 @@ class ApiTokenRevoke extends BasicOperation {
                 notNullNotFound {
                     apiTokenService.findUnexpiredById( params.id as String )
                 }
-                notNullNotFound { ApiToken apiToken ->
+                stream { ApiToken apiToken ->
                     apiTokenService.revoke( apiToken )
                 }
             }

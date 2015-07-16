@@ -34,7 +34,7 @@ class UserBlackListUpdate extends BasicOperation {
                 notNullNotFound { User user ->
                     userRestrictedService.findByUser( user )
                 }
-                notNullNotFound { UserRestricted userRestricted ->
+                stream { UserRestricted userRestricted ->
                     userRestricted.reason = params.reason
                     userRestrictedService.update( userRestricted )
                 }

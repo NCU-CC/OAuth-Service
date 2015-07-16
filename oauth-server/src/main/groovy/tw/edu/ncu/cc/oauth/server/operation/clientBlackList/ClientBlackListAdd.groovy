@@ -34,7 +34,7 @@ class ClientBlackListAdd extends BasicOperation {
                 notNullBadRequest( 'it has already been restricted' ) { Client client ->
                     clientRestrictedService.isClientRestricted( client ) ? null : client
                 }
-                notNullNotFound { Client client ->
+                stream { Client client ->
                     clientRestrictedService.create( new ClientRestricted(
                             client: client,
                             reason: params.reason as String

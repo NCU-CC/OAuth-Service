@@ -35,7 +35,7 @@ class ClientUpdate extends BasicOperation {
                 notNullForbidden { Client client ->
                     clientRestrictedService.isClientRestricted( client ) ? null : client
                 }
-                notNullNotFound { Client client ->
+                stream { Client client ->
                     client.name = clientObject.name
                     client.url  = clientObject.url
                     client.callback    = clientObject.callback

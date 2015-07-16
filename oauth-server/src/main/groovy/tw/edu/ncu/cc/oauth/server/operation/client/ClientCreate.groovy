@@ -39,7 +39,7 @@ class ClientCreate extends BasicOperation {
                 notNullForbidden { User user ->
                     userRestrictedService.isUserRestricted( user ) ? null : user
                 }
-                notNullNotFound { User user ->
+                stream { User user ->
                     clientService.create( new Client(
                             name: clientObject.name,
                             description: clientObject.description,

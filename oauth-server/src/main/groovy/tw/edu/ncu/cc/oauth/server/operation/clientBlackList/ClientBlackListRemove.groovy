@@ -33,7 +33,7 @@ class ClientBlackListRemove extends BasicOperation {
                 notNullNotFound { Client client ->
                     clientRestrictedService.findByClient( client )
                 }
-                notNullNotFound { ClientRestricted clientRestricted ->
+                stream { ClientRestricted clientRestricted ->
                     clientRestrictedService.delete( clientRestricted )
                 }
             }

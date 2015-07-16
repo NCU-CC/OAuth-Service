@@ -34,7 +34,7 @@ class ClientBlackListUpdate extends BasicOperation {
                 notNullNotFound { Client client ->
                     clientRestrictedService.findByClient( client )
                 }
-                notNullNotFound { ClientRestricted clientRestricted ->
+                stream { ClientRestricted clientRestricted ->
                     clientRestricted.reason = params.reason as String
                     clientRestrictedService.update( clientRestricted )
                 }
