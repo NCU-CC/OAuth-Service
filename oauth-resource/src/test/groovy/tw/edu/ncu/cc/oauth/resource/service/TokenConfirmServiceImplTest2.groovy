@@ -4,6 +4,7 @@ import org.junit.ClassRule
 import org.mockserver.model.Header
 import org.mockserver.model.HttpRequest
 import org.mockserver.model.HttpResponse
+import org.springframework.web.client.RestTemplate
 import resource.ServerResource
 import spock.lang.Shared
 import spock.lang.Specification
@@ -49,7 +50,8 @@ class TokenConfirmServiceImplTest2 extends Specification {
         tokenConfirmService = new TokenConfirmServiceImpl(
                 new RemoteConfig(
                         serverPath: "http://localhost:" + serverResource.port()
-                )
+                ),
+                new RestTemplate()
         )
     }
 
