@@ -87,6 +87,27 @@ class UserBlackListControllerTest extends IntegrationSpecification {
     }
 
     @Transactional
+    def "user cannot add user which is already restricted to blacklist"() {
+        given:
+            def user = a_userRestricted().user
+        expect:
+            server().perform(
+                    post( targetURL )
+                            .contentType( MediaType.APPLICATION_JSON )
+                            .content(
+                                """
+                                    {
+                                      "user_name" : "${ user.name }",
+                                      "reason" : "other reason"
+                                    }
+                                """
+                    )
+            ).andExpect(
+                    status().isBadRequest()
+            )
+    }
+
+    @Transactional
     def "user can update user information in blacklist"() {
         given:
             def userRestricted = a_userRestricted()

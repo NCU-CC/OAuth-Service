@@ -31,6 +31,9 @@ class ClientBlackListAdd extends BasicOperation {
                 notNullNotFound {
                     clientService.findUndeletedBySerialId( params.serialId as String )
                 }
+                notNullBadRequest( 'it has already been restricted' ) { Client client ->
+                    clientRestrictedService.isClientRestricted( client ) ? null : client
+                }
                 notNullNotFound { Client client ->
                     clientRestrictedService.create( new ClientRestricted(
                             client: client,
