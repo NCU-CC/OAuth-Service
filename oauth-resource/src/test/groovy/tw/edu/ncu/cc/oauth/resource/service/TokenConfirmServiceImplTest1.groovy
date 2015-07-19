@@ -4,10 +4,12 @@ import org.junit.ClassRule
 import org.mockserver.model.Header
 import org.mockserver.model.HttpRequest
 import org.mockserver.model.HttpResponse
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import resource.ServerResource
 import spock.lang.Shared
 import spock.lang.Specification
+import tw.edu.ncu.cc.oauth.data.v1.management.resource.TokenRequestMetaObject
 import tw.edu.ncu.cc.oauth.resource.config.RemoteConfig
 
 class TokenConfirmServiceImplTest1 extends Specification {
@@ -46,6 +48,14 @@ class TokenConfirmServiceImplTest1 extends Specification {
                 HttpResponse.response()
                         .withStatusCode( 404 )
         )
+        serverResource.mockServer().when(
+                HttpRequest.request()
+                        .withMethod( "GET" )
+                        .withPath( "/management/v1/access_tokens/token/token3" )
+        ).respond(
+                HttpResponse.response()
+                        .withStatusCode( 403 )
+        )
     }
 
     def setup() {
@@ -59,12 +69,21 @@ class TokenConfirmServiceImplTest1 extends Specification {
 
     def "it can get access token from remote server 1"() {
         expect:
-            tokenConfirmService.readAccessToken( "token1" ).scope.toList() == [ "READ", "WRITE" ]
+            tokenConfirmService.readAccessToken( "token1", new TokenRequestMetaObject() ).scope.toList() == [ "READ", "WRITE" ]
     }
 
-    def "it can get access token from remote server 2"() {
-        expect:
-            tokenConfirmService.readAccessToken( "token2" ) == null
+    def "it throws exception if token is not found"() {
+        when:
+            tokenConfirmService.readAccessToken( "token2", new TokenRequestMetaObject() )
+        then:
+            thrown( HttpClientErrorException )
+    }
+
+    def "it throws exception if token is forbidden"() {
+        when:
+            tokenConfirmService.readAccessToken( "token3", new TokenRequestMetaObject() )
+        then:
+            thrown( HttpClientErrorException )
     }
 
 }
