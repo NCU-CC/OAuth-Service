@@ -17,6 +17,7 @@ INSERT INTO client ( id, name, encrypted_secret, url, callback, description, own
   ( 2, 'APP2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2 ),
   ( 3, 'APP3', '0bd2173ec356a389a96fe1527af2ca0441c4f22ebea08bb545cda0abbf1e8a58', 'http://example.com', 'http://example.com', '3333', 2 );
 -- SECRET
+-- yazDKPjo7j4QBowX 8RnbKwp8RjZeGLkx 67xJRmjErlZ59NWV
 
 INSERT INTO client_restricted ( id, client_id, reason ) VALUES
   ( 1, 2, 'reason1' );
@@ -67,3 +68,8 @@ INSERT INTO permission ( id, name ) VALUES
   ( 1, 'ADMIN' ),
   ( 2, 'READ' ),
   ( 3, 'WRITE' );
+
+INSERT INTO token_access_log( id, token_type, token_id, client_id, ip, referer, application ) VALUES
+  ( 1, 'AccessToken', 1, 1, '127.0.0.1', NULL, 'location' ),
+  ( 2, 'AccessToken', 2, 2, '192.168.0.1', NULL, 'activity' ),
+  ( 3, 'ApiToken', 3, 3, '192.168.0.2', NULL, 'course' );
