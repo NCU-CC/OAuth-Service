@@ -3,6 +3,9 @@ apply plugin: 'war'
 apply plugin: 'spring-boot'
 apply plugin: 'org.akhikhl.gretty'
 
+
+version = '0.9.0'
+
 buildscript {
     repositories {
         mavenCentral()

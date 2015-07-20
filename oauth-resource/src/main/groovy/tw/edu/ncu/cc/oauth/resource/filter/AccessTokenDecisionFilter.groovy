@@ -1,10 +1,11 @@
 package tw.edu.ncu.cc.oauth.resource.filter
 
-import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.web.client.HttpClientErrorException
 import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenObject
+import tw.edu.ncu.cc.oauth.resource.component.TokenMetaDecider
 import tw.edu.ncu.cc.oauth.resource.core.ApiCredentialHolder
 import tw.edu.ncu.cc.oauth.resource.exception.InvalidRequestException
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
@@ -16,11 +17,13 @@ import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+import static org.springframework.http.HttpStatus.*
 import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.*
 
 public class AccessTokenDecisionFilter extends AbstractFilter {
 
     def TokenConfirmService tokenConfirmService
+    def TokenMetaDecider tokenMetaDecider
 
     @Override
     public void doFilter( ServletRequest request, ServletResponse response, FilterChain chain ) throws IOException, ServletException {
@@ -38,14 +41,19 @@ public class AccessTokenDecisionFilter extends AbstractFilter {
 
     private void checkAuthentication( HttpServletRequest request ) {
         if( isOAuthRequest( request ) ) {
-            TokenObject accessToken = findAccessToken( request )
-            if( accessToken != null ) {
-                bindAccessToken( request, accessToken )
-            } else {
-                throw new InvalidRequestException( HttpStatus.UNAUTHORIZED, "invalid access token" )
+            try {
+                bindAccessToken( request, findAccessToken( request ) )
+            } catch ( HttpClientErrorException e ) {
+                if( e.statusCode == NOT_FOUND ) {
+                    throw new InvalidRequestException( UNAUTHORIZED, "invalid access token" )
+                } else if( e.statusCode == FORBIDDEN ) {
+                    throw new InvalidRequestException( FORBIDDEN, "invalid request address" )
+                } else {
+                    throw e
+                }
             }
         } else {
-            throw new InvalidRequestException( HttpStatus.BAD_REQUEST, "access token not provided" )
+            throw new InvalidRequestException( BAD_REQUEST, "access token not provided" )
         }
     }
 
@@ -59,7 +67,7 @@ public class AccessTokenDecisionFilter extends AbstractFilter {
         if( ApiCredentialHolder.containsAccessToken( accessToken ) ) {
             ApiCredentialHolder.getAccessToken( accessToken )
         } else {
-            tokenConfirmService.readAccessToken( accessToken )
+            tokenConfirmService.readAccessToken( accessToken, tokenMetaDecider.decide( request ) )
         }
     }
 

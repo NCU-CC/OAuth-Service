@@ -3,6 +3,7 @@ package tw.edu.ncu.cc.oauth.resource.config
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.embedded.FilterRegistrationBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -10,6 +11,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.converter.StringHttpMessageConverter
 import org.springframework.web.client.RestTemplate
+import tw.edu.ncu.cc.oauth.resource.component.TokenMetaDecider
+import tw.edu.ncu.cc.oauth.resource.component.TokenMetaDeciderImpl
 import tw.edu.ncu.cc.oauth.resource.filter.AccessTokenDecisionFilter
 import tw.edu.ncu.cc.oauth.resource.filter.ApiTokenDecisionFilter
 import tw.edu.ncu.cc.oauth.resource.service.BlackListService
@@ -18,7 +21,6 @@ import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmServiceImpl
 
 import java.nio.charset.Charset
-
 
 @Configuration
 @EnableConfigurationProperties( RemoteConfig )
@@ -34,7 +36,7 @@ class ApiAuthorizationAutoConfigure {
 
     @Bean
     @ConditionalOnMissingBean( RestTemplate )
-    RestTemplate restTemplate(  ) {
+    RestTemplate restTemplate() {
         RestTemplate template = new RestTemplate()
         template.getMessageConverters().add( 0, new StringHttpMessageConverter( Charset.forName( "UTF-8" ) ) )
         template
@@ -42,22 +44,29 @@ class ApiAuthorizationAutoConfigure {
 
     @Bean
     @ConditionalOnMissingBean( TokenConfirmService )
-    TokenConfirmService tokenConfirmService(  ) {
+    TokenConfirmService tokenConfirmService() {
         new TokenConfirmServiceImpl( remoteConfig, restTemplate )
     }
 
     @Bean
+    @ConditionalOnMissingBean( TokenMetaDecider )
+    TokenMetaDecider tokenMetaDecider( @Value( "spring.application.name" ) String application ) {
+        new TokenMetaDeciderImpl( application: application )
+    }
+
+    @Bean
     @ConditionalOnMissingBean( BlackListService )
-    BlackListService blackListService(  ) {
+    BlackListService blackListService() {
         new BlackListServiceImpl( remoteConfig, restTemplate )
     }
 
     @Bean
     @ConditionalOnMissingBean( ApiTokenDecisionFilter )
-    ApiTokenDecisionFilter apiTokenDecisionFilter() {
+    ApiTokenDecisionFilter apiTokenDecisionFilter( TokenConfirmService tokenConfirmService, TokenMetaDecider tokenMetaDecider ) {
         logger.info( "auto-configure oauth api token decision filter with server path : " + remoteConfig.serverPath )
         ApiTokenDecisionFilter filter = new ApiTokenDecisionFilter()
-        filter.setTokenConfirmService( tokenConfirmService() )
+        filter.setTokenConfirmService( tokenConfirmService )
+        filter.setTokenMetaDecider( tokenMetaDecider )
         filter
     }
 
@@ -70,10 +79,11 @@ class ApiAuthorizationAutoConfigure {
 
     @Bean
     @ConditionalOnMissingBean( AccessTokenDecisionFilter )
-    AccessTokenDecisionFilter accessTokenDecisionFilter() {
+    AccessTokenDecisionFilter accessTokenDecisionFilter( TokenConfirmService tokenConfirmService, TokenMetaDecider tokenMetaDecider ) {
         logger.info( "auto-configure oauth access token decision filter with server path : " + remoteConfig.serverPath )
         AccessTokenDecisionFilter filter = new AccessTokenDecisionFilter()
-        filter.setTokenConfirmService( tokenConfirmService() )
+        filter.setTokenConfirmService( tokenConfirmService )
+        filter.setTokenMetaDecider( tokenMetaDecider )
         filter
     }
 

@@ -19,9 +19,17 @@ class APITokenController {
     def ConversionService conversionService
 
     @RequestMapping( value = "token/{token}", method = RequestMethod.GET )
-    def get( @PathVariable( "token" ) final String token ) {
+    def get( @PathVariable( "token" ) final String token,
+             @RequestParam( value = "ip", required = false ) String ip,
+             @RequestParam( value = "application", required = false ) String application,
+             @RequestParam( value = "referer", required = false ) String referer ) {
 
-        def resource = apiTokenOperations.show.process( token: token )
+        def resource = apiTokenOperations.show.process(
+                token: token,
+                ip: ip,
+                referer: referer,
+                application: application
+        )
 
         conversionService.convert(
                 resource as ApiToken, ApiTokenClientObject.class

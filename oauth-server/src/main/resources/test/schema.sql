@@ -140,3 +140,17 @@ CREATE TABLE LOGS
   LEVEL   VARCHAR(10) NOT NULL,
   MESSAGE VARCHAR(1000) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS token_access_log
+(
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  version INT DEFAULT 0,
+  date_created DATETIME,
+  last_updated DATETIME,
+  token_type VARCHAR(50),
+  token_id  INT,
+  client_id INT,
+  ip VARCHAR(50),
+  referer VARCHAR(255),
+  application VARCHAR(50)
+);

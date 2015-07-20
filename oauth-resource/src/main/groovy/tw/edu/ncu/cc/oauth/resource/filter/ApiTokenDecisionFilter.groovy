@@ -3,7 +3,9 @@ package tw.edu.ncu.cc.oauth.resource.filter
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.web.client.HttpClientErrorException
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
+import tw.edu.ncu.cc.oauth.resource.component.TokenMetaDecider
 import tw.edu.ncu.cc.oauth.resource.core.ApiCredentialHolder
 import tw.edu.ncu.cc.oauth.resource.exception.InvalidRequestException
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
@@ -15,12 +17,14 @@ import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+import static org.springframework.http.HttpStatus.*
 import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.API_TOKEN_ATTR
 import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.API_TOKEN_HEADER
 
 public class ApiTokenDecisionFilter extends AbstractFilter {
 
     def TokenConfirmService tokenConfirmService
+    def TokenMetaDecider tokenMetaDecider
 
     @Override
     public void doFilter( ServletRequest request, ServletResponse response, FilterChain chain ) throws IOException, ServletException {
@@ -38,11 +42,16 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
 
     private void checkAuthentication( HttpServletRequest request ) {
         if( isApiRequest( request ) ) {
-            ApiTokenClientObject apiToken = findApiToken( request )
-            if( apiToken != null ) {
-                bindApiToken( request, apiToken )
-            } else {
-                throw new InvalidRequestException( HttpStatus.UNAUTHORIZED, "invalid api token" )
+            try {
+                bindApiToken( request, findApiToken( request ) )
+            } catch ( HttpClientErrorException e  ) {
+                if( e.statusCode == NOT_FOUND ) {
+                    throw new InvalidRequestException( UNAUTHORIZED, "invalid api token" )
+                } else if( e.statusCode == FORBIDDEN ) {
+                    throw new InvalidRequestException( FORBIDDEN, "invalid request address" )
+                } else {
+                    throw e
+                }
             }
         } else {
             throw new InvalidRequestException( HttpStatus.BAD_REQUEST, "api token not provided" )
@@ -58,7 +67,7 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
         if( ApiCredentialHolder.containsApiToken( apiToken ) ) {
             ApiCredentialHolder.getApiToken( apiToken )
         } else {
-            tokenConfirmService.readApiToken( apiToken )
+            tokenConfirmService.readApiToken( apiToken, tokenMetaDecider.decide( request ) )
         }
     }
 

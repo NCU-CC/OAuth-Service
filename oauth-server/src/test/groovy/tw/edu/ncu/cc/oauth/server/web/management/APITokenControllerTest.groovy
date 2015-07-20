@@ -25,6 +25,8 @@ class APITokenControllerTest extends IntegrationSpecification {
         then:
             server().perform(
                     get( targetURL + "/token/${response.token}"  )
+                            .param( "ip", "127.0.0.1" )
+                            .param( "application", "test" )
             ).andExpect(
                     status().isOk()
             )
@@ -48,6 +50,8 @@ class APITokenControllerTest extends IntegrationSpecification {
             def response = JSON(
                     server().perform(
                             get( targetURL + "/token/" + apiToken.token )
+                                    .param( "ip", "127.0.0.1" )
+                                    .param( "application", "test" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
@@ -69,6 +73,8 @@ class APITokenControllerTest extends IntegrationSpecification {
         then:
             server().perform(
                     get( targetURL + "/token/" + apiToken.token )
+                            .param( "ip", "127.0.0.1" )
+                            .param( "application", "test" )
             ).andExpect(
                     status().isNotFound()
             )
@@ -81,6 +87,8 @@ class APITokenControllerTest extends IntegrationSpecification {
         expect:
             server().perform(
                     get( targetURL + "/token/" + apiToken.token )
+                            .param( "ip", "127.0.0.1" )
+                            .param( "application", "test" )
             ).andExpect(
                     status().isOk()
             )
@@ -95,6 +103,8 @@ class APITokenControllerTest extends IntegrationSpecification {
         then:
             server().perform(
                     get( targetURL + "/token/" + apiToken.token )
+                            .param( "ip", "127.0.0.1" )
+                            .param( "application", "test" )
             ).andExpect(
                     status().isNotFound()
             )
