@@ -6,6 +6,7 @@ import org.springframework.core.convert.TypeDescriptor
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenLogObject
 import tw.edu.ncu.cc.oauth.server.helper.ResponseHelper
@@ -28,8 +29,8 @@ class StatisticController {
              @RequestParam( value = "token_type", required = false ) String tokenType,
              @RequestParam( value = "token_id", required = false ) Integer tokenId,
              @RequestParam( value = "application", required = false ) String application,
-             @RequestParam( value = "start_date", required = false ) Date startDate,
-             @RequestParam( value = "end_date", required = false ) Date endDate,
+             @RequestParam( value = "start_date", required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date startDate,
+             @RequestParam( value = "end_date", required = false ) @DateTimeFormat( pattern = "yyyy-MM-dd" ) Date endDate,
              @PageableDefault( size = 50 ) Pageable pageable) {
 
         def page  = tokenAccessLogOperations.index.process(
