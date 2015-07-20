@@ -20,8 +20,8 @@ class APITokenController {
 
     @RequestMapping( value = "token/{token}", method = RequestMethod.GET )
     def get( @PathVariable( "token" ) final String token,
-             @RequestParam( value = "ip" ) String ip,
-             @RequestParam( value = "application" ) String application,
+             @RequestParam( value = "ip", required = false ) String ip,
+             @RequestParam( value = "application", required = false ) String application,
              @RequestParam( value = "referer", required = false ) String referer ) {
 
         def resource = apiTokenOperations.show.process(

@@ -21,8 +21,8 @@ class ApiTokenShow extends BasicOperation {
     @Override
     protected validate( OperationParamValidator validator ) {
         validator.required().hasText( 'token' )
-        validator.required().hasText( 'ip' )
-        validator.required().hasText( 'application' )
+        validator.optional().attribute( 'ip' )
+        validator.optional().attribute( 'application' )
         validator.optional().attribute( 'referer' )
     }
 
