@@ -23,13 +23,16 @@ import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmServiceImpl
 import java.nio.charset.Charset
 
 @Configuration
-@EnableConfigurationProperties( RemoteConfig )
+@EnableConfigurationProperties( [ RemoteConfig, CloudConfig ] )
 class ApiAuthorizationAutoConfigure {
 
     private Logger logger = LoggerFactory.getLogger( this.getClass() )
 
     @Autowired
     RemoteConfig remoteConfig
+
+    @Autowired
+    CloudConfig cloudConfig
 
     @Autowired
     RestTemplate restTemplate
@@ -50,8 +53,8 @@ class ApiAuthorizationAutoConfigure {
 
     @Bean
     @ConditionalOnMissingBean( TokenMetaDecider )
-    TokenMetaDecider tokenMetaDecider( @Value( "spring.application.name" ) String application ) {
-        new TokenMetaDeciderImpl( application: application )
+    TokenMetaDecider tokenMetaDecider() {
+        new TokenMetaDeciderImpl( application: cloudConfig.name )
     }
 
     @Bean
