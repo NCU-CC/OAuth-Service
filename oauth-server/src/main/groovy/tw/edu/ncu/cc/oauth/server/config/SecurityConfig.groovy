@@ -51,7 +51,7 @@ public class SecurityConfig {
         @Override
         protected void configure( HttpSecurity http ) throws Exception {
             http.authorizeRequests()
-                    .antMatchers( "/oauth/authorize" ).hasRole( "USER" )
+                    .antMatchers( "/oauth/authorize" ).hasAnyRole( "USER" )
                     .antMatchers( "/login_page" ).permitAll()
                     .antMatchers( "/login_confirm" ).permitAll()
                     .anyRequest().authenticated()
