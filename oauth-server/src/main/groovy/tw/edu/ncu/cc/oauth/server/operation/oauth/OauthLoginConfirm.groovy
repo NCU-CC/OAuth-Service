@@ -81,9 +81,9 @@ class OauthLoginConfirm extends BasicOperation {
         newSession.setMaxInactiveInterval( 5*60 );
     }
 
-    private static String buildRoles( User user ) {
-        user.roles.inject( "ROLE_USER" ) { roles, role ->
-            roles + " " + role.name
+    private static String[] buildRoles( User user ) {
+        user.roles.inject( [ "ROLE_USER" ] ) { roles, role ->
+            roles <<  "Role_" + role.name.toUpperCase()
         }
     }
 
