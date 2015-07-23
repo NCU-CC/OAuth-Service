@@ -1,14 +1,14 @@
 package tw.edu.ncu.cc.oauth.server.model.authorizationCode
 
 import org.springframework.data.jpa.domain.Specification
-import tw.edu.ncu.cc.oauth.server.model.TokenSpecifications
+import tw.edu.ncu.cc.oauth.server.model.UserTokenSpecifications
 
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
 
-class AuthorizationCodeSpecifications extends TokenSpecifications< AuthorizationCode > {
+class AuthorizationCodeSpecifications extends UserTokenSpecifications< AuthorizationCode > {
 
     static Specification< AuthorizationCode > encryptedCodeEquals( String encryptedCode ) {
         return new Specification< AuthorizationCode >() {

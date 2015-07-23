@@ -2,7 +2,6 @@ package tw.edu.ncu.cc.oauth.server.model
 
 import org.springframework.data.jpa.domain.Specification
 import tw.edu.ncu.cc.oauth.server.model.client.Client
-import tw.edu.ncu.cc.oauth.server.model.user.User
 
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
@@ -16,15 +15,6 @@ abstract class TokenSpecifications< T extends TokenEntity > extends BasicSpecifi
             @Override
             Predicate toPredicate( Root< T > root, CriteriaQuery<?> query, CriteriaBuilder cb ) {
                 return cb.greaterThan( root.get( TokenEntity_.dateExpired ), new Date() )
-            }
-        }
-    }
-
-    static Specification< T > userEquals( User user ) {
-        new Specification< T >() {
-            @Override
-            Predicate toPredicate( Root< T > root, CriteriaQuery<?> query, CriteriaBuilder cb ) {
-                return cb.equal( root.get( TokenEntity_.user ), user )
             }
         }
     }

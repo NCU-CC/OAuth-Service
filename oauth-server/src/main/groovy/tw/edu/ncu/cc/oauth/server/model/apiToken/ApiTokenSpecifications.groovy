@@ -1,23 +1,14 @@
 package tw.edu.ncu.cc.oauth.server.model.apiToken
 
 import org.springframework.data.jpa.domain.Specification
-import tw.edu.ncu.cc.oauth.server.model.BasicSpecifications
+import tw.edu.ncu.cc.oauth.server.model.TokenSpecifications
 
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
 import javax.persistence.criteria.Predicate
 import javax.persistence.criteria.Root
 
-class ApiTokenSpecifications extends BasicSpecifications< ApiToken > {
-
-    static Specification< ApiToken > unexpired() {
-        return new Specification< ApiToken >() {
-            @Override
-            public Predicate toPredicate( Root< ApiToken > root, CriteriaQuery< ? > query, CriteriaBuilder cb ) {
-                return cb.greaterThan( root.get( ApiToken_.dateExpired ), new Date() )
-            }
-        }
-    }
+class ApiTokenSpecifications extends TokenSpecifications< ApiToken > {
 
     static Specification< ApiToken > encryptedTokenEquals( String encryptedToken ) {
         return new Specification< ApiToken >() {

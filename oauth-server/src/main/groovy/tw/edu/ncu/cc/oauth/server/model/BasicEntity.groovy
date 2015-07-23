@@ -18,10 +18,6 @@ class BasicEntity implements Serializable {
     @Temporal( value = TemporalType.TIMESTAMP )
     def Date lastUpdated
 
-    def refreshTimeStamp() {
-        lastUpdated = new Date()
-    }
-
     @PrePersist
     protected void onCreate() {
         lastUpdated = dateCreated = new Date()

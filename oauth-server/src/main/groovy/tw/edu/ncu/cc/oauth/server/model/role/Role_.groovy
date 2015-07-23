@@ -1,12 +1,11 @@
 package tw.edu.ncu.cc.oauth.server.model.role
 
+import tw.edu.ncu.cc.oauth.server.model.BasicEntity_
+
 import javax.persistence.metamodel.SingularAttribute
 import javax.persistence.metamodel.StaticMetamodel
 
 @StaticMetamodel( Role )
-class Role_ {
-    public static volatile SingularAttribute< Role, Integer > id
+class Role_ extends BasicEntity_ {
     public static volatile SingularAttribute< Role, String > name
-    public static volatile SingularAttribute< Role, Date > dateCreated
-    public static volatile SingularAttribute< Role, Date > lastUpdated
 }
