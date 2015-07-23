@@ -5,7 +5,6 @@ import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import tw.edu.ncu.cc.oauth.server.helper.StringHelper
 import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
 import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
 import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
@@ -75,8 +74,7 @@ class OauthExchangeAuthorizationCode extends BasicOperation {
 
         logService.info(
                 "EXCHANGE AUTHCODE",
-                "CLIENT:" + clientID,
-                "CODE[10]:" + StringHelper.first( authCode, 10 )
+                "CLIENT:" + clientID
         )
 
         def client = clientService.findUndeletedBySerialId( clientID )
