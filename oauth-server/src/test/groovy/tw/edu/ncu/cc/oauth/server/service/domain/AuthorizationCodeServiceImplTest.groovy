@@ -77,8 +77,8 @@ class AuthorizationCodeServiceImplTest extends SpringSpecification {
         given:
             def code = a_authorizationCode()
         expect:
-            authorizationCodeService.isUnexpiredCodeMatchesClientId( code.code, serialId( code.id ) )
-            ! authorizationCodeService.isUnexpiredCodeMatchesClientId( 'abc', serialId( 3 ) )
+            authorizationCodeService.isUnexpiredCodeMatchesClientId( code.code, code.client.serialId )
+            ! authorizationCodeService.isUnexpiredCodeMatchesClientId( 'abc', code.client.serialId )
     }
 
 }

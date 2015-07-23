@@ -26,13 +26,13 @@ class ClientServiceImplTest extends SpringSpecification {
     @Transactional
     def "it can update exist client"() {
         given:
-            def managedClient = clientService.findUndeletedBySerialId( serialId( 1 ) )
+            def managedClient = clientService.findUndeletedBySerialId( a_client().serialId )
         when:
             managedClient.name = 'newname'
         and:
             clientService.update( managedClient )
         then:
-            clientService.findUndeletedBySerialId( serialId( 1 ) ).name == 'newname'
+            clientService.findUndeletedBySerialId( managedClient.serialId ).name == 'newname'
     }
 
     @Transactional
@@ -44,15 +44,15 @@ class ClientServiceImplTest extends SpringSpecification {
         when:
             clientService.delete( createdClient )
         then:
-            clientService.findUndeletedBySerialId( serialId( createdClient.id ) ) == null
+            clientService.findUndeletedBySerialId( createdClient.serialId ) == null
     }
 
     def "it can validate the client id and secret"() {
         given:
             def client = a_client()
         expect:
-            clientService.isCredentialValid( serialId( client.id ), client.encryptedSecret )
-            ! clientService.isCredentialValid( serialId( 3 ), "SECR" )
+            clientService.isCredentialValid( client.serialId, client.encryptedSecret )
+            ! clientService.isCredentialValid( client.serialId, "SECR" )
     }
 
     @Transactional
@@ -61,7 +61,7 @@ class ClientServiceImplTest extends SpringSpecification {
             def client = new_client()
         and:
             def createdClient = clientService.create( client )
-            def createdClientSerialId = serialId( createdClient.id )
+            def createdClientSerialId = createdClient.serialId
         and:
             def originEncryptedSecret = clientService.findUndeletedBySerialId( createdClientSerialId ).encryptedSecret
         when:
@@ -97,7 +97,7 @@ class ClientServiceImplTest extends SpringSpecification {
 
             def dto = new ClientIdObject(
                     name : createdClient.name.substring( createdClient.name.length() - 1 ),
-                    id : serialId( createdClient.id ),
+                    id : createdClient.serialId,
                     owner : createdClient.owner.name,
                     deleted: false
             )
@@ -121,7 +121,7 @@ class ClientServiceImplTest extends SpringSpecification {
 
             def dto = new ClientIdObject(
                     name : createdClient.name.substring( createdClient.name.length() - 1 ),
-                    id : serialId( createdClient.id ),
+                    id : createdClient.serialId,
                     owner : createdClient.owner.name,
                     deleted: false
             )
@@ -140,7 +140,7 @@ class ClientServiceImplTest extends SpringSpecification {
             clientService.revokeTokens( client )
         and:
             def managedClient = clientService.findUndeletedBySerialId(
-                    serialId( client.id ), Client_.apiTokens, Client_.accessTokens , Client_.codes, Client_.refreshTokens
+                    client.serialId, Client_.apiTokens, Client_.accessTokens , Client_.codes, Client_.refreshTokens
             )
         then:
             managedClient.accessTokens.size() == 0

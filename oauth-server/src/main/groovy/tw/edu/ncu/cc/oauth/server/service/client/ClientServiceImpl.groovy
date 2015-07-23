@@ -32,6 +32,7 @@ class ClientServiceImpl implements ClientService {
     Client create( Client client ) {
         String newSecret = secretService.generateToken()
         client.encryptedSecret = secretService.encrypt( newSecret )
+        client.serialId = UUID.randomUUID().toString()
         clientRepository.save( client )
     }
 
@@ -63,9 +64,8 @@ class ClientServiceImpl implements ClientService {
 
     @Override
     Client findUndeletedBySerialId( String serialId, Attribute... attributes = [] ) {
-        long id = secretService.decodeHashId( serialId )
         clientRepository.findOne(
-                where( ClientSpecifications.idEquals( id as Integer ) )
+                where( ClientSpecifications.serialIdEquals( serialId ) )
                         .and( ClientSpecifications.undeleted() )
                         .and( ClientSpecifications.include( attributes ) )
         )
@@ -85,7 +85,7 @@ class ClientServiceImpl implements ClientService {
     List< Client > findAllByDataObject( ClientIdObject clientObject, Attribute... attributes = [] ) {
         clientRepository.findAll(
                 where( ClientSpecifications.attributes(
-                        StringUtils.isEmpty( clientObject.id ) ? null : secretService.decodeHashId( clientObject.id ) as String,
+                        clientObject.id,
                         clientObject.name,
                         StringUtils.isEmpty( clientObject.owner ) ? null : userService.findByName( clientObject.owner ),
                         clientObject.deleted

@@ -1,6 +1,5 @@
 package data
 
-import org.springframework.transaction.annotation.Transactional
 import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
 
 trait AccessTokenTestData extends DomainTestData {
@@ -22,15 +21,6 @@ trait AccessTokenTestData extends DomainTestData {
                 scope: [ getPermissions().findOne( 1 ), getPermissions().findOne( 2 ) ],
                 token: "Mzo6OlRPS0VO"
         )
-    }
-
-    @Transactional
-    AccessToken get_accessToken( int id ) {
-        def accesstoken = getAccessTokens().findOne( id )
-        accesstoken.getScope()
-        accesstoken.getClient()
-        accesstoken.getUser()
-        accesstoken
     }
 
 }

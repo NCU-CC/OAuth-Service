@@ -18,7 +18,7 @@ class RefreshToken_TokenObjectConverter implements Converter< RefreshToken, Toke
     TokenObject convert( RefreshToken source ) {
         TokenObject tokenObject = new TokenObject()
         tokenObject.id = source.id
-        tokenObject.client_id = secretService.encodeHashId( source.client.id )
+        tokenObject.client_id = source.client.serialId
         tokenObject.user = source.user.name
         tokenObject.scope = ScopeHelper.toStringArray( source.scope )
         tokenObject.last_updated = source.lastUpdated

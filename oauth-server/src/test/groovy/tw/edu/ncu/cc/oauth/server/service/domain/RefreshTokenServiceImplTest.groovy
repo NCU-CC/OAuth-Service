@@ -84,8 +84,8 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
         given:
             def refreshToken = a_refreshToken()
         expect:
-            refreshTokenService.isUnexpiredTokenMatchesClientId( refreshToken.encryptedToken, serialId( refreshToken.id ) )
-            ! refreshTokenService.isUnexpiredTokenMatchesClientId( 'abc', serialId( 3 ) )
+            refreshTokenService.isUnexpiredTokenMatchesClientId( refreshToken.encryptedToken, refreshToken.client.serialId )
+            ! refreshTokenService.isUnexpiredTokenMatchesClientId( 'abc', refreshToken.client.serialId )
     }
 
 }

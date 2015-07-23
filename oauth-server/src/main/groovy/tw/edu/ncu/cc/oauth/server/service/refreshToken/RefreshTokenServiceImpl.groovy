@@ -99,7 +99,7 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     boolean isUnexpiredTokenMatchesClientId( String token, String clientID ) {
         RefreshToken refreshToken = findUnexpiredByToken( token )
         return refreshToken != null &&
-               refreshToken.client.id == secretService.decodeHashId( clientID ) as Integer
+               refreshToken.client.serialId == clientID
     }
 
 }

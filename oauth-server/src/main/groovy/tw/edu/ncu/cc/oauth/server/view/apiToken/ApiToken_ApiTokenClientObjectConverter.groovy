@@ -20,7 +20,7 @@ class ApiToken_ApiTokenClientObjectConverter implements Converter< ApiToken, Api
         apiTokenObject.id = source.id
         apiTokenObject.token = calculateUserSideToken( source )
         apiTokenObject.last_updated = source.lastUpdated
-        apiTokenObject.client_id = secretService.encodeHashId( source.client.id )
+        apiTokenObject.client_id = source.client.serialId
         apiTokenObject
     }
 

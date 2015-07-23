@@ -20,9 +20,10 @@ class StatisticControllerTest extends IntegrationSpecification {
     def "user can read client's token access log"() {
         given:
             def log = tokenAccessLogRepository.findOne( 1 )
+            def client = get_client( log.client.id )
         expect:
             server().perform(
-                    get( targetURL + "/" + serialId( log.client.id ) + "/tokens" )
+                    get( targetURL + "/" + client.serialId + "/tokens" )
                             .param( "ip", log.ip )
                             .param( "application", log.application )
             ).andExpect(

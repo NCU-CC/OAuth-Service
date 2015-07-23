@@ -33,7 +33,7 @@ class ClientRestrictedServiceImplTest extends SpringSpecification {
             clientRestrictedService.findByClient( client ) != null
         when:
             def managedClient = clientService.findUndeletedBySerialId(
-                    serialId( client.id ), Client_.apiTokens, Client_.accessTokens , Client_.codes, Client_.refreshTokens
+                    client.serialId, Client_.apiTokens, Client_.accessTokens , Client_.codes, Client_.refreshTokens
             )
         then:
             managedClient.accessTokens.size() == 0

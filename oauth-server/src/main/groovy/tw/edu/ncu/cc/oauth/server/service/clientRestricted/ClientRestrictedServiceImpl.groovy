@@ -49,7 +49,7 @@ class ClientRestrictedServiceImpl implements ClientRestrictedService {
     List< ClientRestricted > findAll( ClientIdObject clientObject, Pageable pageable ) {
         clientRestrcitedRepository.findAll(
                 ClientRestrictedSpecifications.attributes(
-                        StringUtils.isEmpty( clientObject.id ) ? null : secretService.decodeHashId( clientObject.id ) as String,
+                        clientObject.id,
                         clientObject.name,
                         StringUtils.isEmpty( clientObject.owner ) ? null : userService.findByName( clientObject.owner ),
                         clientObject.deleted

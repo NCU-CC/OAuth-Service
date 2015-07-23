@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS client
   callback VARCHAR(255),
   description VARCHAR(255),
   name VARCHAR(255),
+  serial_id VARCHAR(255),
   encrypted_secret VARCHAR(255),
   url VARCHAR(255),
   deleted BOOLEAN DEFAULT FALSE ,

@@ -16,7 +16,7 @@ class Client_ClientIdSecretObjectConverter implements Converter< Client, ClientI
     @Override
     ClientIdSecretObject convert( Client source ) {
         ClientIdSecretObject secretIdClientObject = new ClientIdSecretObject()
-        secretIdClientObject.id = secretService.encodeHashId( source.id )
+        secretIdClientObject.id = source.serialId
         secretIdClientObject.secret = secretService.decrypt( source.encryptedSecret )
         secretIdClientObject.name = source.name
         secretIdClientObject.description = source.description

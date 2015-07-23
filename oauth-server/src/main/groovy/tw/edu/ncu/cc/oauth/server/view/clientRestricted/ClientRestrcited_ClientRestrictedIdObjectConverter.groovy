@@ -16,7 +16,7 @@ class ClientRestrcited_ClientRestrictedIdObjectConverter implements Converter< C
     @Override
     ClientRestrictedIdObject convert( ClientRestricted source ) {
         ClientRestrictedIdObject restrictedIdObject = new ClientRestrictedIdObject()
-        restrictedIdObject.client_id = secretService.encodeHashId( source.client.id )
+        restrictedIdObject.client_id = source.client.serialId
         restrictedIdObject.reason = source.reason
         restrictedIdObject
     }

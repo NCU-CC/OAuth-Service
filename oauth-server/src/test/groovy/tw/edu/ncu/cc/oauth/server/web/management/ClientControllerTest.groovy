@@ -19,7 +19,7 @@ class ClientControllerTest extends IntegrationSpecification {
         when:
             def clientResponse = JSON(
                     server().perform(
-                            get( targetURL + "/" + serialId( client.id ) )
+                            get( targetURL + "/" + client.serialId )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
@@ -97,7 +97,7 @@ class ClientControllerTest extends IntegrationSpecification {
             def restrictedClient = restricted_client()
         expect:
             server().perform(
-                    put( targetURL + "/${ serialId( restrictedClient.id ) }" )
+                    put( targetURL + "/${ restrictedClient.serialId }" )
                             .contentType( MediaType.APPLICATION_JSON )
                             .content(
                             """
@@ -140,7 +140,7 @@ class ClientControllerTest extends IntegrationSpecification {
             def restrictedClient = restricted_client()
         expect:
             server().perform(
-                    delete( targetURL + "/${  serialId( restrictedClient.id ) }" )
+                    delete( targetURL + "/${ restrictedClient.serialId }" )
             ).andExpect(
                     status().isForbidden()
             )
@@ -182,7 +182,7 @@ class ClientControllerTest extends IntegrationSpecification {
             def restrictedClient = restricted_client()
         expect:
             server().perform(
-                    post( targetURL + "/${  serialId( restrictedClient.id ) }/refresh_secret" )
+                    post( targetURL + "/${ restrictedClient.serialId }/refresh_secret" )
             ).andExpect(
                     status().isForbidden()
             )
@@ -195,7 +195,7 @@ class ClientControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "/${serialId( client.id )}/api_tokens" )
+                            get( targetURL + "/${ client.serialId }/api_tokens" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()

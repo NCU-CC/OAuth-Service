@@ -82,7 +82,7 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     boolean isUnexpiredCodeMatchesClientId( String code, String clientID ) {
         AuthorizationCode authorizationCode = findUnexpiredByCode( code )
         return authorizationCode != null &&
-               authorizationCode.client.id == secretService.decodeHashId( clientID ) as Integer
+               authorizationCode.client.serialId == clientID
     }
 
 }

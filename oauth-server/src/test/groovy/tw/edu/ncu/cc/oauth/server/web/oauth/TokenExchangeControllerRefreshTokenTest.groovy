@@ -17,7 +17,7 @@ class TokenExchangeControllerRefreshTokenTest extends IntegrationSpecification {
                     post( targetURL )
                             .contentType( MediaType.APPLICATION_FORM_URLENCODED )
                             .param( "grant_type", "refresh_token" )
-                            .param( "client_id", serialId( 4 ) )
+                            .param( "client_id", 'GG' )
                             .param( "client_secret", "SECRET" )
                             .param( "refresh_token", "Mzo6OlRPS0VO" )
             ).andExpect(
@@ -31,7 +31,7 @@ class TokenExchangeControllerRefreshTokenTest extends IntegrationSpecification {
                     post( targetURL )
                             .contentType( MediaType.APPLICATION_FORM_URLENCODED )
                             .param( "grant_type", "refresh_token" )
-                            .param( "client_id", serialId( 3 ) )
+                            .param( "client_id", get_client( 3 ).serialId )
                             .param( "client_secret", "SECRET" )
                             .param( "refresh_token", "INVALID" )
             ).andExpect(
@@ -47,7 +47,7 @@ class TokenExchangeControllerRefreshTokenTest extends IntegrationSpecification {
                             post( targetURL )
                                     .contentType( MediaType.APPLICATION_FORM_URLENCODED )
                                     .param( "grant_type", "refresh_token" )
-                                    .param( "client_id", serialId( 3 ) )
+                                    .param( "client_id", get_client( 3 ).serialId )
                                     .param( "client_secret", "SECRET" )
                                     .param( "refresh_token", "Mzo6OlRPS0VO" )
                     ).andExpect(

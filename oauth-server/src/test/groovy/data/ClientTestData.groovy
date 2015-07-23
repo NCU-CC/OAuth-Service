@@ -9,13 +9,10 @@ trait ClientTestData extends DomainTestData {
     @Autowired
     private SecretService secretService
 
-    def String serialId( long id ) {
-        secretService.encodeHashId( id )
-    }
-
     Client restricted_client() {
         new Client(
                 id: 2,
+                serialId: 'S2',
                 name: "APP2",
                 encryptedSecret: "SECRET",
                 owner: getUsers().findOne( 2 ),
@@ -40,6 +37,7 @@ trait ClientTestData extends DomainTestData {
     Client a_client() {
         new Client(
                 id: 3,
+                serialId: 'S3',
                 name: "APP3",
                 encryptedSecret: "SECRET",
                 owner: getUsers().findOne( 3 ),
