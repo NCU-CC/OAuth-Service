@@ -45,6 +45,7 @@ class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     AccessToken createByAuthorizationCode( AccessToken accessToken, AuthorizationCode authorizationCode ) {
         authorizationCodeService.revoke( authorizationCode )
+        authorizationCodeService.refreshLastUsedTime( authorizationCode )
         accessToken.client = authorizationCode.client
         accessToken.scope = authorizationCode.scope.collect().toSet()
         accessToken.user = authorizationCode.user
@@ -59,6 +60,7 @@ class AccessTokenServiceImpl implements AccessTokenService {
         create( accessToken )
         revoke( refreshToken.accessToken )
         refreshToken.accessToken = accessToken
+        refreshToken.lastUsed = new Date()
         refreshTokenRepository.save( refreshToken )
         accessToken
     }
@@ -66,6 +68,12 @@ class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     AccessToken revoke( AccessToken accessToken ) {
         accessToken.revoke()
+        accessTokenRepository.save( accessToken )
+    }
+
+    @Override
+    AccessToken refreshLastUsedTime( AccessToken accessToken ) {
+        accessToken.refreshLastUsedTime()
         accessTokenRepository.save( accessToken )
     }
 

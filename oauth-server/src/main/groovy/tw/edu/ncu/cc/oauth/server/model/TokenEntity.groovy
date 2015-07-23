@@ -14,8 +14,15 @@ class TokenEntity extends BasicEntity {
     @Temporal( value = TemporalType.TIMESTAMP )
     def Date dateExpired
 
+    @Temporal( value = TemporalType.TIMESTAMP )
+    def Date lastUsed
+
     def revoke() {
-        dateExpired = new Date( System.currentTimeMillis() )
+        dateExpired = new Date()
+    }
+
+    def refreshLastUsedTime() {
+        lastUsed = new Date()
     }
 
 }

@@ -39,6 +39,12 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
     }
 
     @Override
+    AuthorizationCode refreshLastUsedTime( AuthorizationCode authorizationCode ) {
+        authorizationCode.refreshLastUsedTime()
+        authorizationCodeRepository.save( authorizationCode )
+    }
+
+    @Override
     AuthorizationCode findUnexpiredByCode( String code, Attribute...attributes = [] ) {
         authorizationCodeRepository.findOne(
                 where( AuthorizationCodeSpecifications.unexpired() )

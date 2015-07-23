@@ -55,6 +55,12 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
+    RefreshToken refreshLastUsedTime( RefreshToken refreshToken ) {
+        refreshToken.refreshLastUsedTime()
+        refreshTokenRepository.save( refreshToken )
+    }
+
+    @Override
     RefreshToken findUnexpiredByToken( String token, Attribute...attributes = [] ) {
         refreshTokenRepository.findOne(
                 where( RefreshTokenSpecifications.unexpired() )

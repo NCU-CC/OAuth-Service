@@ -52,6 +52,12 @@ class ApiTokenServiceImpl implements ApiTokenService {
     }
 
     @Override
+    ApiToken refreshLastUsedTime( ApiToken apiToken ) {
+        apiToken.refreshLastUsedTime()
+        apiTokenRepository.save( apiToken )
+    }
+
+    @Override
     ApiToken findUnexpiredByToken( String token, Attribute...attributes = [] ) {
         apiTokenRepository.findOne(
                 where( ApiTokenSpecifications.encryptedTokenEquals( secretService.decryptQueryable( token ) ) )

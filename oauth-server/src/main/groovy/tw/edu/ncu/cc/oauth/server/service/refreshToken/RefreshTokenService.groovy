@@ -22,6 +22,7 @@ interface RefreshTokenService {
     List< RefreshToken > findAllUnexpiredByClient( Client client, Attribute...attributes )
 
     RefreshToken revoke( RefreshToken refreshToken )
+    RefreshToken refreshLastUsedTime( RefreshToken refreshToken )
 
     boolean isUnexpiredTokenMatchesClientId( String token, String clientID )
 }
