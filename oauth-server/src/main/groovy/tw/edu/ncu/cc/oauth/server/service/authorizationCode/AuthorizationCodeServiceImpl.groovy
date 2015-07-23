@@ -3,7 +3,6 @@ package tw.edu.ncu.cc.oauth.server.service.authorizationCode
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCode
 import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCodeSpecifications
 import tw.edu.ncu.cc.oauth.server.model.client.Client
@@ -27,10 +26,9 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
 
     @Override
     AuthorizationCode create( AuthorizationCode authorizationCode ) {
-        String code = secretService.generateToken()
-        authorizationCode.encryptedCode = secretService.encrypt( code )
+        authorizationCode.encryptedCode = secretService.generateToken()
         authorizationCodeRepository.save( authorizationCode )
-        authorizationCode.code = secretService.encodeSerialSecret( new SerialSecret( authorizationCode.id, code ) )
+        authorizationCode.code = secretService.encryptOnce( authorizationCode.encryptedCode )
         authorizationCode
     }
 
@@ -42,13 +40,11 @@ class AuthorizationCodeServiceImpl implements AuthorizationCodeService {
 
     @Override
     AuthorizationCode findUnexpiredByCode( String code, Attribute...attributes = [] ) {
-        SerialSecret serialSecret = secretService.decodeSerialSecret( code )
-        AuthorizationCode authorizationCode = findUnexpiredById( serialSecret.id as String, attributes )
-        if( authorizationCode != null && secretService.matches( serialSecret.secret, authorizationCode.encryptedCode ) ) {
-            return authorizationCode
-        } else {
-            return null
-        }
+        authorizationCodeRepository.findOne(
+                where( AuthorizationCodeSpecifications.unexpired() )
+                        .and( AuthorizationCodeSpecifications.encryptedCodeEquals( secretService.decryptOnce( code ) ) )
+                        .and( AuthorizationCodeSpecifications.include( attributes ) )
+        )
     }
 
     @Override

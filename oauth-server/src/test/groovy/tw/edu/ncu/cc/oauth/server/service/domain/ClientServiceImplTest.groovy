@@ -51,7 +51,7 @@ class ClientServiceImplTest extends SpringSpecification {
         given:
             def client = a_client()
         expect:
-            clientService.isCredentialValid( client.serialId, client.encryptedSecret )
+            clientService.isCredentialValid( client.serialId, client.secret )
             ! clientService.isCredentialValid( client.serialId, "SECR" )
     }
 

@@ -15,6 +15,12 @@ spring:
 liquibase:
   enabled: false
 
+secrets:
+  encrypt-once-password: tDVHRGFRsWB1fofGcT9MbuWPLsgwVE6QPc0SMOaViVe9MidtA5sFoBjwx55QhzEt
+  encrypt-once-salt: bde1f26c24f303a2741f49571ac55e53988a7d5bca8d5c98a5bd98a5cd8a95dc8ad95c
+  encrypt-queryable-password: ade1s26c25f30362747f49571ac55e73tDVHRGF7sWB1fofGc79MbuWPLsgwVE78
+  encrypt-queryable-salt: b78ad6c6ad87ac6d4ba78a5bd7c5ad76c5a87d6587a65c67a8d5ca765da8c6
+
 custom:
   oauth:
     authCode:
@@ -23,12 +29,6 @@ custom:
       expire-seconds: 600
     apiToken:
       expire-seconds: 600
-    security:
-      encrypt:
-        password: Pc0SMOaViVe9MidtA5sFoBjwx55QhzEt
-        salt: bde1f26c24f303a2741f49571ac55e53
-      encode:
-        salt: tDVHRGFRsWB1fofGcT9MbuWPLsgwVE6Q
   openid:
     config-path: test/openid.properties
   management:

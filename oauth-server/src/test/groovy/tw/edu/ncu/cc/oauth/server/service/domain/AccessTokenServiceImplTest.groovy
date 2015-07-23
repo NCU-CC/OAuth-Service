@@ -97,11 +97,6 @@ class AccessTokenServiceImplTest extends SpringSpecification {
         expect:
             accessTokenService.findUnexpiredByToken( accessToken.token ) != null
             accessTokenService.findUnexpiredByToken( "NOTEXIST" ) == null
-        when:
-            def token1 = accessTokenService.findUnexpiredByToken( accessToken.token )
-            def token2 = accessTokenService.findUnexpiredByToken( accessToken.token )
-        then:
-            token1.lastUpdated != token2.lastUpdated
     }
 
     def "it can read unexpired access tokens by client id"() {

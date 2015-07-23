@@ -16,7 +16,8 @@ trait AuthorizationCodeTestData extends DomainTestData {
     AuthorizationCode a_authorizationCode() {
         new AuthorizationCode(
                 id: 3,
-                code: "Mzo6OkNPREU=",
+                code: "63a2bb18e5031622606ccf41fcee4f1245340e016184080c36824351d9773dfc",
+                encryptedCode: "CODE3",
                 client: getClients().findOne( 3 ),
                 user: getUsers().findOne( 3 ),
                 scope: [ getPermissions().findOne( 3 ) ],

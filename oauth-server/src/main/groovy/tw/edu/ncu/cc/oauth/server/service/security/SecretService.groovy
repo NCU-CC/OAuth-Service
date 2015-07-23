@@ -1,20 +1,13 @@
 package tw.edu.ncu.cc.oauth.server.service.security
 
-import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
-
-
 interface SecretService {
 
     String generateToken()
 
-    String encodeSerialSecret( SerialSecret serialSecret )
-    SerialSecret decodeSerialSecret( String encodedSerialSecret )
+    String encryptOnce( String text )
+    String decryptOnce( String encryptedText )
 
-    String encodeHashId( long id )
-    long decodeHashId( String hashId )
-
-    String encrypt( String text )
-    String decrypt( String encryptedText )
-    boolean matches( String text, String encryptedText )
+    String encryptQueryable( String text )
+    String decryptQueryable( String encryptedText )
 
 }

@@ -1,71 +1,62 @@
 package tw.edu.ncu.cc.oauth.server.service.security
 
-import org.hashids.Hashids
+import org.apache.commons.codec.binary.Base64
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.crypto.encrypt.Encryptors
 import org.springframework.security.crypto.encrypt.TextEncryptor
 import org.springframework.stereotype.Service
-import tw.edu.ncu.cc.oauth.server.helper.SecretCodec
-import tw.edu.ncu.cc.oauth.server.helper.StringGenerator
-import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 
 @Service
 class SecretServiceImpl implements SecretService {
 
-    private Hashids hashids
     private TextEncryptor textEncryptor
+    private TextEncryptor queryableEncryptor
 
     @Autowired
-    SecretServiceImpl( @Value( '${custom.oauth.security.encode.salt}' ) String hashIdSalt,
-                       @Value( '${custom.oauth.security.encrypt.password}' ) String password,
-                       @Value( '${custom.oauth.security.encrypt.salt}' ) String salt ) {
-        hashids = new Hashids( hashIdSalt, 16 )
-        textEncryptor = Encryptors.text( password, salt )
+    SecretServiceImpl( @Value( '${secrets.encrypt-once-password}' ) String oncePassword,
+                       @Value( '${secrets.encrypt-once-salt}' ) String onceSalt,
+                       @Value( '${secrets.encrypt-queryable-password}' ) String queryablePassword,
+                       @Value( '${secrets.encrypt-queryable-salt}' ) String queryableSalt ) {
+        textEncryptor = Encryptors.text( oncePassword, onceSalt )
+        queryableEncryptor = Encryptors.queryableText( queryablePassword, queryableSalt )
     }
 
     @Override
     String generateToken() {
-        return StringGenerator.generateToken()
+        new String(
+                Base64.encodeBase64URLSafe(
+                    UUID.randomUUID().toString().getBytes()
+                )
+        )
     }
 
     @Override
-    String encodeSerialSecret( SerialSecret serialSecret ) {
-        return SecretCodec.encode( serialSecret )
-    }
-
-    @Override
-    SerialSecret decodeSerialSecret( String encodedSerialSecret ) {
-        return SecretCodec.decode( encodedSerialSecret )
-    }
-
-    @Override
-    String encodeHashId( long id ) {
-        return hashids.encode( id )
-    }
-
-    @Override
-    long decodeHashId( String hashId ) {
-        long[] numbers = hashids.decode( hashId )
-        return numbers.size() > 0 ? numbers[ 0 ] : -1
-    }
-
-    @Override
-    String encrypt( String text ) {
+    String encryptOnce( String text ) {
         textEncryptor.encrypt( text )
     }
 
     @Override
-    String decrypt( String encryptedText ) {
+    String decryptOnce( String encryptedText ) {
         try {
             textEncryptor.decrypt( encryptedText )
         } catch ( Exception ignore ) {
-            return null
+            return ""
         }
     }
 
     @Override
-    boolean matches( String text, String encryptedText ) {
-        text == decrypt( encryptedText )
+    String encryptQueryable( String text ) {
+        queryableEncryptor.encrypt( text )
     }
+
+    @Override
+    String decryptQueryable( String encryptedText ) {
+        try {
+            queryableEncryptor.decrypt( encryptedText )
+        } catch ( Exception ignore ) {
+            return ""
+        }
+    }
+
 }

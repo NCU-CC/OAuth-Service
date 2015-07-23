@@ -19,4 +19,13 @@ class ApiTokenSpecifications extends BasicSpecifications< ApiToken > {
         }
     }
 
+    static Specification< ApiToken > encryptedTokenEquals( String encryptedToken ) {
+        return new Specification< ApiToken >() {
+            @Override
+            public Predicate toPredicate( Root< ApiToken > root, CriteriaQuery< ? > query, CriteriaBuilder cb ) {
+                return cb.equal( root.get( ApiToken_.encryptedToken ), encryptedToken )
+            }
+        }
+    }
+
 }

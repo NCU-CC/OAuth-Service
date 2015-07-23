@@ -30,17 +30,19 @@ class ClientServiceImpl implements ClientService {
 
     @Override
     Client create( Client client ) {
-        String newSecret = secretService.generateToken()
-        client.encryptedSecret = secretService.encrypt( newSecret )
-        client.serialId = UUID.randomUUID().toString()
+        client.encryptedSecret = secretService.generateToken()
+        client.serialId = secretService.generateToken()
         clientRepository.save( client )
+        client.secret = secretService.encryptQueryable( client.encryptedSecret )
+        client
     }
 
     @Override
     Client refreshSecret( Client client ) {
-        String newSecret = secretService.generateToken()
-        client.encryptedSecret = secretService.encrypt( newSecret )
+        client.encryptedSecret = secretService.generateToken()
         clientRepository.save( client )
+        client.secret = secretService.encryptQueryable( client.encryptedSecret )
+        client
     }
 
     @Override
@@ -77,7 +79,7 @@ class ClientServiceImpl implements ClientService {
         if ( client == null ) {
             return false
         } else {
-            return secretService.matches( secret, client.encryptedSecret )
+            return secretService.decryptQueryable( secret ) == client.encryptedSecret
         }
     }
 
