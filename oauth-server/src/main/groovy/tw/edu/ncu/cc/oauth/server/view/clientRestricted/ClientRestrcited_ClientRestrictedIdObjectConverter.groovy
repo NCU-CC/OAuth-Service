@@ -18,6 +18,8 @@ class ClientRestrcited_ClientRestrictedIdObjectConverter implements Converter< C
         ClientRestrictedIdObject restrictedIdObject = new ClientRestrictedIdObject()
         restrictedIdObject.client_id = source.client.serialId
         restrictedIdObject.reason = source.reason
+        restrictedIdObject.last_updated = source.lastUpdated
+        restrictedIdObject.date_created = source.dateCreated
         restrictedIdObject
     }
 

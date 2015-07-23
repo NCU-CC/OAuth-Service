@@ -8,11 +8,10 @@ import org.springframework.validation.BindingResult
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
-import tw.edu.ncu.cc.oauth.data.v1.management.user.ManagerCreateObject
 import tw.edu.ncu.cc.oauth.data.v1.management.user.ManagerObject
 import tw.edu.ncu.cc.oauth.server.model.user.User
 import tw.edu.ncu.cc.oauth.server.operation.manager.ManagerOperations
-import tw.edu.ncu.cc.oauth.server.validator.manager.ManagerCreateValidator
+import tw.edu.ncu.cc.oauth.server.validator.manager.ManagerValidator
 
 @RestController
 @RequestMapping( value = "management/v1/managers" )
@@ -26,7 +25,7 @@ public class ManagerController {
 
     @InitBinder
     public static void initBinder( WebDataBinder binder ) {
-        binder.addValidators( new ManagerCreateValidator() );
+        binder.addValidators( new ManagerValidator() );
     }
 
     @RequestMapping(  method = RequestMethod.GET )
@@ -52,7 +51,7 @@ public class ManagerController {
     }
 
     @RequestMapping( method = RequestMethod.POST )
-    def create( @Validated @RequestBody final ManagerCreateObject managerObject, BindingResult bindingResult ) {
+    def create( @Validated @RequestBody final ManagerObject managerObject, BindingResult bindingResult ) {
 
         def resource = managerOperations.create.process( bindingResult, [ managerObject: managerObject ] )
 

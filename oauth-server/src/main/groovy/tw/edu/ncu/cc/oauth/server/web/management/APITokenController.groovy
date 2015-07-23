@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.convert.ConversionService
 import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
 import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiToken
 import tw.edu.ncu.cc.oauth.server.operation.apiToken.ApiTokenOperations
 
@@ -42,7 +41,7 @@ class APITokenController {
         def resource = apiTokenOperations.create.process( clientSerialId: clientSerialId )
 
         conversionService.convert(
-                resource as ApiToken, ApiTokenObject.class
+                resource as ApiToken, ApiTokenClientObject.class
         )
     }
 
@@ -52,7 +51,7 @@ class APITokenController {
         def resource = apiTokenOperations.revoke.process( id: id )
 
         conversionService.convert(
-                resource as ApiToken , ApiTokenObject.class
+                resource as ApiToken , ApiTokenClientObject.class
         )
     }
 
@@ -62,7 +61,7 @@ class APITokenController {
         def resource = apiTokenOperations.refresh.process( id: id )
 
         conversionService.convert(
-                resource as ApiToken, ApiTokenObject.class
+                resource as ApiToken, ApiTokenClientObject.class
         )
     }
 

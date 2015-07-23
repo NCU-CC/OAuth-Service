@@ -22,6 +22,8 @@ class AccessToken_TokenObjectConverter implements Converter< AccessToken, TokenO
         tokenObject.user = source.user.name
         tokenObject.scope = ScopeHelper.toStringArray( source.scope )
         tokenObject.last_updated = source.lastUpdated
+        tokenObject.last_used = source.lastUsed
+        tokenObject.date_created = source.dateCreated
         tokenObject
     }
 

@@ -22,7 +22,9 @@ class RefreshToken_TokenObjectConverter implements Converter< RefreshToken, Toke
         tokenObject.user = source.user.name
         tokenObject.scope = ScopeHelper.toStringArray( source.scope )
         tokenObject.last_updated = source.lastUpdated
-        return tokenObject
+        tokenObject.last_used = source.lastUsed
+        tokenObject.date_created = source.dateCreated
+        tokenObject
     }
 
 }

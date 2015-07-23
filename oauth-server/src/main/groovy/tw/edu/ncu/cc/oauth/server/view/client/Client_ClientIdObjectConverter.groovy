@@ -18,7 +18,9 @@ class Client_ClientIdObjectConverter implements Converter< Client, ClientIdObjec
         idClientObject.url = source.url
         idClientObject.callback = source.callback
         idClientObject.deleted = source.deleted
-        return idClientObject
+        idClientObject.last_updated = source.lastUpdated
+        idClientObject.date_created = source.dateCreated
+        idClientObject
     }
 
 }

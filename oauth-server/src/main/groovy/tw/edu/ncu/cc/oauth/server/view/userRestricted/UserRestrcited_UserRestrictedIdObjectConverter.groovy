@@ -13,6 +13,8 @@ class UserRestrcited_UserRestrictedIdObjectConverter implements Converter< UserR
         UserRestrictedIdObject restrictedIdObject = new UserRestrictedIdObject()
         restrictedIdObject.user_name = source.user.name
         restrictedIdObject.reason = source.reason
+        restrictedIdObject.date_created = source.dateCreated
+        restrictedIdObject.last_updated = source.lastUpdated
         restrictedIdObject
     }
 

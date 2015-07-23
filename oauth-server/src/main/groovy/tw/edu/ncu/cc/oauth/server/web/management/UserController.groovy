@@ -89,7 +89,7 @@ public class UserController {
         def resource = userOperations.createIfNotExist.process( bindingResult, [ userObject: userObject ] )
 
         conversionService.convert(
-                resource as User, UserObject.class
+                resource as User, UserIdObject.class
         )
     }
 

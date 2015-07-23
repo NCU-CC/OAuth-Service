@@ -19,6 +19,8 @@ class ApiToken_ApiTokenClientObjectConverter implements Converter< ApiToken, Api
         apiTokenObject.id = source.id
         apiTokenObject.token = secretService.encryptQueryable( source.encryptedToken )
         apiTokenObject.last_updated = source.lastUpdated
+        apiTokenObject.last_used = source.lastUsed
+        apiTokenObject.date_created = source.dateCreated
         apiTokenObject.client_id = source.client.serialId
         apiTokenObject
     }
