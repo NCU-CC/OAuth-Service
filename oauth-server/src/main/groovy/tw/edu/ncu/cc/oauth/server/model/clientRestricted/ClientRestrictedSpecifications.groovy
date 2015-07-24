@@ -31,7 +31,7 @@ class ClientRestrictedSpecifications extends BasicSpecifications< ClientRestrict
                 def predicates = [ ]
 
                 if ( ! StringUtils.isEmpty( client_id ) ) {
-                    predicates.add( cb.equal( root.get( ClientRestricted_.client ).get( Client_.id ), client_id as Integer ) )
+                    predicates.add( cb.equal( root.get( ClientRestricted_.client ).get( Client_.serialId ), client_id ) )
                 }
 
                 if ( ! StringUtils.isEmpty( client_name ) ) {
