@@ -39,10 +39,10 @@ public class ClientBlackListController {
                @PageableDefault( size = 20 ) Pageable pageable ) {
 
         def resource = clientBlackListOperations.index.process(
-                id: client_id,
-                name: client_name,
-                owner: client_owner,
-                deleted: client_deleted,
+                client_id: client_id,
+                client_name: client_name,
+                client_owner: client_owner,
+                client_deleted: client_deleted,
                 page: pageable
         )
 
