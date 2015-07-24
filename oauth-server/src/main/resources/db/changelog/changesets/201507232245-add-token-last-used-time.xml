@@ -13,7 +13,7 @@
         <addColumn tableName="refresh_token">
             <column name="last_used" type="datetime"/>
         </addColumn>
-        <addColumn tableName="authorization_code">
+        <addColumn tableName="access_token">
             <column name="last_used" type="datetime"/>
         </addColumn>
         <addColumn tableName="api_token">
