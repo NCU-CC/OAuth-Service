@@ -8,6 +8,6 @@ class TokenLogObject {
     def String ip
     def String referer
     def String application
-    def Date date
+    def Date date_created
 
 }

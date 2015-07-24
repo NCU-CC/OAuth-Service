@@ -13,7 +13,7 @@ class TokenAccessLog_TokenLogObject implements Converter< TokenAccessLog, TokenL
     TokenLogObject convert( TokenAccessLog source ) {
         TokenLogObject tokenLogObject = new TokenLogObject()
         tokenLogObject.ip = source.ip
-        tokenLogObject.date = source.dateCreated
+        tokenLogObject.date_created = source.dateCreated
         tokenLogObject.application = source.application
         tokenLogObject.referer = source.referer
         tokenLogObject.token_id = source.tokenId
