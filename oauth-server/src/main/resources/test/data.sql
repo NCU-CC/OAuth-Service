@@ -23,15 +23,15 @@ INSERT INTO client_restricted ( id, client_id, reason ) VALUES
   ( 1, 2, 'reason1' );
 
 INSERT INTO api_token ( id, encrypted_token, date_created, last_updated, date_expired,  client_id ) VALUES
-  ( 1, 'TOKEN1', '2050-12-25', '2050-12-25', '2100-12-25', 1 ),
-  ( 2, 'TOKEN2', '2050-12-25', '2050-12-25', '2000-12-25', 2 ),
-  ( 3, 'TOKEN3', '2050-12-25', '2050-12-25', '2100-12-25', 3 );
+  ( 1, 'TOKEN1', '2050-12-25', '2050-12-25', NULL, 1 ),
+  ( 2, 'TOKEN2', '2050-12-25', '2050-12-25', NULL, 2 ),
+  ( 3, 'TOKEN3', '2050-12-25', '2050-12-25', NULL, 3 );
 -- 404928c32a31c3bb589c1a878b54c3fe
 
 INSERT INTO refresh_token ( id, encrypted_token, access_token_id, client_id, user_id, date_created, last_updated, date_expired ) VALUES
-  ( 1, 'TOKEN1', 1, 1, 1, '2050-12-25', '2050-12-25', '2100-12-25' ),
-  ( 2, 'TOKEN2', 2, 2, 2, '2050-12-25', '2050-12-25', '2000-12-25' ),
-  ( 3, 'TOKEN3', 3, 3, 3, '2050-12-25', '2050-12-25', '2100-12-25' );
+  ( 1, 'TOKEN1', 1, 1, 1, '2050-12-25', '2050-12-25', NULL ),
+  ( 2, 'TOKEN2', 2, 2, 2, '2050-12-25', '2050-12-25', NULL ),
+  ( 3, 'TOKEN3', 3, 3, 3, '2050-12-25', '2050-12-25', NULL );
 -- 3008a3bf9b3cbc298303f731c350debe08fc04eb46cff3b48d00ff43574e2f50
 
 INSERT INTO refresh_token_scope ( permission_id, refresh_token_id ) VALUES

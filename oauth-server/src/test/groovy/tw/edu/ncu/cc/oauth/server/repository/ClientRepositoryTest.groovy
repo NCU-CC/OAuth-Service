@@ -23,6 +23,10 @@ class ClientRepositoryTest extends SpringSpecification {
             client.description == '1111'
             client.owner.name == 'ADMIN1'
             client.encryptedSecret == 'SECRET1'
+            client.apiTokens.size() != 0
+            client.accessTokens.size() != 0
+            client.refreshTokens.size() != 0
+            client.codes.size() != 0
     }
 
 }

@@ -27,8 +27,6 @@ custom:
       expire-seconds: 600
     accessToken:
       expire-seconds: 600
-    apiToken:
-      expire-seconds: 600
   openid:
     config-path: test/openid.properties
   management:

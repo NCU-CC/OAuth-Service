@@ -42,19 +42,19 @@ class Client extends BasicEntity {
     def User owner
 
     @OneToMany( mappedBy = "client", cascade = [ CascadeType.PERSIST, CascadeType.MERGE ] )
-    @Where( clause = "date_expired > CURRENT_TIMESTAMP()" )
+    @Where( clause = "date_expired > CURRENT_TIMESTAMP() or date_expired is null" )
     def Set< ApiToken > apiTokens = new HashSet<>()
 
     @OneToMany( mappedBy = "client", cascade = [ CascadeType.PERSIST, CascadeType.MERGE ] )
-    @Where( clause = "date_expired > CURRENT_TIMESTAMP()" )
+    @Where( clause = "date_expired > CURRENT_TIMESTAMP() or date_expired is null" )
     def Set< RefreshToken > refreshTokens = new HashSet<>()
 
     @OneToMany( mappedBy = "client", cascade = [ CascadeType.PERSIST, CascadeType.MERGE ] )
-    @Where( clause = "date_expired > CURRENT_TIMESTAMP()" )
+    @Where( clause = "date_expired > CURRENT_TIMESTAMP() or date_expired is null" )
     def Set< AccessToken > accessTokens = new HashSet<>()
 
     @OneToMany( mappedBy = "client", cascade = [ CascadeType.PERSIST, CascadeType.MERGE ] )
-    @Where( clause = "date_expired > CURRENT_TIMESTAMP()" )
+    @Where( clause = "date_expired > CURRENT_TIMESTAMP() or date_expired is null" )
     def Set< AuthorizationCode > codes = new HashSet<>()
 
 }

@@ -48,13 +48,13 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
 
     def "it can read unexpired refresh tokens by user"() {
         expect:
-            refreshTokenService.findAllUnexpiredByUser( get_user( 2 ) ).size() == 0
+            refreshTokenService.findAllUnexpiredByUser( get_user( 2 ) ).size() == 1
             refreshTokenService.findAllUnexpiredByUser( get_user( 3 ) ).size() == 1
     }
 
     def "it can read unexpired refresh tokens by client"() {
         expect:
-            refreshTokenService.findAllUnexpiredByClient( get_client( 2 ) ).size() == 0
+            refreshTokenService.findAllUnexpiredByClient( get_client( 2 ) ).size() == 1
             refreshTokenService.findAllUnexpiredByClient( get_client( 3 ) ).size() == 1
     }
 
