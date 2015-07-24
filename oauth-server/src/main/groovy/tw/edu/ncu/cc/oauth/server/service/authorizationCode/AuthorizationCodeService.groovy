@@ -11,6 +11,7 @@ interface AuthorizationCodeService {
 
     AuthorizationCode create( AuthorizationCode authorizationCode );
     AuthorizationCode revoke( AuthorizationCode authorizationCode );
+    AuthorizationCode refreshLastUsedTime( AuthorizationCode authorizationCode );
 
     AuthorizationCode findUnexpiredByCode( String code );
     AuthorizationCode findUnexpiredByCode( String code, Attribute...attributes );

@@ -12,39 +12,48 @@ class TokenExchangeControllerAuthCodeTest extends IntegrationSpecification {
     def targetURL = "/oauth/token"
 
     def "it should restrict the request of invalid grant_type"() {
+        given:
+            def authorizationCode = a_authorizationCode()
+            def client = a_client()
         expect:
             server().perform(
                     post( targetURL )
                             .param( "grant_type", "error" )
-                            .param( "client_id", serialId( 3 ) )
-                            .param( "client_secret", "SECRET" )
-                            .param( "code", "CODE" )
+                            .param( "client_id", authorizationCode.client.serialId )
+                            .param( "client_secret", client.secret )
+                            .param( "code", authorizationCode.code )
             ).andExpect(
                     status().isBadRequest()
             )
     }
 
     def "it should restrict the request of invalid client"() {
+        given:
+            def authorizationCode = a_authorizationCode()
+            def client = a_client()
         expect:
             server().perform(
                     post( targetURL )
                             .param( "grant_type", "authorization_code" )
-                            .param( "client_id", serialId( 4 ) )
-                            .param( "client_secret", "SECRET" )
-                            .param( "code", "CODE" )
+                            .param( "client_id", 'GG' )
+                            .param( "client_secret", client.secret )
+                            .param( "code", authorizationCode.code )
             ).andExpect(
                     status().isBadRequest()
             )
     }
 
     def "it should restrict the request of invalid auth code"() {
+        given:
+            def authorizationCode = a_authorizationCode()
+            def client = a_client()
         expect:
             server().perform(
                     post( targetURL )
                             .contentType( MediaType.APPLICATION_FORM_URLENCODED )
                             .param( "grant_type", "authorization_code" )
-                            .param( "client_id", serialId( 3 ) )
-                            .param( "client_secret", "SECRET" )
+                            .param( "client_id", authorizationCode.client.serialId )
+                            .param( "client_secret", client.secret )
                             .param( "code", "INVALID" )
             ).andExpect(
                     status().isBadRequest()
@@ -53,15 +62,18 @@ class TokenExchangeControllerAuthCodeTest extends IntegrationSpecification {
 
     @Transactional
     def "it can exchange access token and refresh token with auth code"() {
+        given:
+            def authorizationCode = a_authorizationCode()
+            def client = a_client()
         when:
             def response = JSON(
                     server().perform(
                             post( targetURL )
                                     .contentType( MediaType.APPLICATION_FORM_URLENCODED )
                                     .param( "grant_type", "authorization_code" )
-                                    .param( "client_id", serialId( 3 ) )
-                                    .param( "client_secret", "SECRET" )
-                                    .param( "code", "Mzo6OkNPREU=" )
+                                    .param( "client_id", authorizationCode.client.serialId )
+                                    .param( "client_secret", client.secret )
+                                    .param( "code", authorizationCode.code )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()

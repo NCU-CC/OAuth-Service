@@ -13,6 +13,9 @@ import javax.persistence.*
 @Entity
 class Client extends BasicEntity {
 
+    @Column( nullable = false, unique = true )
+    def String serialId
+
     @Column( nullable = false )
     def String encryptedSecret
 

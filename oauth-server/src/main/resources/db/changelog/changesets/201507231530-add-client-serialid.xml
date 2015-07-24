@@ -7,15 +7,11 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 
     <changeSet id="1" author="unknown">
-
-        <createTable tableName="LOGS">
-            <column name="USER_ID" type="varchar(20)"/>
-            <column name="DATED"   type="datetime"/>
-            <column name="LOGGER"  type="varchar(50)"/>
-            <column name="LEVEL"   type="varchar(10)"/>
-            <column name="MESSAGE" type="varchar(1000)"/>
-        </createTable>
-
+        <addColumn tableName="client">
+            <column name="serial_id" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

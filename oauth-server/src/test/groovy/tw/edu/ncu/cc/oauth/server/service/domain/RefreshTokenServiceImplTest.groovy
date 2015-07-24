@@ -42,7 +42,7 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
 
     def "it can read unexpired refresh token by real code"() {
         expect:
-            refreshTokenService.findUnexpiredByToken( a_refreshToken().encryptedToken ) != null
+            refreshTokenService.findUnexpiredByToken( a_refreshToken().token ) != null
             refreshTokenService.findUnexpiredByToken( "NOTEXIST" ) == null
     }
 
@@ -84,8 +84,8 @@ class RefreshTokenServiceImplTest extends SpringSpecification {
         given:
             def refreshToken = a_refreshToken()
         expect:
-            refreshTokenService.isUnexpiredTokenMatchesClientId( refreshToken.encryptedToken, serialId( refreshToken.id ) )
-            ! refreshTokenService.isUnexpiredTokenMatchesClientId( 'abc', serialId( 3 ) )
+            refreshTokenService.isUnexpiredTokenMatchesClientId( refreshToken.token, refreshToken.client.serialId )
+            ! refreshTokenService.isUnexpiredTokenMatchesClientId( 'abc', refreshToken.client.serialId )
     }
 
 }

@@ -21,6 +21,15 @@ class ClientSpecifications extends BasicSpecifications< Client > {
         }
     }
 
+    static Specification< Client > serialIdEquals( String serialId ) {
+        return new Specification< Client >() {
+            @Override
+            public Predicate toPredicate( Root< Client > root, CriteriaQuery< ? > query, CriteriaBuilder cb ) {
+                return cb.equal( root.get( Client_.serialId ), serialId )
+            }
+        }
+    }
+
     static Specification< Client > attributes( String id, String name, User owner, Boolean deleted ) {
         return new Specification< Client >() {
             @Override
@@ -29,7 +38,7 @@ class ClientSpecifications extends BasicSpecifications< Client > {
                 def predicates = [ ]
 
                 if ( !StringUtils.isEmpty( id ) ) {
-                    predicates.add( cb.equal( root.get( Client_.id ), id as Integer ) )
+                    predicates.add( cb.equal( root.get( Client_.serialId ), id ) )
                 }
 
                 if ( !StringUtils.isEmpty( name ) ) {

@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS access_token
   version INT DEFAULT 0,
   date_created DATETIME,
   last_updated DATETIME,
+  last_used DATETIME,
   date_expired DATETIME,
   encrypted_token VARCHAR(255),
   client_id INT NOT NULL,
@@ -16,6 +17,7 @@ CREATE TABLE IF NOT EXISTS refresh_token
   version INT DEFAULT 0,
   date_created DATETIME,
   last_updated DATETIME,
+  last_used DATETIME,
   date_expired DATETIME,
   encrypted_token VARCHAR(255),
   client_id INT NOT NULL,
@@ -29,6 +31,7 @@ CREATE TABLE IF NOT EXISTS authorization_code
   version INT DEFAULT 0,
   date_created DATETIME,
   last_updated DATETIME,
+  last_used DATETIME,
   date_expired DATETIME,
   encrypted_code VARCHAR(255) ,
   client_id INT NOT NULL,
@@ -44,6 +47,7 @@ CREATE TABLE IF NOT EXISTS client
   callback VARCHAR(255),
   description VARCHAR(255),
   name VARCHAR(255),
+  serial_id VARCHAR(255),
   encrypted_secret VARCHAR(255),
   url VARCHAR(255),
   deleted BOOLEAN DEFAULT FALSE ,
@@ -66,6 +70,7 @@ CREATE TABLE IF NOT EXISTS api_token
   version INT DEFAULT 0,
   date_created DATETIME,
   last_updated DATETIME,
+  last_used DATETIME,
   date_expired DATETIME,
   encrypted_token VARCHAR(255),
   client_id INT NOT NULL,
@@ -130,15 +135,6 @@ CREATE TABLE IF NOT EXISTS refresh_token_scope
 (
   permission_id INT NOT NULL,
   refresh_token_id INT NOT NULL,
-);
-
-CREATE TABLE LOGS
-(
-  USER_ID VARCHAR(20) NOT NULL,
-  DATED   DATETIME NOT NULL,
-  LOGGER  VARCHAR(50) NOT NULL,
-  LEVEL   VARCHAR(10) NOT NULL,
-  MESSAGE VARCHAR(1000) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS token_access_log

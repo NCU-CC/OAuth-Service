@@ -16,15 +16,17 @@ class Client_ClientIdSecretObjectConverter implements Converter< Client, ClientI
     @Override
     ClientIdSecretObject convert( Client source ) {
         ClientIdSecretObject secretIdClientObject = new ClientIdSecretObject()
-        secretIdClientObject.id = secretService.encodeHashId( source.id )
-        secretIdClientObject.secret = secretService.decrypt( source.encryptedSecret )
+        secretIdClientObject.id = source.serialId
+        secretIdClientObject.secret = secretService.encryptQueryable( source.encryptedSecret )
         secretIdClientObject.name = source.name
         secretIdClientObject.description = source.description
         secretIdClientObject.owner = source.owner.name
         secretIdClientObject.url = source.url
         secretIdClientObject.callback = source.callback
         secretIdClientObject.deleted = source.deleted
-        return secretIdClientObject
+        secretIdClientObject.last_updated = source.lastUpdated
+        secretIdClientObject.date_created = source.dateCreated
+        secretIdClientObject
     }
 
 }

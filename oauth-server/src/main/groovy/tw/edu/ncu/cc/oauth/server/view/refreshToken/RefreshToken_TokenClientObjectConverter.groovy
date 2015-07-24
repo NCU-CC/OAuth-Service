@@ -18,15 +18,15 @@ class RefreshToken_TokenClientObjectConverter implements Converter< RefreshToken
 
     @Override
     TokenClientObject convert( RefreshToken source ) {
-
         TokenClientObject clientTokenObject = new TokenClientObject()
         clientTokenObject.id = source.id
         clientTokenObject.user = source.user.name
         clientTokenObject.client = convertFrom( source.client )
         clientTokenObject.scope = ScopeHelper.toStringArray( source.scope )
         clientTokenObject.last_updated = source.lastUpdated
-
-        return clientTokenObject
+        clientTokenObject.last_used = source.lastUsed
+        clientTokenObject.date_created = source.dateCreated
+        clientTokenObject
     }
 
     private ClientIdObject convertFrom( Client client ) {

@@ -1,13 +1,13 @@
 package tw.edu.ncu.cc.oauth.server.model.refreshToken
 
-import tw.edu.ncu.cc.oauth.server.model.TokenEntity
+import tw.edu.ncu.cc.oauth.server.model.UserTokenEntity
 import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
 import tw.edu.ncu.cc.oauth.server.model.permission.Permission
 
 import javax.persistence.*
 
 @Entity
-class RefreshToken extends TokenEntity {
+class RefreshToken extends UserTokenEntity {
 
     @Transient
     def String token

@@ -3,9 +3,6 @@ package tw.edu.ncu.cc.oauth.server.service.apiToken
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
-import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
-import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
 import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiToken
 import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiTokenSpecifications
 import tw.edu.ncu.cc.oauth.server.repository.model.ApiTokenRepository
@@ -31,20 +28,17 @@ class ApiTokenServiceImpl implements ApiTokenService {
 
     @Override
     ApiToken create( ApiToken apiToken ) {
-        String token = secretService.generateToken()
-        apiToken.encryptedToken = secretService.encrypt( token )
-        apiToken.dateExpired = TimeBuilder.now().after( 36, TimeUnit.MONTH ).buildDate()
+        apiToken.encryptedToken = secretService.generateToken()
         apiTokenRepository.save( apiToken )
-        apiToken.token = secretService.encodeSerialSecret( new SerialSecret( apiToken.id, token ) )
+        apiToken.token = secretService.encryptQueryable( apiToken.encryptedToken )
         apiToken
     }
 
     @Override
     ApiToken refreshToken( ApiToken apiToken ) {
-        String token = secretService.generateToken()
-        apiToken.encryptedToken = secretService.encrypt( token )
+        apiToken.encryptedToken = secretService.generateToken()
         apiTokenRepository.save( apiToken )
-        apiToken.token = secretService.encodeSerialSecret( new SerialSecret( apiToken.id, token ) )
+        apiToken.token = secretService.encryptQueryable( apiToken.encryptedToken )
         apiToken
     }
 
@@ -55,15 +49,18 @@ class ApiTokenServiceImpl implements ApiTokenService {
     }
 
     @Override
+    ApiToken refreshLastUsedTime( ApiToken apiToken ) {
+        apiToken.refreshLastUsedTime()
+        apiTokenRepository.save( apiToken )
+    }
+
+    @Override
     ApiToken findUnexpiredByToken( String token, Attribute...attributes = [] ) {
-        SerialSecret serialSecret = secretService.decodeSerialSecret( token )
-        ApiToken apiToken = findUnexpiredById( serialSecret.id as String, attributes )
-        if( apiToken != null && secretService.matches( serialSecret.secret, apiToken.encryptedToken ) ) {
-            apiToken.refreshTimeStamp()
-            apiTokenRepository.save( apiToken )
-        } else {
-            return null
-        }
+        apiTokenRepository.findOne(
+                where( ApiTokenSpecifications.encryptedTokenEquals( secretService.decryptQueryable( token ) ) )
+                        .and( ApiTokenSpecifications.unexpired() )
+                        .and( ApiTokenSpecifications.include( attributes ) )
+        )
     }
 
     @Override

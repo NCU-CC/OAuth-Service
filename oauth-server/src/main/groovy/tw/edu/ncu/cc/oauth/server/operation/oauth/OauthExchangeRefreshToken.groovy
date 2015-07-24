@@ -1,13 +1,11 @@
 package tw.edu.ncu.cc.oauth.server.operation.oauth
 
+import groovy.time.TimeCategory
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import tw.edu.ncu.cc.oauth.server.helper.StringHelper
-import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
-import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
 import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
 import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken_
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
@@ -47,7 +45,7 @@ class OauthExchangeRefreshToken extends BasicOperation {
     @Override
     protected handle( Map params, Map model ) {
         OAuthTokenRequest request = params.request as OAuthTokenRequest
-        long expireSeconds = params.expireSeconds as long
+        Integer expireSeconds = params.expireSeconds as Integer
 
         transaction.executeSerializable {
 
@@ -68,8 +66,7 @@ class OauthExchangeRefreshToken extends BasicOperation {
 
         logService.info(
                 "EXCHANGE REFRESHTOKEN",
-                "CLIENT:" + clientID,
-                "REFRESHTOKEN[10]:" + StringHelper.first( refreshToken, 10 )
+                "CLIENT:" + clientID
         )
 
         def client = clientService.findUndeletedBySerialId( clientID )
@@ -87,7 +84,7 @@ class OauthExchangeRefreshToken extends BasicOperation {
         }
     }
 
-    private AccessToken prepareAccessToken( OAuthTokenRequest request, long expireSeconds ) {
+    private AccessToken prepareAccessToken( OAuthTokenRequest request, Integer expireSeconds ) {
         accessTokenService.createByRefreshToken(
                 new AccessToken(
                         dateExpired: dicideExpireDate( expireSeconds )
@@ -96,15 +93,13 @@ class OauthExchangeRefreshToken extends BasicOperation {
         )
     }
 
-    private static Date dicideExpireDate( long expireSeconds ) {
-        if( expireSeconds <= 0 ) {
-            return TimeBuilder.now().after( 30, TimeUnit.DAY ).buildDate()
-        } else {
-            return TimeBuilder.now().after( expireSeconds, TimeUnit.SECOND ).buildDate()
+    private static Date dicideExpireDate( Integer expireSeconds ) {
+        use( TimeCategory ) {
+            new Date() + expireSeconds.seconds
         }
     }
 
-    private static String buildResponseMessage( String token, long expireSeconds ) {
+    private static String buildResponseMessage( String token, Integer expireSeconds ) {
         return org.apache.oltu.oauth2.as.response.OAuthASResponse
                 .tokenResponse( HttpServletResponse.SC_OK )
                 .setAccessToken(  token )

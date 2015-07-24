@@ -60,7 +60,7 @@ class ClientBlackListControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            get( targetURL + "/" + serialId( clientRestricted.client.id ) )
+                            get( targetURL + "/" + clientRestricted.client.serialId )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
@@ -81,7 +81,7 @@ class ClientBlackListControllerTest extends IntegrationSpecification {
                             .content(
                                 """
                                     {
-                                      "client_id" : "${ serialId( client.id ) }",
+                                      "client_id" : "${ client.serialId }",
                                       "reason" : "other reason"
                                     }
                                 """
@@ -94,7 +94,7 @@ class ClientBlackListControllerTest extends IntegrationSpecification {
             response.reason == "other reason"
         and:
             server().perform(
-                    get( targetURL + "/" + serialId( client.id ) )
+                    get( targetURL + "/" + client.serialId )
             ).andExpect(
                     status().isOk()
             )
@@ -111,7 +111,7 @@ class ClientBlackListControllerTest extends IntegrationSpecification {
                             .content(
                                 """
                                     {
-                                      "client_id" : "${ serialId( client.id ) }",
+                                      "client_id" : "${ client.serialId }",
                                       "reason" : "other reason"
                                     }
                                 """
@@ -128,7 +128,7 @@ class ClientBlackListControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            put( targetURL + "/" + serialId( clientRestricted.client.id ) )
+                            put( targetURL + "/" + clientRestricted.client.serialId )
                                     .contentType( MediaType.APPLICATION_JSON )
                                     .content(
                                     """
@@ -143,7 +143,7 @@ class ClientBlackListControllerTest extends IntegrationSpecification {
             response.reason == "another reason"
         and:
             server().perform(
-                    get( targetURL + "/" + serialId( clientRestricted.client.id ) )
+                    get( targetURL + "/" + clientRestricted.client.serialId )
             ).andExpect(
                     status().isOk()
             )
@@ -155,19 +155,19 @@ class ClientBlackListControllerTest extends IntegrationSpecification {
             def clientRestricted = a_clientRestricted()
         and:
             server().perform(
-                    get( targetURL    + "/" + serialId( clientRestricted.client.id ) )
+                    get( targetURL    + "/" + clientRestricted.client.serialId )
             ).andExpect(
                     status().isOk()
             )
         when:
             server().perform(
-                    delete( targetURL + "/" + serialId( clientRestricted.client.id ) )
+                    delete( targetURL + "/" + clientRestricted.client.serialId )
             ).andExpect(
                     status().isOk()
             )
         then:
             server().perform(
-                    get( targetURL    + "/" + serialId( clientRestricted.client.id ) )
+                    get( targetURL    + "/" + clientRestricted.client.serialId )
             ).andExpect(
                     status().isNotFound()
             )

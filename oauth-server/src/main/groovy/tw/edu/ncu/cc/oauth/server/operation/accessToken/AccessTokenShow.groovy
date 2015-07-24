@@ -34,6 +34,9 @@ class AccessTokenShow extends BasicOperation {
                 accessTokenService.findUnexpiredByToken( params.token as String, AccessToken_.scope )
             }
             stream { AccessToken accessToken ->
+                accessTokenService.refreshLastUsedTime( accessToken )
+            }
+            stream { AccessToken accessToken ->
                 tokenAccessLogService.create(
                         new TokenAccessLog(
                                 tokenType: accessToken.class.simpleName,

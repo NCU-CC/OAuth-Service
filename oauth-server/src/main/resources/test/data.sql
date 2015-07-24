@@ -12,12 +12,12 @@ INSERT INTO role ( id, name ) VALUES
 INSERT INTO user_roles ( user_id, role_id ) VALUES
   ( 1, 1 );
 
-INSERT INTO client ( id, name, encrypted_secret, url, callback, description, owner_id ) VALUES
-  ( 1, 'APP1', 'SECRET1', 'http://example.com', 'http://example.com', '1111', 1 ),
-  ( 2, 'APP2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2 ),
-  ( 3, 'APP3', '0bd2173ec356a389a96fe1527af2ca0441c4f22ebea08bb545cda0abbf1e8a58', 'http://example.com', 'http://example.com', '3333', 2 );
--- SECRET
--- yazDKPjo7j4QBowX 8RnbKwp8RjZeGLkx 67xJRmjErlZ59NWV
+INSERT INTO client ( id, name, serial_id, encrypted_secret, url, callback, description, owner_id ) VALUES
+  ( 1, 'APP1', 'S1', 'SECRET1', 'http://example.com', 'http://example.com', '1111', 1 ),
+  ( 2, 'APP2', 'S2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2 ),
+  ( 3, 'APP3', 'S3', 'SECRET3', 'http://example.com', 'http://example.com', '3333', 2 );
+-- 150f821363ad4e3a3031dd47565a7cba
+-- bb4266c5c397d40e5b70dfe1e9dee626
 
 INSERT INTO client_restricted ( id, client_id, reason ) VALUES
   ( 1, 2, 'reason1' );
@@ -25,14 +25,14 @@ INSERT INTO client_restricted ( id, client_id, reason ) VALUES
 INSERT INTO api_token ( id, encrypted_token, date_created, last_updated, date_expired,  client_id ) VALUES
   ( 1, 'TOKEN1', '2050-12-25', '2050-12-25', '2100-12-25', 1 ),
   ( 2, 'TOKEN2', '2050-12-25', '2050-12-25', '2000-12-25', 2 ),
-  ( 3, '1c202d72a9202db6d14be298abb6e317770c3484fa1e5a176e2da4d7e4ea94c1', '2050-12-25', '2050-12-25', '2100-12-25', 3 );
--- Mzo6OlRPS0VO
+  ( 3, 'TOKEN3', '2050-12-25', '2050-12-25', '2100-12-25', 3 );
+-- 404928c32a31c3bb589c1a878b54c3fe
 
 INSERT INTO refresh_token ( id, encrypted_token, access_token_id, client_id, user_id, date_created, last_updated, date_expired ) VALUES
   ( 1, 'TOKEN1', 1, 1, 1, '2050-12-25', '2050-12-25', '2100-12-25' ),
   ( 2, 'TOKEN2', 2, 2, 2, '2050-12-25', '2050-12-25', '2000-12-25' ),
-  ( 3, '1c202d72a9202db6d14be298abb6e317770c3484fa1e5a176e2da4d7e4ea94c1', 3, 3, 3, '2050-12-25', '2050-12-25', '2100-12-25' );
--- Mzo6OlRPS0VO
+  ( 3, 'TOKEN3', 3, 3, 3, '2050-12-25', '2050-12-25', '2100-12-25' );
+-- 3008a3bf9b3cbc298303f731c350debe08fc04eb46cff3b48d00ff43574e2f50
 
 INSERT INTO refresh_token_scope ( permission_id, refresh_token_id ) VALUES
   ( 1, 1 ),
@@ -43,8 +43,8 @@ INSERT INTO refresh_token_scope ( permission_id, refresh_token_id ) VALUES
 INSERT INTO access_token ( id, encrypted_token, client_id, user_id, date_created, last_updated, date_expired ) VALUES
   ( 1, 'TOKEN1', 1,  1, '2050-12-25', '2050-12-25', '2100-12-25' ),
   ( 2, 'TOKEN2', 2,  2, '2050-12-25', '2050-12-25', '2000-12-25' ),
-  ( 3, '1c202d72a9202db6d14be298abb6e317770c3484fa1e5a176e2da4d7e4ea94c1', 3, 3, '2050-12-25', '2050-12-25', '2100-12-25' );
--- Mzo6OlRPS0VO
+  ( 3, 'TOKEN3', 3, 3, '2050-12-25', '2050-12-25', '2100-12-25' );
+-- 3008a3bf9b3cbc298303f731c350debe08fc04eb46cff3b48d00ff43574e2f50
 
 INSERT INTO access_token_scope ( permission_id, access_token_id ) VALUES
   ( 1, 1 ),
@@ -55,8 +55,8 @@ INSERT INTO access_token_scope ( permission_id, access_token_id ) VALUES
 INSERT INTO authorization_code ( id, encrypted_code, client_id, user_id, date_created, last_updated, date_expired ) VALUES
   ( 1, 'CODE1', 1,  1, '2050-12-25', '2050-12-25', '2100-12-25' ),
   ( 2, 'CODE2', 2,  2, '2050-12-25', '2050-12-25', '2000-12-25' ),
-  ( 3, '0a8e074040d26600eb09531fcc90de0e619243f24966dd91a8b3791cf4b3e83d', 3, 3, '2050-12-25', '2050-12-25', '2100-12-25' );
--- Mzo6OkNPREU=
+  ( 3, 'CODE3', 3, 3, '2050-12-25', '2050-12-25', '2100-12-25' );
+-- 63a2bb18e5031622606ccf41fcee4f1245340e016184080c36824351d9773dfc
 
 INSERT INTO authorization_code_scope ( permission_id, authorization_code_id ) VALUES
   ( 1, 1 ),

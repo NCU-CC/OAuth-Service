@@ -3,7 +3,6 @@ package tw.edu.ncu.cc.oauth.server.service.refreshToken
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken
@@ -36,15 +35,14 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
         refreshToken.client = accessToken.client
         refreshToken.scope = accessToken.scope.collect().toSet()
         refreshToken.user = accessToken.user
-        return create( refreshToken )
+        create( refreshToken )
     }
 
     private RefreshToken create( RefreshToken refreshToken ) {
-        String token = secretService.generateToken()
-        refreshToken.encryptedToken = secretService.encrypt( token )
+        refreshToken.encryptedToken = secretService.generateToken()
         refreshTokenRepository.save( refreshToken )
-        refreshToken.token = secretService.encodeSerialSecret( new SerialSecret( refreshToken.id, token ) )
-        return refreshToken
+        refreshToken.token = secretService.encryptOnce( refreshToken.encryptedToken )
+        refreshToken
     }
 
 
@@ -57,14 +55,18 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     }
 
     @Override
+    RefreshToken refreshLastUsedTime( RefreshToken refreshToken ) {
+        refreshToken.refreshLastUsedTime()
+        refreshTokenRepository.save( refreshToken )
+    }
+
+    @Override
     RefreshToken findUnexpiredByToken( String token, Attribute...attributes = [] ) {
-        SerialSecret serialSecret = secretService.decodeSerialSecret( token )
-        RefreshToken refreshToken = findUnexpiredById( serialSecret.id as String, attributes )
-        if( refreshToken != null && secretService.matches( serialSecret.secret, refreshToken.encryptedToken ) ) {
-            return refreshToken
-        } else {
-            return null
-        }
+        refreshTokenRepository.findOne(
+                where( RefreshTokenSpecifications.unexpired() )
+                        .and( RefreshTokenSpecifications.encryptedTokenEquals( secretService.decryptOnce( token ) ) )
+                        .and( RefreshTokenSpecifications.include( attributes ) )
+        )
     }
 
     @Override
@@ -99,7 +101,7 @@ class RefreshTokenServiceImpl implements RefreshTokenService {
     boolean isUnexpiredTokenMatchesClientId( String token, String clientID ) {
         RefreshToken refreshToken = findUnexpiredByToken( token )
         return refreshToken != null &&
-               refreshToken.client.id == secretService.decodeHashId( clientID ) as Integer
+               refreshToken.client.serialId == clientID
     }
 
 }

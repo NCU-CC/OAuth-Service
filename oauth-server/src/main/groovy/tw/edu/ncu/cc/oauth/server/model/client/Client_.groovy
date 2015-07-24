@@ -16,6 +16,7 @@ import javax.persistence.metamodel.StaticMetamodel
 class Client_ extends BasicEntity_ {
 
     public static volatile SingularAttribute< Client, String > name
+    public static volatile SingularAttribute< Client, String > serialId
     public static volatile SingularAttribute< Client, String > encryptedSecret
     public static volatile SingularAttribute< Client, String > description
     public static volatile SingularAttribute< Client, String > url

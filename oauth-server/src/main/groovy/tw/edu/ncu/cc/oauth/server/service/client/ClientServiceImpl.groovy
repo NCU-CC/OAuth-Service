@@ -30,16 +30,19 @@ class ClientServiceImpl implements ClientService {
 
     @Override
     Client create( Client client ) {
-        String newSecret = secretService.generateToken()
-        client.encryptedSecret = secretService.encrypt( newSecret )
+        client.encryptedSecret = secretService.generateToken()
+        client.serialId = secretService.generateToken()
         clientRepository.save( client )
+        client.secret = secretService.encryptQueryable( client.encryptedSecret )
+        client
     }
 
     @Override
     Client refreshSecret( Client client ) {
-        String newSecret = secretService.generateToken()
-        client.encryptedSecret = secretService.encrypt( newSecret )
+        client.encryptedSecret = secretService.generateToken()
         clientRepository.save( client )
+        client.secret = secretService.encryptQueryable( client.encryptedSecret )
+        client
     }
 
     @Override
@@ -63,9 +66,8 @@ class ClientServiceImpl implements ClientService {
 
     @Override
     Client findUndeletedBySerialId( String serialId, Attribute... attributes = [] ) {
-        long id = secretService.decodeHashId( serialId )
         clientRepository.findOne(
-                where( ClientSpecifications.idEquals( id as Integer ) )
+                where( ClientSpecifications.serialIdEquals( serialId ) )
                         .and( ClientSpecifications.undeleted() )
                         .and( ClientSpecifications.include( attributes ) )
         )
@@ -77,7 +79,7 @@ class ClientServiceImpl implements ClientService {
         if ( client == null ) {
             return false
         } else {
-            return secretService.matches( secret, client.encryptedSecret )
+            return secretService.decryptQueryable( secret ) == client.encryptedSecret
         }
     }
 
@@ -85,7 +87,7 @@ class ClientServiceImpl implements ClientService {
     List< Client > findAllByDataObject( ClientIdObject clientObject, Attribute... attributes = [] ) {
         clientRepository.findAll(
                 where( ClientSpecifications.attributes(
-                        StringUtils.isEmpty( clientObject.id ) ? null : secretService.decodeHashId( clientObject.id ) as String,
+                        clientObject.id,
                         clientObject.name,
                         StringUtils.isEmpty( clientObject.owner ) ? null : userService.findByName( clientObject.owner ),
                         clientObject.deleted

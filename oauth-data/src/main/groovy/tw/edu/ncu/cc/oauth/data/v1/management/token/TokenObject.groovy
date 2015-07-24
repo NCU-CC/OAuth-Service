@@ -7,5 +7,7 @@ public class TokenObject {
     def String client_id
     def String[] scope
     def Date last_updated
+    def Date last_used
+    def Date date_created
 
 }

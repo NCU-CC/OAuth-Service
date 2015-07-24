@@ -17,7 +17,7 @@ class APITokenControllerTest extends IntegrationSpecification {
         when:
             def response = JSON(
                     server().perform(
-                            post( targetURL + "?client_id=" + serialId( client.id ) )
+                            post( targetURL + "?client_id=" + client.serialId )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
@@ -34,9 +34,11 @@ class APITokenControllerTest extends IntegrationSpecification {
 
     @Transactional
     def "user cannot create api token if providing client is in blacklist"() {
+        given:
+            def client = restricted_client()
         expect:
             server().perform(
-                    post( targetURL + "?client_id=" + serialId( 2 ) )
+                    post( targetURL + "?client_id=" + client.serialId )
             ).andExpect(
                     status().isForbidden()
             ).andReturn()

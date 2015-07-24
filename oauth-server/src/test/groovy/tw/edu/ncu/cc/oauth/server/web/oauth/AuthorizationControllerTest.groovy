@@ -20,7 +20,7 @@ class AuthorizationControllerTest extends IntegrationSpecification {
                     get( targetURL ).with( user( "testman" ) )
                             .param( "state", "abc123" )
                             .param( "scope", "READ" )
-                            .param( "client_id", serialId( 3 ) )
+                            .param( "client_id", get_client( 3 ).serialId )
                             .param( "response_type", "code" )
             ).andExpect(
                     status().isOk()
@@ -34,7 +34,7 @@ class AuthorizationControllerTest extends IntegrationSpecification {
                     get( targetURL ).with( user( "testman" ) )
                             .param( "state", "abc123" )
                             .param( "scope", "READ" )
-                            .param( "client_id", serialId( 2 ) )
+                            .param( "client_id", get_client( 2 ).serialId )
                             .param( "response_type", "code" )
             ).andExpect(
                     status().isBadRequest()
@@ -47,7 +47,7 @@ class AuthorizationControllerTest extends IntegrationSpecification {
                     get( targetURL )
                             .param( "state", "abc123" )
                             .param( "scope", "READ" )
-                            .param( "client_id", serialId( 3 ) )
+                            .param( "client_id", get_client( 3 ).serialId )
                             .param( "response_type", "code" )
             ).andExpect(
                     status().isFound()
@@ -60,7 +60,7 @@ class AuthorizationControllerTest extends IntegrationSpecification {
             server().perform(
                     get( targetURL ).with( user( "testman" ) )
                             .param( "scope", "READ" )
-                            .param( "client_id", serialId( 3 ) )
+                            .param( "client_id", get_client( 3 ).serialId )
                             .param( "response_type", "code" )
             ).andExpect(
                     status().isOk()
@@ -81,7 +81,7 @@ class AuthorizationControllerTest extends IntegrationSpecification {
             server().perform(
                     get( targetURL ).with( user( "testman" ) )
                             .param( "scope", "NOTEXIST" )
-                            .param( "client_id", serialId( 3 ) )
+                            .param( "client_id", get_client( 3 ).serialId )
                             .param( "response_type", "code" )
             ).andExpect(
                     status().isFound()
@@ -96,7 +96,7 @@ class AuthorizationControllerTest extends IntegrationSpecification {
                     get( targetURL ).with( user( "testman" ) )
                             .param( "state", "abc123" )
                             .param( "scope", "NOTEXIST" )
-                            .param( "client_id", serialId( 3 ) )
+                            .param( "client_id", get_client( 3 ).serialId )
                             .param( "response_type", "code" )
             ).andExpect(
                     status().isFound()
@@ -124,7 +124,7 @@ class AuthorizationControllerTest extends IntegrationSpecification {
             server().perform(
                     get( targetURL ).with( user( "testman" ) )
                             .param( "scope", "READ" )
-                            .param( "client_id", serialId( 3 ) )
+                            .param( "client_id", get_client( 3 ).serialId )
                             .param( "response_type", "NOTEXIST" )
             ).andExpect(
                     status().isBadRequest()

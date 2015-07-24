@@ -33,6 +33,9 @@ class ApiTokenShow extends BasicOperation {
                 apiTokenService.findUnexpiredByToken( params.token as String )
             }
             stream { ApiToken apiToken ->
+                apiTokenService.refreshLastUsedTime( apiToken )
+            }
+            stream { ApiToken apiToken ->
                 tokenAccessLogService.create(
                         new TokenAccessLog(
                                 tokenType: apiToken.class.simpleName,

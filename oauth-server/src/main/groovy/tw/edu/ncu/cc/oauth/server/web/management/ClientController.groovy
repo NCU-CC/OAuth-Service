@@ -9,7 +9,7 @@ import org.springframework.web.bind.WebDataBinder
 import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientIdSecretObject
 import tw.edu.ncu.cc.oauth.data.v1.management.client.ClientObject
-import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenObject
+import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
 import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiToken
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.operation.client.ClientOperations
@@ -108,7 +108,7 @@ public class ClientController {
         conversionService.convert(
                 resource as Set< ApiToken >,
                 TypeDescriptor.collection( Set.class, TypeDescriptor.valueOf( ApiToken.class ) ),
-                TypeDescriptor.array( TypeDescriptor.valueOf( ApiTokenObject.class ) )
+                TypeDescriptor.array( TypeDescriptor.valueOf( ApiTokenClientObject.class ) )
         )
     }
 

@@ -25,5 +25,6 @@ interface AccessTokenService {
     List< AccessToken > findAllUnexpiredByClient( Client client, Attribute...attributes );
 
     AccessToken revoke( AccessToken accessToken );
+    AccessToken refreshLastUsedTime( AccessToken accessToken );
 
 }

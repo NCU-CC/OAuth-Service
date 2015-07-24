@@ -1,13 +1,12 @@
 package tw.edu.ncu.cc.oauth.server.operation.oauth
 
+import groovy.time.TimeCategory
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import tw.edu.ncu.cc.oauth.server.helper.OAuthProblemBuilder
 import tw.edu.ncu.cc.oauth.server.helper.OAuthURLBuilder
-import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
-import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
 import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCode
 import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.permission.Permission
@@ -38,7 +37,7 @@ class OauthAccessAgree extends BasicOperation {
     def ClientRestrictedService clientRestrictedService
 
     @Value( '${custom.oauth.authCode.expire-seconds}' )
-    def long authorizationCodeExpireSeconds
+    def Integer authorizationCodeExpireSeconds
 
     @Override
     protected validate( OperationParamValidator validator ) {
@@ -72,10 +71,7 @@ class OauthAccessAgree extends BasicOperation {
                         .build();
             }
 
-            Date expireDate = TimeBuilder
-                    .now()
-                    .after( authorizationCodeExpireSeconds, TimeUnit.SECOND )
-                    .buildDate()
+            Date expireDate = decideAuthorizationCodeExpireTime()
 
             AuthorizationCode authCode = authorizationCodeService.create( new AuthorizationCode(
                     client: client,
@@ -91,6 +87,12 @@ class OauthAccessAgree extends BasicOperation {
                     .build()
         }
 
+    }
+
+    Date decideAuthorizationCodeExpireTime() {
+        use( TimeCategory ) {
+            new Date() + authorizationCodeExpireSeconds.seconds
+        }
     }
 
 }

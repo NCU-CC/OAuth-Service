@@ -15,7 +15,8 @@ trait ApiTokenTestData extends DomainTestData {
         new ApiToken(
                 id: 3,
                 client: getClients().findOne( 3 ),
-                token: "Mzo6OlRPS0VO"
+                token: "404928c32a31c3bb589c1a878b54c3fe",
+                encryptedToken: "TOKEN3"
         )
     }
 

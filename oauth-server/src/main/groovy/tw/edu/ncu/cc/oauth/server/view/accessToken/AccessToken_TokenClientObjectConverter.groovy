@@ -24,6 +24,8 @@ class AccessToken_TokenClientObjectConverter implements Converter< AccessToken, 
         clientTokenObject.client = convertFrom( source.client )
         clientTokenObject.scope = ScopeHelper.toStringArray( source.scope )
         clientTokenObject.last_updated = source.lastUpdated
+        clientTokenObject.last_used = source.lastUsed
+        clientTokenObject.date_created = source.dateCreated
         clientTokenObject
     }
 

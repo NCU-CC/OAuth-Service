@@ -9,7 +9,6 @@
     <changeSet id="1" author="unknown">
 
         <addColumn tableName="client">
-            <column name="api_use_times" type="int"/>
             <column name="deleted" type="boolean"/>
         </addColumn>
 

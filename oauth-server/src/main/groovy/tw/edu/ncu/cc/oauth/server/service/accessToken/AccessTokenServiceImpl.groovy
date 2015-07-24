@@ -3,7 +3,6 @@ package tw.edu.ncu.cc.oauth.server.service.accessToken
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import tw.edu.ncu.cc.oauth.server.helper.data.SerialSecret
 import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
 import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessTokenSpecifications
 import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCode
@@ -37,16 +36,16 @@ class AccessTokenServiceImpl implements AccessTokenService {
 
     @Override
     AccessToken create( AccessToken accessToken ) {
-        String token = secretService.generateToken()
-        accessToken.encryptedToken = secretService.encrypt( token )
+        accessToken.encryptedToken = secretService.generateToken()
         accessTokenRepository.save( accessToken )
-        accessToken.token = secretService.encodeSerialSecret( new SerialSecret( accessToken.id, token ) )
+        accessToken.token = secretService.encryptOnce( accessToken.encryptedToken )
         accessToken
     }
 
     @Override
     AccessToken createByAuthorizationCode( AccessToken accessToken, AuthorizationCode authorizationCode ) {
         authorizationCodeService.revoke( authorizationCode )
+        authorizationCodeService.refreshLastUsedTime( authorizationCode )
         accessToken.client = authorizationCode.client
         accessToken.scope = authorizationCode.scope.collect().toSet()
         accessToken.user = authorizationCode.user
@@ -61,6 +60,7 @@ class AccessTokenServiceImpl implements AccessTokenService {
         create( accessToken )
         revoke( refreshToken.accessToken )
         refreshToken.accessToken = accessToken
+        refreshToken.lastUsed = new Date()
         refreshTokenRepository.save( refreshToken )
         accessToken
     }
@@ -72,15 +72,18 @@ class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
+    AccessToken refreshLastUsedTime( AccessToken accessToken ) {
+        accessToken.refreshLastUsedTime()
+        accessTokenRepository.save( accessToken )
+    }
+
+    @Override
     AccessToken findUnexpiredByToken( String token, Attribute...attributes = [] ) {
-        SerialSecret serialSecret = secretService.decodeSerialSecret( token )
-        AccessToken accessToken = findUnexpiredById( serialSecret.id as String, attributes )
-        if( accessToken != null && secretService.matches( serialSecret.secret, accessToken.encryptedToken ) ) {
-            accessToken.refreshTimeStamp()
-            accessTokenRepository.save( accessToken )
-        } else {
-            return null
-        }
+        accessTokenRepository.findOne(
+                where( AccessTokenSpecifications.unexpired() )
+                        .and( AccessTokenSpecifications.encryptedTokenEquals( secretService.decryptOnce( token ) ) )
+                        .and( AccessTokenSpecifications.include( attributes ) )
+        )
     }
 
     @Override
