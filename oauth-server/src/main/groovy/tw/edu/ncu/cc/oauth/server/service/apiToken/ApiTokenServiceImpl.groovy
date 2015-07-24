@@ -3,8 +3,6 @@ package tw.edu.ncu.cc.oauth.server.service.apiToken
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
-import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
 import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiToken
 import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiTokenSpecifications
 import tw.edu.ncu.cc.oauth.server.repository.model.ApiTokenRepository
@@ -31,7 +29,6 @@ class ApiTokenServiceImpl implements ApiTokenService {
     @Override
     ApiToken create( ApiToken apiToken ) {
         apiToken.encryptedToken = secretService.generateToken()
-        apiToken.dateExpired = TimeBuilder.now().after( 36, TimeUnit.MONTH ).buildDate()
         apiTokenRepository.save( apiToken )
         apiToken.token = secretService.encryptQueryable( apiToken.encryptedToken )
         apiToken

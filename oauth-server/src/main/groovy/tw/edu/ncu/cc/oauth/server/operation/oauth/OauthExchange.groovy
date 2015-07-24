@@ -22,7 +22,7 @@ import static org.apache.oltu.oauth2.common.message.types.GrantType.REFRESH_TOKE
 class OauthExchange extends BasicOperation {
 
     @Value( '${custom.oauth.accessToken.expire-seconds}' )
-    def long accessTokenExpireSeconds
+    def Integer accessTokenExpireSeconds
 
     @Autowired
     def OauthExchangeRefreshToken exchangeRefreshToken

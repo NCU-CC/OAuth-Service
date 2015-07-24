@@ -1,12 +1,11 @@
 package tw.edu.ncu.cc.oauth.server.operation.oauth
 
+import groovy.time.TimeCategory
 import org.apache.oltu.oauth2.as.request.OAuthTokenRequest
 import org.apache.oltu.oauth2.common.error.OAuthError
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import tw.edu.ncu.cc.oauth.server.helper.TimeBuilder
-import tw.edu.ncu.cc.oauth.server.helper.data.TimeUnit
 import tw.edu.ncu.cc.oauth.server.model.accessToken.AccessToken
 import tw.edu.ncu.cc.oauth.server.model.authorizationCode.AuthorizationCode_
 import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken
@@ -52,7 +51,7 @@ class OauthExchangeAuthorizationCode extends BasicOperation {
     protected handle( Map params, Map model ) {
 
         OAuthTokenRequest request = params.request as OAuthTokenRequest
-        long expireSeconds = params.expireSeconds as long
+        Integer expireSeconds = params.expireSeconds as Integer
 
         transaction.executeSerializable {
 
@@ -92,30 +91,32 @@ class OauthExchangeAuthorizationCode extends BasicOperation {
         }
     }
 
-    private AccessToken prepareAccessToken( OAuthTokenRequest request, long expireSeconds ) {
+    private AccessToken prepareAccessToken( OAuthTokenRequest request, Integer expireSeconds ) {
         accessTokenService.createByAuthorizationCode(
                 new AccessToken(
-                        dateExpired: dicideExpireDate( expireSeconds )
+                        dateExpired: dicideAccessTokenExpireDate( expireSeconds )
                 ),
                 authCodeService.findUnexpiredByCode( request.getCode(), AuthorizationCode_.scope )
         )
     }
 
-    private static Date dicideExpireDate( long expireSeconds ) {
-        if( expireSeconds <= 0 ) {
-            return TimeBuilder.now().after( 30, TimeUnit.DAY ).buildDate()
-        } else {
-            return TimeBuilder.now().after( expireSeconds, TimeUnit.SECOND ).buildDate()
+    private static Date dicideAccessTokenExpireDate( Integer expireSeconds ) {
+        use( TimeCategory ) {
+            new Date() + expireSeconds.seconds
         }
     }
 
     private RefreshToken prepareRefreshToken( AccessToken accessToken ) {
         refreshTokenService.createByAccessToken(
                 new RefreshToken(
-                        dateExpired: TimeBuilder.now().after( 120, TimeUnit.MONTH ).buildDate()
+                        dateExpired: dicideRefreshTokenExpireDate()
                 ),
                 accessToken
         )
+    }
+
+    private static Date dicideRefreshTokenExpireDate() {
+        return null
     }
 
     private static String buildResponseMessage( String accessToken, String refreshToken, long expireSeconds ) {

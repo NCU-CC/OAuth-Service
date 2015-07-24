@@ -14,7 +14,12 @@ abstract class TokenSpecifications< T extends TokenEntity > extends BasicSpecifi
         new Specification< T >() {
             @Override
             Predicate toPredicate( Root< T > root, CriteriaQuery<?> query, CriteriaBuilder cb ) {
-                return cb.greaterThan( root.get( TokenEntity_.dateExpired ), new Date() )
+                cb.and(
+                        cb.or(
+                            cb.isNull( root.get( TokenEntity_.dateExpired ) ),
+                            cb.greaterThan( root.get( TokenEntity_.dateExpired ), new Date() )
+                        )
+                )
             }
         }
     }

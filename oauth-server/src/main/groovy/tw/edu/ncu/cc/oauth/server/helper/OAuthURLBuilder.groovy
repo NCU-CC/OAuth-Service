@@ -54,7 +54,7 @@ public class OAuthURLBuilder {
         return stringBuilder.deleteCharAt( stringBuilder.length()-1 ).toString();
     }
 
-    private boolean isNotEmpty( String string ) {
+    private static boolean isNotEmpty( String string ) {
         return string != null && !string.equals( "" );
     }
 
