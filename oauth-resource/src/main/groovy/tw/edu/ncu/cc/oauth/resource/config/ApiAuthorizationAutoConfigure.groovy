@@ -3,7 +3,6 @@ package tw.edu.ncu.cc.oauth.resource.config
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.embedded.FilterRegistrationBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -32,9 +31,6 @@ class ApiAuthorizationAutoConfigure {
     RemoteConfig remoteConfig
 
     @Autowired
-    CloudConfig cloudConfig
-
-    @Autowired
     RestTemplate restTemplate
 
     @Bean
@@ -54,7 +50,7 @@ class ApiAuthorizationAutoConfigure {
     @Bean
     @ConditionalOnMissingBean( TokenMetaDecider )
     TokenMetaDecider tokenMetaDecider() {
-        new TokenMetaDeciderImpl( application: cloudConfig.name )
+        new TokenMetaDeciderImpl()
     }
 
     @Bean

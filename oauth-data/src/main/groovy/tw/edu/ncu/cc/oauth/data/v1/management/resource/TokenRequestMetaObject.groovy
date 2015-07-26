@@ -5,6 +5,5 @@ class TokenRequestMetaObject {
 
     def String ip
     def String referer
-    def String application
 
 }

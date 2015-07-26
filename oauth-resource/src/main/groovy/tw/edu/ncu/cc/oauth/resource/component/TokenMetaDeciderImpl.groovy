@@ -8,14 +8,11 @@ import static org.springframework.http.HttpHeaders.REFERER
 
 class TokenMetaDeciderImpl implements TokenMetaDecider {
 
-    def String application
-
     @Override
     TokenRequestMetaObject decide( HttpServletRequest request ) {
         new TokenRequestMetaObject(
                 ip: request.remoteAddr,
-                referer: request.getHeader( REFERER ),
-                application: application
+                referer: request.getHeader( REFERER )
         )
     }
 
