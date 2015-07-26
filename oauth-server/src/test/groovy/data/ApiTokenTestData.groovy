@@ -20,4 +20,17 @@ trait ApiTokenTestData extends DomainTestData {
         )
     }
 
+    ApiToken trusted_apiToken() {
+        a_apiToken()
+    }
+
+    ApiToken untrusted_apiToken() {
+        new ApiToken(
+                id: 2,
+                client: getClients().findOne( 2 ),
+                token: "84545f3b5cadecbe465926049b0fbe66",
+                encryptedToken: "TOKEN2"
+        )
+    }
+
 }

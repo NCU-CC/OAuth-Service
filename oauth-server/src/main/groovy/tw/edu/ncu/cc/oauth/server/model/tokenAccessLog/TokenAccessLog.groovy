@@ -27,7 +27,8 @@ class TokenAccessLog extends BasicEntity {
     @Column
     def String referer
 
-    @Column
-    def String application
+    @JoinColumn
+    @ManyToOne( optional = false )
+    def Client application
 
 }

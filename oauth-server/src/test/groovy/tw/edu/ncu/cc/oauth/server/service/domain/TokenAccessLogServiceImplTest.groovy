@@ -21,7 +21,7 @@ class TokenAccessLogServiceImplTest extends SpringSpecification {
                     tokenType: "type",
                     tokenId: 1,
                     client: get_client( 1 ),
-                    application: "gg",
+                    application: get_client( 3 ),
                     ip: "192.168.0.1",
                     referer: "www.example.com"
             )
@@ -30,7 +30,7 @@ class TokenAccessLogServiceImplTest extends SpringSpecification {
         then:
             tokenAccessLogService.findAll(
                     Specifications.where(
-                            TokenAccessLogSpecifications.applicationEquals( "gg" )
+                            TokenAccessLogSpecifications.applicationEquals( get_client( 3 ).name )
                     ),
                     new PageRequest( 0, 1 )
             ).size() != 0

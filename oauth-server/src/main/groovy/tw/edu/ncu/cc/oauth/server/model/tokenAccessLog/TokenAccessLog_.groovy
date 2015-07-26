@@ -11,7 +11,7 @@ class TokenAccessLog_ extends BasicEntity_ {
     public static volatile SingularAttribute< TokenAccessLog, String > tokenType
     public static volatile SingularAttribute< TokenAccessLog, Integer > tokenId
     public static volatile SingularAttribute< TokenAccessLog, Client > client
+    public static volatile SingularAttribute< TokenAccessLog, Client > application
     public static volatile SingularAttribute< TokenAccessLog, String > ip
     public static volatile SingularAttribute< TokenAccessLog, String > referer
-    public static volatile SingularAttribute< TokenAccessLog, String > application
 }

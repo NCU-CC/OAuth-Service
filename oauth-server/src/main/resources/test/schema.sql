@@ -50,7 +50,8 @@ CREATE TABLE IF NOT EXISTS client
   serial_id VARCHAR(255),
   encrypted_secret VARCHAR(255),
   url VARCHAR(255),
-  deleted BOOLEAN DEFAULT FALSE ,
+  deleted BOOLEAN DEFAULT FALSE,
+  trusted BOOLEAN DEFAULT FALSE,
   owner_id INT NOT NULL
 );
 
@@ -146,7 +147,7 @@ CREATE TABLE IF NOT EXISTS token_access_log
   token_type VARCHAR(50),
   token_id  INT,
   client_id INT,
+  application_id INT,
   ip VARCHAR(50),
-  referer VARCHAR(255),
-  application VARCHAR(50)
+  referer VARCHAR(255)
 );

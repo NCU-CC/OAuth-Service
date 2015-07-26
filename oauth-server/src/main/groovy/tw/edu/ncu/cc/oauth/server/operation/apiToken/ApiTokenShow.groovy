@@ -21,8 +21,8 @@ class ApiTokenShow extends BasicOperation {
     @Override
     protected validate( OperationParamValidator validator ) {
         validator.required().hasText( 'token' )
+        validator.required().attribute( 'application' )
         validator.optional().attribute( 'ip' )
-        validator.optional().attribute( 'application' )
         validator.optional().attribute( 'referer' )
     }
 
@@ -41,9 +41,9 @@ class ApiTokenShow extends BasicOperation {
                                 tokenType: apiToken.class.simpleName,
                                 tokenId: apiToken.id,
                                 client: apiToken.client,
+                                application: params.application,
                                 ip: params.ip,
-                                referer: params.referer,
-                                application: params.application
+                                referer: params.referer
                         )
                 )
                 return apiToken

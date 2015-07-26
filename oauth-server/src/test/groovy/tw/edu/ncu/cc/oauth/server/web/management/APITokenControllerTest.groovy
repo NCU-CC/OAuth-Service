@@ -5,6 +5,7 @@ import specification.IntegrationSpecification
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.getAPI_TOKEN_HEADER
 
 class APITokenControllerTest extends IntegrationSpecification {
 
@@ -25,8 +26,8 @@ class APITokenControllerTest extends IntegrationSpecification {
         then:
             server().perform(
                     get( targetURL + "/token/${response.token}"  )
+                            .header( API_TOKEN_HEADER, trusted_apiToken().token )
                             .param( "ip", "127.0.0.1" )
-                            .param( "application", "test" )
             ).andExpect(
                     status().isOk()
             )
@@ -52,20 +53,35 @@ class APITokenControllerTest extends IntegrationSpecification {
             def response = JSON(
                     server().perform(
                             get( targetURL + "/token/" + apiToken.token )
+                                    .header( API_TOKEN_HEADER, trusted_apiToken().token )
                                     .param( "ip", "127.0.0.1" )
-                                    .param( "application", "test" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
             )
         then:
             response.client_id != null
+        expect:
+            server().perform(
+                    get( targetURL + "/token/" + apiToken.token )
+                            .param( "ip", "127.0.0.1" )
+            ).andExpect(
+                    status().isBadRequest()
+            )
+        and:
+            server().perform(
+                    get( targetURL + "/token/" + apiToken.token )
+                            .header( API_TOKEN_HEADER, untrusted_apiToken().token )
+                            .param( "ip", "127.0.0.1" )
+            ).andExpect(
+                    status().isForbidden()
+            )
     }
 
     @Transactional
     def "user can revoke api token info by id"() {
         given:
-            def apiToken = a_apiToken()
+            def apiToken = untrusted_apiToken()
         when:
             server().perform(
                     delete( targetURL + "/" + apiToken.id )
@@ -75,8 +91,8 @@ class APITokenControllerTest extends IntegrationSpecification {
         then:
             server().perform(
                     get( targetURL + "/token/" + apiToken.token )
+                            .header( API_TOKEN_HEADER, trusted_apiToken().token )
                             .param( "ip", "127.0.0.1" )
-                            .param( "application", "test" )
             ).andExpect(
                     status().isNotFound()
             )
@@ -85,12 +101,12 @@ class APITokenControllerTest extends IntegrationSpecification {
     @Transactional
     def "user can refresh api token info by id"() {
         given:
-            def apiToken = a_apiToken()
+            def apiToken = untrusted_apiToken()
         expect:
             server().perform(
                     get( targetURL + "/token/" + apiToken.token )
+                            .header( API_TOKEN_HEADER, trusted_apiToken().token )
                             .param( "ip", "127.0.0.1" )
-                            .param( "application", "test" )
             ).andExpect(
                     status().isOk()
             )
@@ -105,8 +121,8 @@ class APITokenControllerTest extends IntegrationSpecification {
         then:
             server().perform(
                     get( targetURL + "/token/" + apiToken.token )
+                            .header( API_TOKEN_HEADER, trusted_apiToken().token )
                             .param( "ip", "127.0.0.1" )
-                            .param( "application", "test" )
             ).andExpect(
                     status().isNotFound()
             )

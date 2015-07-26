@@ -21,6 +21,15 @@ class ClientSpecifications extends BasicSpecifications< Client > {
         }
     }
 
+    static Specification< Client > trusted() {
+        return new Specification< Client >() {
+            @Override
+            public Predicate toPredicate( Root< Client > root, CriteriaQuery< ? > query, CriteriaBuilder cb ) {
+                return cb.equal( root.get( Client_.trusted ), true )
+            }
+        }
+    }
+
     static Specification< Client > serialIdEquals( String serialId ) {
         return new Specification< Client >() {
             @Override
@@ -30,7 +39,7 @@ class ClientSpecifications extends BasicSpecifications< Client > {
         }
     }
 
-    static Specification< Client > attributes( String id, String name, User owner, Boolean deleted ) {
+    static Specification< Client > attributes( String id, String name, User owner, Boolean deleted, Boolean trusted = false ) {
         return new Specification< Client >() {
             @Override
             public Predicate toPredicate( Root<Client> root, CriteriaQuery<?> query, CriteriaBuilder cb ) {
@@ -51,6 +60,10 @@ class ClientSpecifications extends BasicSpecifications< Client > {
 
                 if( deleted != null ) {
                     predicates.add( cb.equal( root.get( Client_.deleted ), deleted ) )
+                }
+
+                if( deleted != null ) {
+                    predicates.add( cb.equal( root.get( Client_.trusted ), trusted ) )
                 }
 
                 cb.and( predicates as Predicate[] )

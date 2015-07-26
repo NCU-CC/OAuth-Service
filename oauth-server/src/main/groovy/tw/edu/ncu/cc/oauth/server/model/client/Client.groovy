@@ -37,6 +37,9 @@ class Client extends BasicEntity {
     @Column
     def Boolean deleted = false
 
+    @Column
+    def Boolean trusted = false
+
     @JoinColumn
     @ManyToOne( optional = false )
     def User owner

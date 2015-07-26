@@ -18,14 +18,18 @@
             <column name="token_type" type="varchar(50)"/>
             <column name="token_id" type="int"/>
             <column name="client_id" type="int"/>
+            <column name="application_id" type="int"/>
             <column name="ip" type="varchar(50)"/>
             <column name="referer" type="varchar(255)"/>
-            <column name="application" type="varchar(50)"/>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="token_access_log" baseColumnNames="client_id"
                                  referencedTableName="client" referencedColumnNames="id"
                                  constraintName="fk_lb_ANDXhFj32g" />
+
+        <addForeignKeyConstraint baseTableName="token_access_log" baseColumnNames="application_id"
+                                 referencedTableName="client" referencedColumnNames="id"
+                                 constraintName="fk_lb_gNgghFj32g" />
 
     </changeSet>
 

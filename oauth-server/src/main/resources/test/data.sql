@@ -12,10 +12,10 @@ INSERT INTO role ( id, name ) VALUES
 INSERT INTO user_roles ( user_id, role_id ) VALUES
   ( 1, 1 );
 
-INSERT INTO client ( id, name, serial_id, encrypted_secret, url, callback, description, owner_id ) VALUES
-  ( 1, 'APP1', 'S1', 'SECRET1', 'http://example.com', 'http://example.com', '1111', 1 ),
-  ( 2, 'APP2', 'S2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2 ),
-  ( 3, 'APP3', 'S3', 'SECRET3', 'http://example.com', 'http://example.com', '3333', 2 );
+INSERT INTO client ( id, name, serial_id, encrypted_secret, url, callback, description, owner_id, trusted ) VALUES
+  ( 1, 'APP1', 'S1', 'SECRET1', 'http://example.com', 'http://example.com', '1111', 1, false ),
+  ( 2, 'APP2', 'S2', 'SECRET2', 'http://example.com', 'http://example.com', '2222', 2, false ),
+  ( 3, 'APP3', 'S3', 'SECRET3', 'http://example.com', 'http://example.com', '3333', 2, true );
 -- 150f821363ad4e3a3031dd47565a7cba
 -- bb4266c5c397d40e5b70dfe1e9dee626
 
@@ -26,6 +26,7 @@ INSERT INTO api_token ( id, encrypted_token, date_created, last_updated, date_ex
   ( 1, 'TOKEN1', '2050-12-25', '2050-12-25', NULL, 1 ),
   ( 2, 'TOKEN2', '2050-12-25', '2050-12-25', NULL, 2 ),
   ( 3, 'TOKEN3', '2050-12-25', '2050-12-25', NULL, 3 );
+-- 84545f3b5cadecbe465926049b0fbe66
 -- 404928c32a31c3bb589c1a878b54c3fe
 
 INSERT INTO refresh_token ( id, encrypted_token, access_token_id, client_id, user_id, date_created, last_updated, date_expired ) VALUES
@@ -69,7 +70,7 @@ INSERT INTO permission ( id, name ) VALUES
   ( 2, 'READ' ),
   ( 3, 'WRITE' );
 
-INSERT INTO token_access_log( id, token_type, token_id, client_id, ip, referer, application ) VALUES
-  ( 1, 'AccessToken', 1, 1, '127.0.0.1', NULL, 'location' ),
-  ( 2, 'AccessToken', 2, 2, '192.168.0.1', NULL, 'activity' ),
-  ( 3, 'ApiToken', 3, 3, '192.168.0.2', NULL, 'course' );
+INSERT INTO token_access_log( id, token_type, token_id, client_id, ip, referer, application_id ) VALUES
+  ( 1, 'AccessToken', 1, 1, '127.0.0.1', NULL, 1 ),
+  ( 2, 'AccessToken', 2, 2, '192.168.0.1', NULL, 2 ),
+  ( 3, 'ApiToken', 3, 3, '192.168.0.2', NULL, 3 );
