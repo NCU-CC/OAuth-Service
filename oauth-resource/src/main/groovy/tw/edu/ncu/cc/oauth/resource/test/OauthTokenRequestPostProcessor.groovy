@@ -5,8 +5,8 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor
 import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenObject
 import tw.edu.ncu.cc.oauth.resource.core.ApiCredentialHolder
 
-import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.ACCESS_TOKEN_HEADER
-import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.ACCESS_TOKEN_PREFIX
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.ACCESS_TOKEN_HEADER
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.ACCESS_TOKEN_PREFIX
 
 class OauthTokenRequestPostProcessor implements RequestPostProcessor {
 

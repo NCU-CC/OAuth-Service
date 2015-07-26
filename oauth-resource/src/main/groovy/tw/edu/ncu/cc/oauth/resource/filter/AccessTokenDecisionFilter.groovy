@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 import static org.springframework.http.HttpStatus.*
-import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.*
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.*
 
 public class AccessTokenDecisionFilter extends AbstractFilter {
 

@@ -12,7 +12,7 @@ import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.*
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.*
 
 class AccessTokenDecisionFilterTest extends Specification {
 

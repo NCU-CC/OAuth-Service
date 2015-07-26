@@ -12,8 +12,8 @@ import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.getAPI_TOKEN_ATTR
-import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.getAPI_TOKEN_HEADER
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.getAPI_TOKEN_ATTR
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.getAPI_TOKEN_HEADER
 
 class ApiTokenDecisionFilterTest extends Specification {
 

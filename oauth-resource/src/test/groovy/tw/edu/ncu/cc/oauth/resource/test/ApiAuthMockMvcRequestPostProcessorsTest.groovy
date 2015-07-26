@@ -4,7 +4,7 @@ import org.springframework.mock.web.MockHttpServletRequest
 import spock.lang.Specification
 import tw.edu.ncu.cc.oauth.resource.core.ApiCredentialHolder
 
-import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.*
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.*
 
 class ApiAuthMockMvcRequestPostProcessorsTest extends Specification {
 

@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 import static org.springframework.http.HttpStatus.*
-import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.API_TOKEN_ATTR
-import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.API_TOKEN_HEADER
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.API_TOKEN_ATTR
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.API_TOKEN_HEADER
 
 public class ApiTokenDecisionFilter extends AbstractFilter {
 
