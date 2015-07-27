@@ -35,4 +35,13 @@ class TokenAccessLogServiceImplTest extends SpringSpecification {
                     new PageRequest( 0, 1 )
             ).size() != 0
     }
+
+    @Transactional
+    def "it can count access times per month with specified client and application"() {
+        expect:
+            50000 == tokenAccessLogService.findAccessTimesPerMonthByClientAndApplication(
+                    get_client( 2 ), get_client( 3 )
+            )
+    }
+
 }
