@@ -74,3 +74,8 @@ INSERT INTO token_access_log( id, token_type, token_id, client_id, ip, referer, 
   ( 1, 'AccessToken', 1, 1, '127.0.0.1', NULL, 1 ),
   ( 2, 'AccessToken', 2, 2, '192.168.0.1', NULL, 2 ),
   ( 3, 'ApiToken', 3, 3, '192.168.0.2', NULL, 3 );
+
+INSERT INTO client_access_log( id, client_id, application_id, access_times_per_month ) VALUES
+  ( 1, 1, 3, 0 ),
+  ( 2, 2, 3, 50000 ),
+  ( 3, 3, 3, 300);

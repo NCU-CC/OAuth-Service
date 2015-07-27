@@ -33,4 +33,17 @@ trait ApiTokenTestData extends DomainTestData {
         )
     }
 
+    ApiToken reach_limit_with_trustedAPI_apiToken() {
+        untrusted_apiToken()
+    }
+
+    ApiToken not_reach_limit_apiToken() {
+        new ApiToken(
+                id: 1,
+                client: getClients().findOne( 1 ),
+                token: "509913a20c104d2ff2a8f7711dc537cf",
+                encryptedToken: "TOKEN1"
+        )
+    }
+
 }

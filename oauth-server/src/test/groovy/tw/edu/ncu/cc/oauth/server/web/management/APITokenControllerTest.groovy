@@ -79,6 +79,19 @@ class APITokenControllerTest extends IntegrationSpecification {
     }
 
     @Transactional
+    def "user cannot get api token info if that api token reach api call limit"() {
+        given:
+            def apiToken = reach_limit_with_trustedAPI_apiToken()
+        server().perform(
+                get( targetURL + "/token/" + apiToken.token )
+                        .header( API_TOKEN_HEADER, trusted_apiToken().token )
+                        .param( "ip", "127.0.0.1" )
+        ).andExpect(
+                status().isForbidden()
+        )
+    }
+
+    @Transactional
     def "user can revoke api token info by id"() {
         given:
             def apiToken = untrusted_apiToken()
@@ -101,7 +114,7 @@ class APITokenControllerTest extends IntegrationSpecification {
     @Transactional
     def "user can refresh api token info by id"() {
         given:
-            def apiToken = untrusted_apiToken()
+            def apiToken = not_reach_limit_apiToken()
         expect:
             server().perform(
                     get( targetURL + "/token/" + apiToken.token )

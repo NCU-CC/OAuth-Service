@@ -1,6 +1,5 @@
 package tw.edu.ncu.cc.oauth.resource.filter
 
-import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.client.HttpClientErrorException
@@ -48,13 +47,13 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
                 if( e.statusCode == NOT_FOUND ) {
                     throw new InvalidRequestException( UNAUTHORIZED, "invalid api token" )
                 } else if( e.statusCode == FORBIDDEN ) {
-                    throw new InvalidRequestException( FORBIDDEN, "invalid request address" )
+                    throw new InvalidRequestException( FORBIDDEN, "invalid request:" + e.message )
                 } else {
                     throw e
                 }
             }
         } else {
-            throw new InvalidRequestException( HttpStatus.BAD_REQUEST, "api token not provided" )
+            throw new InvalidRequestException( BAD_REQUEST, "api token not provided" )
         }
     }
 
