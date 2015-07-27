@@ -1,8 +1,10 @@
 package tw.edu.ncu.cc.oauth.server.operation.apiToken
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiToken
+import tw.edu.ncu.cc.oauth.server.model.client.Client
 import tw.edu.ncu.cc.oauth.server.model.tokenAccessLog.TokenAccessLog
 import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
 import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
@@ -18,6 +20,9 @@ class ApiTokenShow extends BasicOperation {
     @Autowired
     def TokenAccessLogService tokenAccessLogService
 
+    @Value( '${custom.oauth.resource.access-limit-per-month}' )
+    def Integer resourceAccessLimitPerMonth
+
     @Override
     protected validate( OperationParamValidator validator ) {
         validator.required().hasText( 'token' )
@@ -31,6 +36,16 @@ class ApiTokenShow extends BasicOperation {
         streams {
             notNullNotFound {
                 apiTokenService.findUnexpiredByToken( params.token as String )
+            }
+            notNullForbidden( 'reach api access times limit per month'  ) { ApiToken apiToken ->
+                if( apiToken.client.trusted ) {
+                    apiToken
+                } else {
+                    int accessTimesPerMonth = tokenAccessLogService.findAccessTimesPerMonthByClientAndApplication(
+                            apiToken.client, params.application as Client
+                    )
+                    accessTimesPerMonth > resourceAccessLimitPerMonth ? null : apiToken
+                }
             }
             stream { ApiToken apiToken ->
                 apiTokenService.refreshLastUsedTime( apiToken )

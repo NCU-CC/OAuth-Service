@@ -27,6 +27,8 @@ custom:
       expire-seconds: 600
     accessToken:
       expire-seconds: 600
+    resource:
+      access-limit-per-month: 25000
   openid:
     config-path: test/openid.properties
   management:
