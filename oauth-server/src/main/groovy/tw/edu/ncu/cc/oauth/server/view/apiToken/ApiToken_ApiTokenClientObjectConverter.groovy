@@ -21,6 +21,7 @@ class ApiToken_ApiTokenClientObjectConverter implements Converter< ApiToken, Api
         apiTokenObject.last_updated = source.lastUpdated
         apiTokenObject.last_used = source.lastUsed
         apiTokenObject.date_created = source.dateCreated
+        apiTokenObject.client_trusted = source.client.trusted
         apiTokenObject.client_id = source.client.serialId
         apiTokenObject
     }
