@@ -34,8 +34,8 @@ public class AccessTokenDecisionFilter extends AbstractFilter {
         try {
             checkAuthentication( httpRequest )
             chain.doFilter( request, response )
-        } catch ( InvalidRequestException e ) {
-            httpResponse.sendError( e.httpStatus.value(), e.message )
+        } catch ( HttpClientErrorException e ) {
+            httpResponse.sendError( e.statusCode.value(), "access token decision failed: ${ e.message }" )
         }
     }
 
@@ -45,15 +45,17 @@ public class AccessTokenDecisionFilter extends AbstractFilter {
                 bindAccessToken( request, findAccessToken( request ) )
             } catch ( HttpClientErrorException e ) {
                 if( e.statusCode == NOT_FOUND ) {
-                    throw new InvalidRequestException( UNAUTHORIZED, "invalid access token" )
+                    throw new HttpClientErrorException( UNAUTHORIZED, "invalid access token" )
                 } else if( e.statusCode == FORBIDDEN ) {
-                    throw new InvalidRequestException( FORBIDDEN, "invalid request address" )
+                    throw new HttpClientErrorException( FORBIDDEN, "invalid request: ${ e.message }" )
                 } else {
                     throw e
                 }
             }
         } else {
-            throw new InvalidRequestException( BAD_REQUEST, "access token not provided" )
+            throw new HttpClientErrorException(
+                    BAD_REQUEST, "access token not provided in Header like: ${ ACCESS_TOKEN_HEADER }: ${ ACCESS_TOKEN_PREFIX } [ your token ]"
+            )
         }
     }
 
