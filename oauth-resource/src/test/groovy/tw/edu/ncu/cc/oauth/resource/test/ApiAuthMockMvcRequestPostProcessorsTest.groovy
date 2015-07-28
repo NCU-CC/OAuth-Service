@@ -15,6 +15,7 @@ class ApiAuthMockMvcRequestPostProcessorsTest extends Specification {
             ApiAuthMockMvcRequestPostProcessors
                     .apiToken( "test-api-token" )
                     .clientId( "app" )
+                    .clientTrusted()
                     .postProcessRequest( mockrequest )
         then:
             1 * mockrequest.addHeader( API_TOKEN_HEADER, "test-api-token" )
@@ -22,6 +23,7 @@ class ApiAuthMockMvcRequestPostProcessorsTest extends Specification {
             def apiToken = ApiCredentialHolder.getApiToken( "test-api-token" )
         then:
             apiToken.client_id == "app"
+            apiToken.client_trusted
     }
 
     def "it can add oauth token to mock request and crdential holder"() {

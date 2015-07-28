@@ -10,6 +10,7 @@ class ApiTokenRequestPostProcessor implements RequestPostProcessor {
 
     private String apiToken
     private String clientId
+    private Boolean clientTrusted = false
 
     ApiTokenRequestPostProcessor( String apiToken ) {
         this.apiToken = apiToken
@@ -20,12 +21,18 @@ class ApiTokenRequestPostProcessor implements RequestPostProcessor {
         this
     }
 
+    ApiTokenRequestPostProcessor clientTrusted() {
+        this.clientTrusted = true
+        this
+    }
+
     @Override
     MockHttpServletRequest postProcessRequest( MockHttpServletRequest request ) {
         request.addHeader( RequestAttribute.API_TOKEN_HEADER, apiToken )
         ApiCredentialHolder.addApiToken( apiToken, new ApiTokenClientObject(
                 last_updated: new Date(),
-                client_id: clientId
+                client_id: clientId,
+                client_trusted: clientTrusted
         ) )
         request
     }
