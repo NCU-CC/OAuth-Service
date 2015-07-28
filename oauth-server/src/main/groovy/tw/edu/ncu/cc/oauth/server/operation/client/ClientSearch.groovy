@@ -18,6 +18,7 @@ class ClientSearch extends BasicOperation {
         validator.optional().attribute( 'id' )
         validator.optional().attribute( 'name' )
         validator.optional().attribute( 'owner' )
+        validator.optional().isBoolean( 'trusted' )
         validator.optional().isBoolean( 'deleted' )
     }
 
@@ -28,6 +29,7 @@ class ClientSearch extends BasicOperation {
                 id : params.id as String,
                 name : params.name as String,
                 owner : params.owner as String,
+                trusted: params.trusted as Boolean,
                 deleted: params.deleted as Boolean
         )
 

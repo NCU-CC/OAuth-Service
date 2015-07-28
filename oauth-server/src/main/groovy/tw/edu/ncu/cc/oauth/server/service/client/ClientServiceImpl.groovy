@@ -90,7 +90,8 @@ class ClientServiceImpl implements ClientService {
                         clientObject.id,
                         clientObject.name,
                         StringUtils.isEmpty( clientObject.owner ) ? null : userService.findByName( clientObject.owner ),
-                        clientObject.deleted
+                        clientObject.deleted,
+                        clientObject.trusted
                 ) )
                 .and( ClientSpecifications.include( attributes ) )
         )
