@@ -3,6 +3,7 @@ package tw.edu.ncu.cc.oauth.resource.filter
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.client.HttpClientErrorException
+import tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
 import tw.edu.ncu.cc.oauth.resource.component.TokenMetaDecider
 import tw.edu.ncu.cc.oauth.resource.core.ApiCredentialHolder
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse
 import static org.springframework.http.HttpStatus.*
 import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.API_TOKEN_ATTR
 import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.API_TOKEN_HEADER
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.API_TOKEN_HEADER
 
 public class ApiTokenDecisionFilter extends AbstractFilter {
 
@@ -34,8 +36,8 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
         try {
             checkAuthentication( httpRequest )
             chain.doFilter( request, response )
-        } catch ( InvalidRequestException e ) {
-            httpResponse.sendError( e.httpStatus.value(), e.message )
+        } catch ( HttpClientErrorException e ) {
+            httpResponse.sendError( e.statusCode.value(), "api token decision failed: ${ e.message }" )
         }
     }
 
@@ -47,15 +49,17 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
                 bindApiToken( request, apiTokenClientObject )
             } catch ( HttpClientErrorException e  ) {
                 if( e.statusCode == NOT_FOUND ) {
-                    throw new InvalidRequestException( UNAUTHORIZED, "invalid api token" )
+                    throw new HttpClientErrorException( UNAUTHORIZED, "invalid api token" )
                 } else if( e.statusCode == FORBIDDEN ) {
-                    throw new InvalidRequestException( FORBIDDEN, "invalid request:" + e.message )
+                    throw new HttpClientErrorException( FORBIDDEN, "invalid request: ${ e.message }" )
                 } else {
                     throw e
                 }
             }
         } else {
-            throw new InvalidRequestException( BAD_REQUEST, "api token not provided" )
+            throw new HttpClientErrorException(
+                    BAD_REQUEST, "api token not provided in Header like: ${ API_TOKEN_HEADER }: [ your token ]"
+            )
         }
     }
 
