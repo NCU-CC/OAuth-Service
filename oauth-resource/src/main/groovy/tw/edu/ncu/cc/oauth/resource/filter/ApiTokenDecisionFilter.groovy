@@ -42,7 +42,9 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
     private void checkAuthentication( HttpServletRequest request ) {
         if( isApiRequest( request ) ) {
             try {
-                bindApiToken( request, findApiToken( request ) )
+                ApiTokenClientObject apiTokenClientObject = findApiToken( request )
+                verifyApiTokenOject( apiTokenClientObject )
+                bindApiToken( request, apiTokenClientObject )
             } catch ( HttpClientErrorException e  ) {
                 if( e.statusCode == NOT_FOUND ) {
                     throw new InvalidRequestException( UNAUTHORIZED, "invalid api token" )
@@ -73,6 +75,8 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
     private static String readApiTokenFromRequest( HttpServletRequest request ) {
         request.getHeader( API_TOKEN_HEADER )
     }
+
+    protected void verifyApiTokenOject( ApiTokenClientObject apiTokenClientObject ) {}
 
     private static void bindApiToken( HttpServletRequest request, ApiTokenClientObject apiTokenObject ) {
         SecurityContextHolder.getContext().setAuthentication(
