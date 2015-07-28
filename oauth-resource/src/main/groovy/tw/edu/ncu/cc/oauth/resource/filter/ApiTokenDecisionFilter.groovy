@@ -3,11 +3,9 @@ package tw.edu.ncu.cc.oauth.resource.filter
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.client.HttpClientErrorException
-import tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
 import tw.edu.ncu.cc.oauth.resource.component.TokenMetaDecider
 import tw.edu.ncu.cc.oauth.resource.core.ApiCredentialHolder
-import tw.edu.ncu.cc.oauth.resource.exception.InvalidRequestException
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
 
 import javax.servlet.FilterChain
@@ -20,7 +18,7 @@ import javax.servlet.http.HttpServletResponse
 import static org.springframework.http.HttpStatus.*
 import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.API_TOKEN_ATTR
 import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.API_TOKEN_HEADER
-import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.API_TOKEN_HEADER
+import static tw.edu.ncu.cc.oauth.resource.helper.MessageHelper.errorDescription
 
 public class ApiTokenDecisionFilter extends AbstractFilter {
 
@@ -51,7 +49,7 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
                 if( e.statusCode == NOT_FOUND ) {
                     throw new HttpClientErrorException( UNAUTHORIZED, "invalid api token" )
                 } else if( e.statusCode == FORBIDDEN ) {
-                    throw new HttpClientErrorException( FORBIDDEN, "invalid request: ${ e.message }" )
+                    throw new HttpClientErrorException( FORBIDDEN, "invalid request: ${ errorDescription( e ) }" )
                 } else {
                     throw e
                 }
