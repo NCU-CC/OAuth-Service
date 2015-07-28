@@ -64,6 +64,12 @@ class APITokenControllerTest extends IntegrationSpecification {
         expect:
             server().perform(
                     get( targetURL + "/token/" + apiToken.token )
+            ).andExpect(
+                    status().isBadRequest()
+            )
+        and:
+            server().perform(
+                    get( targetURL + "/token/" + apiToken.token )
                             .param( "ip", "127.0.0.1" )
             ).andExpect(
                     status().isBadRequest()

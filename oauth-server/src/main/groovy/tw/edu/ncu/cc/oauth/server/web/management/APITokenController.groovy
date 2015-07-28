@@ -22,7 +22,7 @@ class APITokenController {
 
     @RequestMapping( value = "token/{token}", method = RequestMethod.GET )
     def get( @PathVariable( "token" ) final String token,
-             @RequestParam( value = "ip", required = false ) String ip,
+             @RequestParam( value = "ip" ) String ip,
              @RequestParam( value = "referer", required = false ) String referer,
              HttpServletRequest request ) {
 

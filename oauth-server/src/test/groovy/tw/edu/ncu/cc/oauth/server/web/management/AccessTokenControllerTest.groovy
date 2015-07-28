@@ -42,6 +42,14 @@ class AccessTokenControllerTest extends IntegrationSpecification {
         and:
             server().perform(
                     get( targetURL + "/token/" + accessToken.token )
+                            .param( "ip", "127.0.0.1" )
+            ).andExpect(
+                    status().isBadRequest()
+            )
+        and:
+            server().perform(
+                    get( targetURL + "/token/" + accessToken.token )
+                            .param( "ip", "127.0.0.1" )
                             .header( API_TOKEN_HEADER, untrusted_apiToken().token )
             ).andExpect(
                     status().isForbidden()
