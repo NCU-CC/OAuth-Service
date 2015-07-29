@@ -15,14 +15,14 @@ import javax.servlet.http.HttpServletResponse
 import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.getAPI_TOKEN_ATTR
 import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.getAPI_TOKEN_HEADER
 
-class ApiTokenDecisionFilterTest extends Specification {
+class TrustedApiTokenDecisionFilterTest extends Specification {
 
     def FilterChain filterChain
     def HttpServletRequest  request
     def HttpServletResponse response
     def TokenMetaDecider tokenMetaDecider
     def TokenConfirmService tokenConfirmService
-    def ApiTokenDecisionFilter apiTokenDecisionFilter
+    def TrustedApiTokenDecisionFilter trustedApiTokenDecisionFilter
 
     def setup() {
         filterChain = Mock( FilterChain )
@@ -31,16 +31,16 @@ class ApiTokenDecisionFilterTest extends Specification {
         tokenConfirmService = Mock( TokenConfirmService )
         tokenMetaDecider = Mock( TokenMetaDecider )
 
-        apiTokenDecisionFilter = new ApiTokenDecisionFilter()
-        apiTokenDecisionFilter.tokenConfirmService = tokenConfirmService
-        apiTokenDecisionFilter.tokenMetaDecider = tokenMetaDecider
+        trustedApiTokenDecisionFilter = new TrustedApiTokenDecisionFilter()
+        trustedApiTokenDecisionFilter.tokenConfirmService = tokenConfirmService
+        trustedApiTokenDecisionFilter.tokenMetaDecider = tokenMetaDecider
     }
 
     def "it should response with 400 directly if no api token appended"() {
         given:
             request.getHeader( API_TOKEN_HEADER ) >> null
         when:
-            apiTokenDecisionFilter.doFilter( request, response, filterChain )
+            trustedApiTokenDecisionFilter.doFilter( request, response, filterChain )
         then:
             1 * response.sendError( 400, _ as String )
         and:
@@ -55,7 +55,7 @@ class ApiTokenDecisionFilterTest extends Specification {
                 throw new HttpClientErrorException( HttpStatus.NOT_FOUND )
             }
         when:
-            apiTokenDecisionFilter.doFilter( request, response, filterChain )
+            trustedApiTokenDecisionFilter.doFilter( request, response, filterChain )
         then:
             1 * response.sendError( 401, _ as String )
         and:
@@ -70,7 +70,22 @@ class ApiTokenDecisionFilterTest extends Specification {
                 throw new HttpClientErrorException( HttpStatus.FORBIDDEN )
             }
         when:
-            apiTokenDecisionFilter.doFilter( request, response, filterChain )
+            trustedApiTokenDecisionFilter.doFilter( request, response, filterChain )
+        then:
+            1 * response.sendError( 403, _ as String )
+        and:
+            0 * filterChain.doFilter( _ as HttpServletRequest, _ as HttpServletResponse )
+    }
+
+    def "it should response 403 if api token provided but its client is not trusted"() {
+        given:
+            request.getHeader( API_TOKEN_HEADER ) >> "TOKEN2"
+        and:
+            tokenConfirmService.readApiToken( "TOKEN2", null ) >> new ApiTokenClientObject(
+                    client_trusted: false
+            )
+        when:
+            trustedApiTokenDecisionFilter.doFilter( request, response, filterChain )
         then:
             1 * response.sendError( 403, _ as String )
         and:
@@ -82,10 +97,11 @@ class ApiTokenDecisionFilterTest extends Specification {
             request.getHeader( API_TOKEN_HEADER ) >> "TOKEN"
         and:
             tokenConfirmService.readApiToken( "TOKEN", null ) >> new ApiTokenClientObject(
-                    client_id: "testapp"
+                    client_id: "testapp",
+                    client_trusted: true
             )
         when:
-            apiTokenDecisionFilter.doFilter( request, response, filterChain )
+            trustedApiTokenDecisionFilter.doFilter( request, response, filterChain )
         then:
             SecurityContextHolder.getContext().getAuthentication().name == "testapp"
         and:

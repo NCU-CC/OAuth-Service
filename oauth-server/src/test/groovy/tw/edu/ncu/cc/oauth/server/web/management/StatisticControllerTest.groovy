@@ -6,7 +6,6 @@ import specification.IntegrationSpecification
 import tw.edu.ncu.cc.oauth.server.repository.model.TokenAccessLogRepository
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 class StatisticControllerTest extends IntegrationSpecification {
@@ -25,7 +24,6 @@ class StatisticControllerTest extends IntegrationSpecification {
             server().perform(
                     get( targetURL + "/" + client.serialId + "/tokens" )
                             .param( "ip", log.ip )
-                            .param( "application", log.application )
             ).andExpect(
                     status().isOk()
             ).andReturn()

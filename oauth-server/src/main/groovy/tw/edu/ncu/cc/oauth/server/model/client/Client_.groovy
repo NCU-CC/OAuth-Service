@@ -22,6 +22,7 @@ class Client_ extends BasicEntity_ {
     public static volatile SingularAttribute< Client, String > url
     public static volatile SingularAttribute< Client, String > callback
     public static volatile SingularAttribute< Client, Boolean > deleted
+    public static volatile SingularAttribute< Client, Boolean > trusted
     public static volatile SingularAttribute< Client, User > owner
     public static volatile SetAttribute< Client, ApiToken > apiTokens
     public static volatile SetAttribute< Client, RefreshToken > refreshTokens

@@ -4,6 +4,8 @@ public class ErrorObject {
 
     def String error_description
 
+    public ErrorObject(){}
+
     public ErrorObject( String error_description ) {
         this.error_description = error_description;
     }

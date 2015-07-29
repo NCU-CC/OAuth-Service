@@ -3,7 +3,6 @@ package tw.edu.ncu.cc.oauth.resource.config
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.embedded.FilterRegistrationBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -15,6 +14,7 @@ import tw.edu.ncu.cc.oauth.resource.component.TokenMetaDecider
 import tw.edu.ncu.cc.oauth.resource.component.TokenMetaDeciderImpl
 import tw.edu.ncu.cc.oauth.resource.filter.AccessTokenDecisionFilter
 import tw.edu.ncu.cc.oauth.resource.filter.ApiTokenDecisionFilter
+import tw.edu.ncu.cc.oauth.resource.filter.TrustedApiTokenDecisionFilter
 import tw.edu.ncu.cc.oauth.resource.service.BlackListService
 import tw.edu.ncu.cc.oauth.resource.service.BlackListServiceImpl
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
@@ -30,9 +30,6 @@ class ApiAuthorizationAutoConfigure {
 
     @Autowired
     RemoteConfig remoteConfig
-
-    @Autowired
-    CloudConfig cloudConfig
 
     @Autowired
     RestTemplate restTemplate
@@ -54,7 +51,7 @@ class ApiAuthorizationAutoConfigure {
     @Bean
     @ConditionalOnMissingBean( TokenMetaDecider )
     TokenMetaDecider tokenMetaDecider() {
-        new TokenMetaDeciderImpl( application: cloudConfig.name )
+        new TokenMetaDeciderImpl()
     }
 
     @Bean
@@ -76,6 +73,23 @@ class ApiAuthorizationAutoConfigure {
     @Bean
     FilterRegistrationBean apiTokenDecisionFilterRegistration( ApiTokenDecisionFilter apiTokenDecisionFilter ) {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean( apiTokenDecisionFilter )
+        registrationBean.setEnabled( false )
+        registrationBean
+    }
+
+    @Bean
+    @ConditionalOnMissingBean( TrustedApiTokenDecisionFilter )
+    TrustedApiTokenDecisionFilter trustedapiTokenDecisionFilter( TokenConfirmService tokenConfirmService, TokenMetaDecider tokenMetaDecider ) {
+        logger.info( "auto-configure oauth trusted api token decision filter with server path : " + remoteConfig.serverPath )
+        TrustedApiTokenDecisionFilter filter = new TrustedApiTokenDecisionFilter()
+        filter.setTokenConfirmService( tokenConfirmService )
+        filter.setTokenMetaDecider( tokenMetaDecider )
+        filter
+    }
+
+    @Bean
+    FilterRegistrationBean trustedApiTokenDecisionFilterRegistration( TrustedApiTokenDecisionFilter trustedApiTokenDecisionFilter ) {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean( trustedApiTokenDecisionFilter )
         registrationBean.setEnabled( false )
         registrationBean
     }

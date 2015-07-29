@@ -1,13 +1,11 @@
 package tw.edu.ncu.cc.oauth.resource.filter
 
-import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.client.HttpClientErrorException
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
 import tw.edu.ncu.cc.oauth.resource.component.TokenMetaDecider
 import tw.edu.ncu.cc.oauth.resource.core.ApiCredentialHolder
-import tw.edu.ncu.cc.oauth.resource.exception.InvalidRequestException
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
 
 import javax.servlet.FilterChain
@@ -18,8 +16,9 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 import static org.springframework.http.HttpStatus.*
-import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.API_TOKEN_ATTR
-import static tw.edu.ncu.cc.oauth.resource.config.RequestConfig.API_TOKEN_HEADER
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.API_TOKEN_ATTR
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.API_TOKEN_HEADER
+import static tw.edu.ncu.cc.oauth.resource.helper.MessageHelper.errorDescription
 
 public class ApiTokenDecisionFilter extends AbstractFilter {
 
@@ -35,26 +34,30 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
         try {
             checkAuthentication( httpRequest )
             chain.doFilter( request, response )
-        } catch ( InvalidRequestException e ) {
-            httpResponse.sendError( e.httpStatus.value(), e.message )
+        } catch ( HttpClientErrorException e ) {
+            httpResponse.sendError( e.statusCode.value(), "api token decision failed: ${ e.message }" )
         }
     }
 
     private void checkAuthentication( HttpServletRequest request ) {
         if( isApiRequest( request ) ) {
             try {
-                bindApiToken( request, findApiToken( request ) )
+                ApiTokenClientObject apiTokenClientObject = findApiToken( request )
+                verifyApiTokenOject( apiTokenClientObject )
+                bindApiToken( request, apiTokenClientObject )
             } catch ( HttpClientErrorException e  ) {
                 if( e.statusCode == NOT_FOUND ) {
-                    throw new InvalidRequestException( UNAUTHORIZED, "invalid api token" )
+                    throw new HttpClientErrorException( UNAUTHORIZED, "invalid api token" )
                 } else if( e.statusCode == FORBIDDEN ) {
-                    throw new InvalidRequestException( FORBIDDEN, "invalid request address" )
+                    throw new HttpClientErrorException( FORBIDDEN, "invalid request: ${ errorDescription( e ) }" )
                 } else {
                     throw e
                 }
             }
         } else {
-            throw new InvalidRequestException( HttpStatus.BAD_REQUEST, "api token not provided" )
+            throw new HttpClientErrorException(
+                    BAD_REQUEST, "api token not provided in Header like: ${ API_TOKEN_HEADER }: [ your token ]"
+            )
         }
     }
 
@@ -74,6 +77,8 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
     private static String readApiTokenFromRequest( HttpServletRequest request ) {
         request.getHeader( API_TOKEN_HEADER )
     }
+
+    protected void verifyApiTokenOject( ApiTokenClientObject apiTokenClientObject ) {}
 
     private static void bindApiToken( HttpServletRequest request, ApiTokenClientObject apiTokenObject ) {
         SecurityContextHolder.getContext().setAuthentication(

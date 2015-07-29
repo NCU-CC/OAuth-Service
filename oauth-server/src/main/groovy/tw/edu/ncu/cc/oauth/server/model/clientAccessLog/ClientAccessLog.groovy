@@ -1,4 +1,4 @@
-package tw.edu.ncu.cc.oauth.server.model.tokenAccessLog
+package tw.edu.ncu.cc.oauth.server.model.clientAccessLog
 
 import tw.edu.ncu.cc.oauth.server.model.BasicEntity
 import tw.edu.ncu.cc.oauth.server.model.client.Client
@@ -9,26 +9,17 @@ import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 
 @Entity
-class TokenAccessLog extends BasicEntity {
-
-    @Column
-    def String tokenType
-
-    @Column
-    def Integer tokenId
+class ClientAccessLog extends BasicEntity {
 
     @JoinColumn
     @ManyToOne( optional = false )
     def Client client
 
-    @Column
-    def String ip
-
-    @Column
-    def String referer
-
     @JoinColumn
     @ManyToOne( optional = false )
     def Client application
+
+    @Column
+    def Integer accessTimesPerMonth = 0
 
 }

@@ -10,4 +10,17 @@ trait ManagerTestData extends DomainTestData {
         user.roles.find { it.name == 'admin' } == null ? null : user
     }
 
+    User a_manager() {
+        new User(
+                name: "ADMIN1",
+                roles: [ getRoles().findOne( 1 ) ]
+        )
+    }
+
+    User a_common_user() {
+        new User(
+                name: "ADMIN2"
+        )
+    }
+
 }

@@ -39,9 +39,10 @@ public class ClientController {
     def search( @RequestParam( value = "id", required = false ) String id,
                 @RequestParam( value = "name", required = false ) String name,
                 @RequestParam( value = "owner", required = false ) String owner,
-                @RequestParam( value = "deleted", defaultValue = "false" ) Boolean deleted ) {
+                @RequestParam( value = "deleted", defaultValue = "false" ) Boolean deleted,
+                @RequestParam( value = "trusted", defaultValue = "false" ) Boolean trusted ) {
 
-        def resource = clientOperations.search.process( id: id, name: name, owner: owner, deleted: deleted )
+        def resource = clientOperations.search.process( id: id, name: name, owner: owner, deleted: deleted, trusted: trusted )
 
         conversionService.convert(
                 resource as List<Client>,

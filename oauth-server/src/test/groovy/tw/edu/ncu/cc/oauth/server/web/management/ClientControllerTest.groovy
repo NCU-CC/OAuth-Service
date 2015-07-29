@@ -66,6 +66,44 @@ class ClientControllerTest extends IntegrationSpecification {
     }
 
     @Transactional
+    def "only manager can create trusted client"() {
+        expect:
+            server().perform(
+                    post( targetURL )
+                            .contentType( MediaType.APPLICATION_JSON )
+                            .content(
+                            """
+                                {
+                                  "name" :     "app",
+                                  "callback" : "http://example.com",
+                                  "owner" :    "${ a_manager().name }",
+                                  "trusted" :  "${ true }"
+                                }
+                            """
+                    )
+            ).andExpect(
+                    status().isOk()
+            )
+        and:
+            server().perform(
+                    post( targetURL )
+                            .contentType( MediaType.APPLICATION_JSON )
+                            .content(
+                            """
+                                {
+                                  "name" :     "app",
+                                  "callback" : "http://example.com",
+                                  "owner" :    "${ a_common_user().name }",
+                                  "trusted" :  "${ true }"
+                                }
+                            """
+                    )
+            ).andExpect(
+                    status().isForbidden()
+            )
+    }
+
+    @Transactional
     def "user cannot create client if that user is restricted"() {
         given:
             def clientObject = new ClientObject(

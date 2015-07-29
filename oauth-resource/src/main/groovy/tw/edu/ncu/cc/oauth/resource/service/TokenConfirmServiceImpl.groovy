@@ -1,7 +1,11 @@
 package tw.edu.ncu.cc.oauth.resource.service
 
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseEntity
 import org.springframework.web.client.RestTemplate
+import tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute
 import tw.edu.ncu.cc.oauth.data.v1.management.resource.TokenRequestMetaObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
 import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenObject
@@ -31,11 +35,19 @@ public class TokenConfirmServiceImpl implements TokenConfirmService {
     }
 
     private <T> ResponseEntity<T> getTokenWithType( String url, String token, TokenRequestMetaObject metaObject, Class<T> responseType ) {
-        restTemplate.getForEntity(
-                url + "/" + token + "?ip={ip}&referer={referer}&application={app}",
+        restTemplate.exchange(
+                url + "/" + token + "?ip={ip}&referer={referer}",
+                HttpMethod.GET,
+                headers(),
                 responseType,
-                metaObject.ip, metaObject.referer, metaObject.application
+                metaObject.ip, metaObject.referer
         )
+    }
+
+    private HttpEntity headers() {
+        HttpHeaders headers = new HttpHeaders()
+        headers.add( RequestAttribute.API_TOKEN_HEADER, config.apiToken )
+        new HttpEntity( headers )
     }
 
 }

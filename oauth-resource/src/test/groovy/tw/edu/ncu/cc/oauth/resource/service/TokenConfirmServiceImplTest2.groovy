@@ -12,6 +12,8 @@ import spock.lang.Specification
 import tw.edu.ncu.cc.oauth.data.v1.management.resource.TokenRequestMetaObject
 import tw.edu.ncu.cc.oauth.resource.config.RemoteConfig
 
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.getAPI_TOKEN_HEADER
+
 class TokenConfirmServiceImplTest2 extends Specification {
 
     @Shared @ClassRule
@@ -24,6 +26,7 @@ class TokenConfirmServiceImplTest2 extends Specification {
                 HttpRequest.request()
                         .withMethod( "GET" )
                         .withPath( "/management/v1/api_tokens/token/token1" )
+                        .withHeader( new Header( API_TOKEN_HEADER, "abc123" ) )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 200 )
@@ -42,6 +45,7 @@ class TokenConfirmServiceImplTest2 extends Specification {
                 HttpRequest.request()
                         .withMethod( "GET" )
                         .withPath( "/management/v1/api_tokens/token/token2" )
+                        .withHeader( new Header( API_TOKEN_HEADER, "abc123" ) )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 404 )
@@ -50,6 +54,7 @@ class TokenConfirmServiceImplTest2 extends Specification {
                 HttpRequest.request()
                         .withMethod( "GET" )
                         .withPath( "/management/v1/api_tokens/token/token3" )
+                        .withHeader( new Header( API_TOKEN_HEADER, "abc123" ) )
         ).respond(
                 HttpResponse.response()
                         .withStatusCode( 403 )
@@ -59,7 +64,8 @@ class TokenConfirmServiceImplTest2 extends Specification {
     def setup() {
         tokenConfirmService = new TokenConfirmServiceImpl(
                 new RemoteConfig(
-                        serverPath: "http://localhost:" + serverResource.port()
+                        serverPath: "http://localhost:" + serverResource.port(),
+                        apiToken: "abc123"
                 ),
                 new RestTemplate()
         )

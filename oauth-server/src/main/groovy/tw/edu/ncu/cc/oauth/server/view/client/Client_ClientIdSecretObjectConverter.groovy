@@ -24,6 +24,7 @@ class Client_ClientIdSecretObjectConverter implements Converter< Client, ClientI
         secretIdClientObject.url = source.url
         secretIdClientObject.callback = source.callback
         secretIdClientObject.deleted = source.deleted
+        secretIdClientObject.trusted = source.trusted
         secretIdClientObject.last_updated = source.lastUpdated
         secretIdClientObject.date_created = source.dateCreated
         secretIdClientObject

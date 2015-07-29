@@ -2,10 +2,10 @@ package tw.edu.ncu.cc.oauth.server.web.management
 
 import org.springframework.transaction.annotation.Transactional
 import specification.IntegrationSpecification
-import spock.lang.Ignore
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute.API_TOKEN_HEADER
 
 class AccessTokenControllerTest extends IntegrationSpecification {
 
@@ -19,8 +19,8 @@ class AccessTokenControllerTest extends IntegrationSpecification {
             def response = JSON(
                     server().perform(
                             get( targetURL + "/token/" + accessToken.token )
+                                    .header( API_TOKEN_HEADER, trusted_apiToken().token )
                                     .param( "ip", "127.0.0.1" )
-                                    .param( "application", "test" )
                     ).andExpect(
                             status().isOk()
                     ).andReturn()
@@ -29,9 +29,8 @@ class AccessTokenControllerTest extends IntegrationSpecification {
             response.user == accessToken.user.name
     }
 
-    @Ignore
     @Transactional
-    def "user cannot get access token info by token if invalid params"() { //TODO WAIT FOR OTHER SERVICES
+    def "user cannot get access token info by token if invalid authentication"() {
         given:
             def accessToken = a_accessToken()
         expect:
@@ -50,10 +49,12 @@ class AccessTokenControllerTest extends IntegrationSpecification {
         and:
             server().perform(
                     get( targetURL + "/token/" + accessToken.token )
-                            .param( "application", "test" )
+                            .param( "ip", "127.0.0.1" )
+                            .header( API_TOKEN_HEADER, untrusted_apiToken().token )
             ).andExpect(
-                    status().isBadRequest()
+                    status().isForbidden()
             )
+
     }
 
 }

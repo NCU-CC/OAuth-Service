@@ -4,6 +4,7 @@ import org.springframework.data.jpa.domain.Specification
 import tw.edu.ncu.cc.oauth.server.model.BasicEntity_
 import tw.edu.ncu.cc.oauth.server.model.BasicSpecifications
 import tw.edu.ncu.cc.oauth.server.model.client.Client
+import tw.edu.ncu.cc.oauth.server.model.client.Client_
 
 import javax.persistence.criteria.CriteriaBuilder
 import javax.persistence.criteria.CriteriaQuery
@@ -34,7 +35,7 @@ class TokenAccessLogSpecifications extends BasicSpecifications<TokenAccessLog> {
         return new Specification<TokenAccessLog>() {
             @Override
             Predicate toPredicate( Root< TokenAccessLog > root, CriteriaQuery<?> query, CriteriaBuilder cb ) {
-                return cb.equal( root.get( TokenAccessLog_.application ), application )
+                return cb.equal( root.get( TokenAccessLog_.application ).get( Client_.name ), application )
             }
         }
     }
