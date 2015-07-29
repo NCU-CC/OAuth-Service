@@ -58,24 +58,29 @@ h5{
     font-size: 15px;
 }
 
-#accept-btn {
-    background-color: rgb(233, 233, 233);
-}
-
-#decline-btn {
-    background-color: rgb(215, 96, 77);
-}
-
-
 .permission-group {
-    font-weight: 800;
-    margin: 10px auto;
+    margin: 20px auto;
 }
 .form-group {
     font-size: 15px;
+    margin-bottom: 30px;
 }
-.permission-item {
 
+.form-description {
+    font-weight: 800;
+    color: #ff0000;
+}
+
+.permission-name {
+    font-weight: 800;
+}
+
+.permission-item {
+    border: 1px solid rgba(0,0,0,0.3);
+    border-radius: 4px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    margin: 10px auto;
 }
 
 @media (min-width: 768px) {

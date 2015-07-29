@@ -26,19 +26,24 @@
         <h5>USER: ${user_id}</h5>
         <h5>CLIENT: <a href="${client.url}">${client.name}</a></h5>
         <div class="form-group">
-            For following permissions
+            <div class="form-description" >
+                READ CAREFULLY BEFORE ACCEPT !
+            </div>
             <div class="permission-group">
                 <c:forEach items="${scope}" var="permission">
-                    <div class="permission-item">${permission.name}</div>
+                    <div class="permission-item">
+                        <div class="permission-name">${permission.name}</div>
+                        <div class="permission-description">${permission.description}</div>
+                    </div>
                 </c:forEach>
             </div>
             <form:form action="${confirm_page}" method="POST">
                 <input name='approval' value='true' type='hidden'/>
-                <input type="submit" id="accept-btn" class="btn btn-default" value="Accept"/>
+                <input type="submit" id="accept-btn" class="btn btn-default btn-success btn-block" value="Accept"/>
             </form:form>
             <form:form action="${confirm_page}" method="POST">
                 <input name='approval' value='false' type='hidden'/>
-                <input type="submit" id="decline-btn" class="btn btn-default" value="Decline"/>
+                <input type="submit" id="decline-btn" class="btn btn-default btn-danger btn-block" value="Decline"/>
             </form:form>
         </div>
 

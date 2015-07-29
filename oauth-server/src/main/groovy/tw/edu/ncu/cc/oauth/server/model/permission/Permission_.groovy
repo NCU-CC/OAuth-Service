@@ -8,4 +8,5 @@ import javax.persistence.metamodel.StaticMetamodel
 @StaticMetamodel( Permission )
 class Permission_ extends BasicEntity_ {
     public static volatile SingularAttribute< Permission, String > name
+    public static volatile SingularAttribute< Permission, String > description
 }

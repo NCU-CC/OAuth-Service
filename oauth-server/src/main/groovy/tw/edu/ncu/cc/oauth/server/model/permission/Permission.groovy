@@ -11,4 +11,7 @@ class Permission extends BasicEntity {
     @Column( unique = true, nullable = false )
     def String name
 
+    @Column
+    def String description
+
 }

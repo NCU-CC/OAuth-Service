@@ -117,7 +117,8 @@ CREATE TABLE IF NOT EXISTS permission
   version INT DEFAULT 0,
   date_created DATETIME,
   last_updated DATETIME,
-  name VARCHAR(255)
+  name VARCHAR(255),
+  description VARCHAR(500)
 );
 
 CREATE TABLE IF NOT EXISTS access_token_scope

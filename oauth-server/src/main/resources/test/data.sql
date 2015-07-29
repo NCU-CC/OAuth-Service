@@ -65,10 +65,10 @@ INSERT INTO authorization_code_scope ( permission_id, authorization_code_id ) VA
   ( 1, 3 ),
   ( 2, 3 );
 
-INSERT INTO permission ( id, name ) VALUES
-  ( 1, 'ADMIN' ),
-  ( 2, 'READ' ),
-  ( 3, 'WRITE' );
+INSERT INTO permission ( id, name, description ) VALUES
+  ( 1, 'ADMIN', 'all permissions to read/write information of user' ),
+  ( 2, 'READ', 'read all informations of user data' ),
+  ( 3, 'WRITE', 'write informations into user data' );
 
 INSERT INTO token_access_log( id, token_type, token_id, client_id, ip, referer, application_id ) VALUES
   ( 1, 'AccessToken', 1, 1, '127.0.0.1', NULL, 1 ),
