@@ -64,9 +64,9 @@ public class SecurityConfig {
     public static class OauthConfig2 extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure( HttpSecurity http ) throws Exception {
-            http.antMatcher( "/oauth/token" )
+            http.antMatcher( "/oauth/token/**" )
                 .authorizeRequests()
-                    .antMatchers( "/oauth/token" ).permitAll()
+                    .antMatchers( "/oauth/token/**" ).permitAll()
                     .and()
                 .csrf().disable()
         }
@@ -82,9 +82,9 @@ public class SecurityConfig {
         @Override
         protected void configure( HttpSecurity http ) throws Exception {
             http.authorizeRequests()
-                    .antMatchers( "/oauth/authorize" ).hasAnyRole( "USER" )
-                    .antMatchers( "/login_page" ).permitAll()
-                    .antMatchers( "/login_confirm" ).permitAll()
+                    .antMatchers( "/oauth/authorize/**" ).hasAnyRole( "USER" )
+                    .antMatchers( "/login_page/**" ).permitAll()
+                    .antMatchers( "/login_confirm/**" ).permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
