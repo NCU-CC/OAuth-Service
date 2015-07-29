@@ -9,6 +9,7 @@ import tw.edu.ncu.cc.oauth.resource.component.TokenMetaDecider
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
 
 import javax.servlet.FilterChain
+import javax.servlet.ServletOutputStream
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -30,6 +31,7 @@ class TrustedApiTokenDecisionFilterTest extends Specification {
         response = Mock( HttpServletResponse )
         tokenConfirmService = Mock( TokenConfirmService )
         tokenMetaDecider = Mock( TokenMetaDecider )
+        response.getOutputStream() >> Mock( ServletOutputStream )
 
         trustedApiTokenDecisionFilter = new TrustedApiTokenDecisionFilter()
         trustedApiTokenDecisionFilter.tokenConfirmService = tokenConfirmService
@@ -42,7 +44,7 @@ class TrustedApiTokenDecisionFilterTest extends Specification {
         when:
             trustedApiTokenDecisionFilter.doFilter( request, response, filterChain )
         then:
-            1 * response.sendError( 400, _ as String )
+            1 * response.setStatus( 400 )
         and:
             0 * filterChain.doFilter( _ as HttpServletRequest, _ as HttpServletResponse )
     }
@@ -57,7 +59,7 @@ class TrustedApiTokenDecisionFilterTest extends Specification {
         when:
             trustedApiTokenDecisionFilter.doFilter( request, response, filterChain )
         then:
-            1 * response.sendError( 401, _ as String )
+            1 * response.setStatus( 401 )
         and:
             0 * filterChain.doFilter( _ as HttpServletRequest, _ as HttpServletResponse )
     }
@@ -72,7 +74,7 @@ class TrustedApiTokenDecisionFilterTest extends Specification {
         when:
             trustedApiTokenDecisionFilter.doFilter( request, response, filterChain )
         then:
-            1 * response.sendError( 403, _ as String )
+            1 * response.setStatus( 403 )
         and:
             0 * filterChain.doFilter( _ as HttpServletRequest, _ as HttpServletResponse )
     }
@@ -87,7 +89,7 @@ class TrustedApiTokenDecisionFilterTest extends Specification {
         when:
             trustedApiTokenDecisionFilter.doFilter( request, response, filterChain )
         then:
-            1 * response.sendError( 403, _ as String )
+            1 * response.setStatus( 403 )
         and:
             0 * filterChain.doFilter( _ as HttpServletRequest, _ as HttpServletResponse )
     }

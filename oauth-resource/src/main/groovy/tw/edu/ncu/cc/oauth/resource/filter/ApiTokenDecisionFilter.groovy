@@ -6,6 +6,7 @@ import org.springframework.web.client.HttpClientErrorException
 import tw.edu.ncu.cc.oauth.data.v1.management.token.ApiTokenClientObject
 import tw.edu.ncu.cc.oauth.resource.component.TokenMetaDecider
 import tw.edu.ncu.cc.oauth.resource.core.ApiCredentialHolder
+import tw.edu.ncu.cc.oauth.resource.helper.MessageHelper
 import tw.edu.ncu.cc.oauth.resource.service.TokenConfirmService
 
 import javax.servlet.FilterChain
@@ -35,7 +36,9 @@ public class ApiTokenDecisionFilter extends AbstractFilter {
             checkAuthentication( httpRequest )
             chain.doFilter( request, response )
         } catch ( HttpClientErrorException e ) {
-            httpResponse.sendError( e.statusCode.value(), "api token decision failed: ${ e.message }" )
+            httpResponse.setContentType( "application/json" )
+            httpResponse.setStatus( e.statusCode.value() )
+            MessageHelper.writeErrorMessage( "api token decision failed: ${ e.message }", httpResponse.outputStream )
         }
     }
 

@@ -77,6 +77,14 @@ class APITokenControllerTest extends IntegrationSpecification {
         and:
             server().perform(
                     get( targetURL + "/token/" + apiToken.token )
+                            .header( API_TOKEN_HEADER, "gggggg" )
+                            .param( "ip", "127.0.0.1" )
+            ).andExpect(
+                    status().isUnauthorized()
+            )
+        and:
+            server().perform(
+                    get( targetURL + "/token/" + apiToken.token )
                             .header( API_TOKEN_HEADER, untrusted_apiToken().token )
                             .param( "ip", "127.0.0.1" )
             ).andExpect(

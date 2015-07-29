@@ -1,5 +1,6 @@
 package tw.edu.ncu.cc.oauth.server.interceptor
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -7,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpServerErrorException
 import tw.edu.ncu.cc.oauth.data.v1.attribute.RequestAttribute
+import tw.edu.ncu.cc.oauth.data.v1.message.ErrorObject
 import tw.edu.ncu.cc.oauth.server.model.apiToken.ApiToken
 import tw.edu.ncu.cc.oauth.server.service.apiToken.ApiTokenService
 
@@ -39,7 +41,9 @@ class TrustedApiTokenDecisionFilter implements Filter {
             checkAuthentication( httpRequest )
             chain.doFilter( request, response )
         } catch ( HttpServerErrorException e ) {
-            httpResponse.sendError( e.statusCode.value(), e.message )
+            httpResponse.setContentType( "application/json" )
+            httpResponse.setStatus( e.statusCode.value() )
+            new ObjectMapper().writeValue( httpResponse.outputStream, new ErrorObject( "trusted api token decision failed: ${ e.message }" ) )
         }
     }
 
@@ -47,7 +51,9 @@ class TrustedApiTokenDecisionFilter implements Filter {
         if( isApiRequest( request ) ) {
             ApiToken apiToken = findTrustedApiToken( request )
             if( apiToken == null ) {
-                throw new HttpServerErrorException( HttpStatus.FORBIDDEN, "trusted api token not found" )
+                throw new HttpServerErrorException( HttpStatus.UNAUTHORIZED, "invalid trusted api token" )
+            } else if( ! apiToken.client.trusted ) {
+                throw new HttpServerErrorException( HttpStatus.FORBIDDEN, "not a trusted api token" )
             } else {
                 bindApiToken( request, apiToken )
             }
@@ -63,7 +69,7 @@ class TrustedApiTokenDecisionFilter implements Filter {
     private ApiToken findTrustedApiToken( HttpServletRequest request ) {
         String token = readApiTokenFromRequest( request )
         ApiToken apiToken = apiTokenService.findUnexpiredByToken( token )
-        apiToken != null && apiToken.client.trusted ? apiToken : null
+        apiToken != null ? apiToken : null
     }
 
     private static String readApiTokenFromRequest( HttpServletRequest request ) {

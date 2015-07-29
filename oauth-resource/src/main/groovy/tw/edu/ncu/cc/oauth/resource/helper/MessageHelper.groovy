@@ -7,6 +7,11 @@ import tw.edu.ncu.cc.oauth.data.v1.message.ErrorObject
 
 class MessageHelper {
 
+    static void writeErrorMessage( String errorDescription, OutputStream outputStream ) {
+        ObjectMapper objectMapper = new ObjectMapper()
+        objectMapper.writeValue( outputStream, new ErrorObject( errorDescription ) )
+    }
+
     static ErrorObject errorObject( String errorMessageBody ) {
         try {
             ObjectMapper objectMapper = new ObjectMapper()
