@@ -33,35 +33,37 @@ class ApiTokenShow extends BasicOperation {
 
     @Override
     protected def handle( Map params, Map model ) {
-        streams {
-            notNullNotFound {
-                apiTokenService.findUnexpiredByToken( params.token as String )
-            }
-            notNullForbidden( 'reach api access times limit per month'  ) { ApiToken apiToken ->
-                if( apiToken.client.trusted ) {
-                    apiToken
-                } else {
-                    int accessTimesPerMonth = tokenAccessLogService.findAccessTimesPerMonthByClientAndApplication(
-                            apiToken.client, params.application as Client
-                    )
-                    accessTimesPerMonth > resourceAccessLimitPerMonth ? null : apiToken
+        transaction.execute() {
+            streams {
+                notNullNotFound {
+                    apiTokenService.findUnexpiredByToken( params.token as String )
                 }
-            }
-            stream { ApiToken apiToken ->
-                apiTokenService.refreshLastUsedTime( apiToken )
-            }
-            stream { ApiToken apiToken ->
-                tokenAccessLogService.create(
-                        new TokenAccessLog(
-                                tokenType: apiToken.class.simpleName,
-                                tokenId: apiToken.id,
-                                client: apiToken.client,
-                                application: params.application,
-                                ip: params.ip,
-                                referer: params.referer
+                notNullForbidden( 'reach api access times limit per month'  ) { ApiToken apiToken ->
+                    if( apiToken.client.trusted ) {
+                        apiToken
+                    } else {
+                        int accessTimesPerMonth = tokenAccessLogService.findAccessTimesPerMonthByClientAndApplication(
+                                apiToken.client, params.application as Client
                         )
-                )
-                return apiToken
+                        accessTimesPerMonth > resourceAccessLimitPerMonth ? null : apiToken
+                    }
+                }
+                stream { ApiToken apiToken ->
+                    apiTokenService.refreshLastUsedTime( apiToken )
+                }
+                stream { ApiToken apiToken ->
+                    tokenAccessLogService.create(
+                            new TokenAccessLog(
+                                    tokenType: apiToken.class.simpleName,
+                                    tokenId: apiToken.id,
+                                    client: apiToken.client,
+                                    application: params.application,
+                                    ip: params.ip,
+                                    referer: params.referer
+                            )
+                    )
+                    return apiToken
+                }
             }
         }
     }

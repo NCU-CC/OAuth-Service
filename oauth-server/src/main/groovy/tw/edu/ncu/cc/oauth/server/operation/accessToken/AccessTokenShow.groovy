@@ -29,25 +29,27 @@ class AccessTokenShow extends BasicOperation {
 
     @Override
     protected handle( Map params, Map model ) {
-        streams {
-            notNullNotFound {
-                accessTokenService.findUnexpiredByToken( params.token as String, AccessToken_.scope )
-            }
-            stream { AccessToken accessToken ->
-                accessTokenService.refreshLastUsedTime( accessToken )
-            }
-            stream { AccessToken accessToken ->
-                tokenAccessLogService.create(
-                        new TokenAccessLog(
-                                tokenType: accessToken.class.simpleName,
-                                tokenId: accessToken.id,
-                                client: accessToken.client,
-                                application: params.application,
-                                ip: params.ip,
-                                referer: params.referer
-                        )
-                )
-                return accessToken
+        transaction.execute() {
+            streams {
+                notNullNotFound {
+                    accessTokenService.findUnexpiredByToken( params.token as String, AccessToken_.scope )
+                }
+                stream { AccessToken accessToken ->
+                    accessTokenService.refreshLastUsedTime( accessToken )
+                }
+                stream { AccessToken accessToken ->
+                    tokenAccessLogService.create(
+                            new TokenAccessLog(
+                                    tokenType: accessToken.class.simpleName,
+                                    tokenId: accessToken.id,
+                                    client: accessToken.client,
+                                    application: params.application,
+                                    ip: params.ip,
+                                    referer: params.referer
+                            )
+                    )
+                    return accessToken
+                }
             }
         }
     }
