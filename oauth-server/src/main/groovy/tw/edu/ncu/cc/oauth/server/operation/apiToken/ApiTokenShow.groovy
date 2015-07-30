@@ -33,7 +33,7 @@ class ApiTokenShow extends BasicOperation {
 
     @Override
     protected def handle( Map params, Map model ) {
-        transaction.executeSerializable() {
+        transaction.executeSerializable {
             streams {
                 notNullNotFound {
                     apiTokenService.findUnexpiredByToken( params.token as String )

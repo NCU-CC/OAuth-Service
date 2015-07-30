@@ -29,7 +29,7 @@ class AccessTokenShow extends BasicOperation {
 
     @Override
     protected handle( Map params, Map model ) {
-        transaction.executeSerializable() {
+        transaction.executeSerializable {
             streams {
                 notNullNotFound {
                     accessTokenService.findUnexpiredByToken( params.token as String, AccessToken_.scope )

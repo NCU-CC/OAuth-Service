@@ -19,14 +19,15 @@ class OperationTransaction {
 
     def execute( DefaultTransactionDefinition definition = new DefaultTransactionDefinition(), Closure closure ) {
         TransactionStatus status = transactionManager.getTransaction( definition )
+        def result
         try {
-            def result = closure.call()
-            transactionManager.commit( status )
-            result
+            result = closure.call()
         } catch ( Exception e ) {
             transactionManager.rollback( status )
             throw e
         }
+        transactionManager.commit( status )
+        return result
     }
 
 }
