@@ -55,7 +55,7 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler( Exception )
     def ResponseEntity exceptionHandler( Exception exception ) {
-        logService.error( "UNEXPECTED ERROR:", exception )
+        logService.error( "INTERNAL ERROR", "SYSTEM", null, exception )
         return new ResponseEntity<>(
                 new ErrorObject(
                         exception.message
