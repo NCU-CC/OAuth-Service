@@ -2,10 +2,8 @@ package tw.edu.ncu.cc.oauth.server.web.management
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.convert.ConversionService
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.core.convert.TypeDescriptor
+import org.springframework.web.bind.annotation.*
 import tw.edu.ncu.cc.oauth.data.v1.management.token.TokenClientObject
 import tw.edu.ncu.cc.oauth.server.model.refreshToken.RefreshToken
 import tw.edu.ncu.cc.oauth.server.operation.authorizedToken.AuthorizedTokenOperations
@@ -19,6 +17,18 @@ public class AuthorizedTokenController {
 
     @Autowired
     def ConversionService conversionService
+
+    @RequestMapping( method = RequestMethod.GET )
+    def index( @RequestParam( value = "user", required = false ) String user ) {
+
+        def resource = authorizedTokenOperations.index.process( user: user )
+
+        conversionService.convert(
+                resource as List< RefreshToken >,
+                TypeDescriptor.collection( List.class, TypeDescriptor.valueOf( RefreshToken.class ) ),
+                TypeDescriptor.array( TypeDescriptor.valueOf( TokenClientObject.class ) )
+        )
+    }
 
     @RequestMapping( value = "{id}", method = RequestMethod.GET )
     def get( @PathVariable( "id" ) final String id ) {
