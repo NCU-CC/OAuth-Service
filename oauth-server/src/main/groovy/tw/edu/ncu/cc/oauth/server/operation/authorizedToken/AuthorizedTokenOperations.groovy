@@ -12,4 +12,7 @@ class AuthorizedTokenOperations {
     @Autowired
     def AuthorizedTokenShow show
 
+    @Autowired
+    def AuthorizedTokenIndex index
+
 }

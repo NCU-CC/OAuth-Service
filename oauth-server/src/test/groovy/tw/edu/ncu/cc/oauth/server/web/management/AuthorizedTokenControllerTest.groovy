@@ -11,6 +11,21 @@ class AuthorizedTokenControllerTest extends IntegrationSpecification {
 
     def targetURL = "/management/v1/authorized_tokens"
 
+    def "user can search authorized token info by user"() {
+        given:
+            def refreshToken = a_refreshToken()
+        when:
+            def response = JSON(
+                    server().perform(
+                            get( targetURL + "?user=${refreshToken.user.name}" )
+                    ).andExpect(
+                            status().isOk()
+                    ).andReturn()
+            )
+        then:
+            response.size() != 0
+    }
+
     def "user can get authorized token info by id"() {
         given:
             def refreshToken = a_refreshToken()
