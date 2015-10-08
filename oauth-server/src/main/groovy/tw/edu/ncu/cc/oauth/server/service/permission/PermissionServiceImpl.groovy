@@ -13,6 +13,17 @@ class PermissionServiceImpl implements PermissionService {
     def PermissionRepository permissionRepository
 
     @Override
+    Permission create( Permission permission ) {
+        permissionRepository.save( permission )
+    }
+
+    @Override
+    Permission delete( Permission permission ) {
+        permissionRepository.delete( permission.id )
+        permission
+    }
+
+    @Override
     @Cacheable( value="apiService", key="'PermissionID:' + #id" )
     Permission findById( int id ) {
         permissionRepository.findOne( id )
