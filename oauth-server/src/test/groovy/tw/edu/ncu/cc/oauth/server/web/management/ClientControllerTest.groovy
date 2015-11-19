@@ -151,6 +151,78 @@ class ClientControllerTest extends IntegrationSpecification {
     }
 
     @Transactional
+    def "user can update client owner to valid user"() {
+        given:
+            def createdClientObject = created_a_client( new ClientObject(
+                    name:     "app",
+                    callback: "http://example.com",
+                    owner:    "ADMIN1"
+            ) )
+        expect:
+            server().perform(
+                    put( targetURL + "/${ createdClientObject.id }" )
+                            .contentType( MediaType.APPLICATION_JSON )
+                            .content(
+                            """
+                                {
+                                  "owner" :    "ADMIN3"
+                                }
+                            """
+                    )
+            ).andExpect(
+                    status().isOk()
+            )
+    }
+
+    @Transactional
+    def "user cannot update client owner to not exist user"() {
+        given:
+            def createdClientObject = created_a_client( new ClientObject(
+                    name:     "app",
+                    callback: "http://example.com",
+                    owner:    "ADMIN1"
+            ) )
+        expect:
+            server().perform(
+                    put( targetURL + "/${ createdClientObject.id }" )
+                            .contentType( MediaType.APPLICATION_JSON )
+                            .content(
+                            """
+                                {
+                                  "owner" :    "USERNOTEXIST"
+                                }
+                            """
+                    )
+            ).andExpect(
+                    status().isBadRequest()
+            )
+    }
+
+    @Transactional
+    def "user cannot update client owner to restricted user"() {
+        given:
+            def createdClientObject = created_a_client( new ClientObject(
+                    name:     "app",
+                    callback: "http://example.com",
+                    owner:    "ADMIN1"
+            ) )
+        expect:
+            server().perform(
+                    put( targetURL + "/${ createdClientObject.id }" )
+                            .contentType( MediaType.APPLICATION_JSON )
+                            .content(
+                            """
+                                {
+                                  "owner" :    "ADMIN2"
+                                }
+                            """
+                    )
+            ).andExpect(
+                    status().isBadRequest()
+            )
+    }
+
+    @Transactional
     def "user can delete client by serial id"() {
         given:
             def createdClientObject = created_a_client( new ClientObject(
