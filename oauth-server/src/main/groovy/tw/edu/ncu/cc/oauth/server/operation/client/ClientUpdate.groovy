@@ -8,9 +8,17 @@ import tw.edu.ncu.cc.oauth.server.operation.BasicOperation
 import tw.edu.ncu.cc.oauth.server.operation.OperationParamValidator
 import tw.edu.ncu.cc.oauth.server.service.client.ClientService
 import tw.edu.ncu.cc.oauth.server.service.clientRestricted.ClientRestrictedService
+import tw.edu.ncu.cc.oauth.server.service.user.UserService
+import tw.edu.ncu.cc.oauth.server.service.userRestricted.UserRestrictedService
 
 @Component
 class ClientUpdate extends BasicOperation {
+
+    @Autowired
+    def UserService userService
+
+    @Autowired
+    def UserRestrictedService userRestrictedService
 
     @Autowired
     def ClientService clientService
@@ -29,11 +37,24 @@ class ClientUpdate extends BasicOperation {
         ClientObject clientObject = params.clientObject as ClientObject
         transaction.executeSerializable {
             streams {
-                notNullNotFound {
+                notNullNotFound( 'client is not found' ) {
                     clientService.findUndeletedBySerialId( params.serialId as String )
                 }
-                notNullForbidden { Client client ->
+                notNullForbidden( 'client is restricted' ) { Client client ->
                     clientRestrictedService.isClientRestricted( client ) ? null : client
+                }
+                notNullBadRequest( 'user is not valid' ) { Client client ->
+                    if( clientObject.owner != null ) {
+                        def user = userService.findByName( clientObject.owner )
+                        if( user == null ) {
+                            return null
+                        } else if ( userRestrictedService.isUserRestricted( user ) ){
+                            return null
+                        } else {
+                            client.owner = user
+                        }
+                    }
+                    return client
                 }
                 stream { Client client ->
                     client.name = clientObject.name
