@@ -75,19 +75,19 @@ class TokenConfirmServiceImplTest1 extends Specification {
 
     def "it can get access token from remote server 1"() {
         expect:
-            tokenConfirmService.readAccessToken( "token1", new TokenRequestMetaObject() ).scope.toList() == [ "READ", "WRITE" ]
+            tokenConfirmService.readAccessToken( "token1", new TokenRequestMetaObject(), false ).scope.toList() == [ "READ", "WRITE" ]
     }
 
     def "it throws exception if token is not found"() {
         when:
-            tokenConfirmService.readAccessToken( "token2", new TokenRequestMetaObject() )
+            tokenConfirmService.readAccessToken( "token2", new TokenRequestMetaObject(), false )
         then:
             thrown( HttpClientErrorException )
     }
 
     def "it throws exception if token is forbidden"() {
         when:
-            tokenConfirmService.readAccessToken( "token3", new TokenRequestMetaObject() )
+            tokenConfirmService.readAccessToken( "token3", new TokenRequestMetaObject(), false )
         then:
             thrown( HttpClientErrorException )
     }

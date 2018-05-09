@@ -23,8 +23,11 @@ public class TokenConfirmServiceImpl implements TokenConfirmService {
     }
 
     @Override
-    public TokenObject readAccessToken( String accessToken, TokenRequestMetaObject metaObject ) {
-        String targetUrl = config.serverPath + config.accessTokenPath
+    public TokenObject readAccessToken( String accessToken, TokenRequestMetaObject metaObject, boolean useNewOauth ) {
+        String targetUrl = (
+                useNewOauth ? config.newServerPath + config.newAccessTokenPath
+                            : config.serverPath + config.accessTokenPath
+        )
         getTokenWithType( targetUrl, accessToken, metaObject, TokenObject.class ).getBody()
     }
 

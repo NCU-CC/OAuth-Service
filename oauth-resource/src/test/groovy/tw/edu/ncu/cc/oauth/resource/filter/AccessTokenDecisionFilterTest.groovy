@@ -52,7 +52,7 @@ class AccessTokenDecisionFilterTest extends Specification {
         given:
             request.getHeader( ACCESS_TOKEN_HEADER ) >> ACCESS_TOKEN_PREFIX + " " + "ACCESS_TOKEN2"
         and:
-            tokenConfirmService.readAccessToken( "ACCESS_TOKEN2", null ) >> {
+            tokenConfirmService.readAccessToken( "ACCESS_TOKEN2", null, false ) >> {
                 throw new HttpClientErrorException( HttpStatus.NOT_FOUND )
             }
         when:
@@ -67,7 +67,7 @@ class AccessTokenDecisionFilterTest extends Specification {
         given:
             request.getHeader( ACCESS_TOKEN_HEADER ) >> ACCESS_TOKEN_PREFIX + " " + "ACCESS_TOKEN3"
         and:
-            tokenConfirmService.readAccessToken( "ACCESS_TOKEN3", null ) >> {
+            tokenConfirmService.readAccessToken( "ACCESS_TOKEN3", null, false ) >> {
                 throw new HttpClientErrorException( HttpStatus.FORBIDDEN )
             }
         when:
@@ -82,7 +82,7 @@ class AccessTokenDecisionFilterTest extends Specification {
         given:
             request.getHeader( ACCESS_TOKEN_HEADER ) >> ACCESS_TOKEN_PREFIX + " " + "ACCESS_TOKEN"
         and:
-            tokenConfirmService.readAccessToken( "ACCESS_TOKEN", null ) >> new TokenObject(
+            tokenConfirmService.readAccessToken( "ACCESS_TOKEN", null, false ) >> new TokenObject(
                     user: "USER",
                     scope: [ "PERMISSION" ]
             )

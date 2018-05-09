@@ -7,4 +7,5 @@ class RequestAttribute {
     static final String ACCESS_TOKEN_HEADER = "Authorization"
     static final String ACCESS_TOKEN_PREFIX = "Bearer"
     static final String ACCESS_TOKEN_ATTR = "_NCU_ACCESS_TOKEN"
+    static final String NEW_OAUTH_HEADER = "X-NCU-NEW-OAUTH"
 }

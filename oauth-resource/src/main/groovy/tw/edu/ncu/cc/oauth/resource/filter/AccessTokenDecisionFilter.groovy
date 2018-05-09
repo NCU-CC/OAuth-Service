@@ -72,7 +72,11 @@ public class AccessTokenDecisionFilter extends AbstractFilter {
         if( ApiCredentialHolder.containsAccessToken( accessToken ) ) {
             ApiCredentialHolder.getAccessToken( accessToken )
         } else {
-            tokenConfirmService.readAccessToken( accessToken, tokenMetaDecider.decide( request ) )
+            tokenConfirmService.readAccessToken(
+                    accessToken,
+                    tokenMetaDecider.decide( request ),
+                    hasNewOauthHeader( request )
+            )
         }
     }
 
@@ -90,4 +94,7 @@ public class AccessTokenDecisionFilter extends AbstractFilter {
         request.setAttribute( ACCESS_TOKEN_ATTR, accessToken )
     }
 
+    private static boolean hasNewOauthHeader( HttpServletRequest request ) {
+        return request.getHeader( NEW_OAUTH_HEADER ) != null
+    }
 }
